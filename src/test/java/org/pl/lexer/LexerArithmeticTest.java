@@ -3,7 +3,7 @@ package org.pl.lexer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.pl.lexer.token.NumberToken;
-import org.pl.lexer.token.PlusToken;
+import org.pl.lexer.token.arithmetic.PlusToken;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;

@@ -1,4 +1,6 @@
-package org.pl.lexer.token;
+package org.pl.lexer.token.arithmetic;
+
+import org.pl.lexer.token.IToken;
 
 public class MultiplyToken implements IToken {
     public Object getValue() {

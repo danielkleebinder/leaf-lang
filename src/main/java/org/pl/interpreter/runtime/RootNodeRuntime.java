@@ -1,4 +1,4 @@
-package org.pl.interpreter.node;
+package org.pl.interpreter.runtime;
 
 import org.pl.interpreter.IInterpreter;
 import org.pl.parser.ast.INode;
@@ -7,7 +7,7 @@ import org.pl.parser.ast.RootNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RootNodeInterpreter implements INodeInterpreter<RootNode, Object> {
+public class RootNodeRuntime implements IRuntime<RootNode, Object> {
     @Override
     public Object interpret(IInterpreter interpreter, RootNode node) {
         List<Object> results = new ArrayList<>(8);

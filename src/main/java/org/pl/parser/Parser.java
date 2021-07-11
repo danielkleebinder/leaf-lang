@@ -1,6 +1,11 @@
 package org.pl.parser;
 
 import org.pl.lexer.token.*;
+import org.pl.lexer.token.arithmetic.DivideToken;
+import org.pl.lexer.token.arithmetic.MinusToken;
+import org.pl.lexer.token.arithmetic.MultiplyToken;
+import org.pl.lexer.token.arithmetic.PlusToken;
+import org.pl.lexer.token.logical.*;
 import org.pl.parser.ast.*;
 
 import java.util.ArrayList;
@@ -106,13 +111,38 @@ public class Parser implements IParser {
         return node;
     }
 
+    private INode evalLogicalExpr() {
+        var node = evalArithmeticExpr();
+        while (true) {
+            if (tokenOfType(EqualToken.class)) {
+                consumeToken(EqualToken.class);
+                node = new BinaryOperationNode(node, evalArithmeticExpr(), BinaryOperation.EQUAL);
+            } else if (tokenOfType(LessThanToken.class)) {
+                consumeToken(LessThanToken.class);
+                node = new BinaryOperationNode(node, evalArithmeticExpr(), BinaryOperation.LESS_THAN);
+            } else if (tokenOfType(LessThanOrEqualToken.class)) {
+                consumeToken(LessThanOrEqualToken.class);
+                node = new BinaryOperationNode(node, evalArithmeticExpr(), BinaryOperation.LESS_THAN_OR_EQUAL);
+            } else if (tokenOfType(GreaterThanToken.class)) {
+                consumeToken(GreaterThanToken.class);
+                node = new BinaryOperationNode(node, evalArithmeticExpr(), BinaryOperation.GREATER_THAN);
+            } else if (tokenOfType(GreaterThanOrEqualToken.class)) {
+                consumeToken(GreaterThanOrEqualToken.class);
+                node = new BinaryOperationNode(node, evalArithmeticExpr(), BinaryOperation.GREATER_THAN_OR_EQUAL);
+            } else {
+                break;
+            }
+        }
+        return node;
+    }
+
     /**
-     * Evaluates the expression semantic:
-     * expr ::= term (( PLUS | MINUS ) term)*
+     * Evaluates the arithemtic expression semantic:
+     * arithmetic-expr ::= term (( PLUS | MINUS ) term)*
      *
      * @return Expression evaluation.
      */
-    private INode evalExpr() {
+    private INode evalArithmeticExpr() {
         var node = evalTerm();
         while (true) {
             if (tokenOfType(PlusToken.class)) {
@@ -121,6 +151,26 @@ public class Parser implements IParser {
             } else if (tokenOfType(MinusToken.class)) {
                 consumeToken(MinusToken.class);
                 node = new BinaryOperationNode(node, evalTerm(), BinaryOperation.MINUS);
+            } else {
+                break;
+            }
+        }
+        return node;
+    }
+
+    private INode evalExpr() {
+        if (tokenOfType(LogicalNotToken.class)) {
+            consumeToken(LogicalNotToken.class);
+            return new UnaryOperationNode(evalLogicalExpr(), UnaryOperation.LOGICAL_NEGATE);
+        }
+        var node = evalLogicalExpr();
+        while (true) {
+            if (tokenOfType(LogicalAndToken.class)) {
+                consumeToken(LogicalAndToken.class);
+                node = new BinaryOperationNode(node, evalLogicalExpr(), BinaryOperation.LOGICAL_AND);
+            } else if (tokenOfType(LogicalOrToken.class)) {
+                consumeToken(LogicalOrToken.class);
+                node = new BinaryOperationNode(node, evalLogicalExpr(), BinaryOperation.LOGICAL_OR);
             } else {
                 break;
             }

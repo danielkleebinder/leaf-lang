@@ -2,7 +2,7 @@ package org.pl.lexer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.pl.lexer.token.MinusToken;
+import org.pl.lexer.token.arithmetic.MinusToken;
 import org.pl.lexer.token.NumberToken;
 
 import java.math.BigDecimal;
@@ -73,6 +73,7 @@ public class LexerNumberTest {
     @Test
     void shouldErrorForTwoDecimalPoints() {
         var tokens = lexer.tokenize("3.14.15");
+        System.out.println(tokens);
         assertEquals(0, tokens.size());
     }
 }

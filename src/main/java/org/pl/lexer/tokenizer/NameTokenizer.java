@@ -6,7 +6,7 @@ import org.pl.lexer.token.NameToken;
 public class NameTokenizer implements ITokenizer {
     @Override
     public boolean matches(Character c) {
-        return Character.isJavaIdentifierPart(c);
+        return Character.isAlphabetic(c);
     }
 
     @Override

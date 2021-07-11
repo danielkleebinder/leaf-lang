@@ -38,6 +38,7 @@ public class Lexer implements ILexer {
             add(new DivideTokenizer());
             add(new MultiplyTokenizer());
             add(new ComplementTokenizer());
+            add(new LogicalTokenizer());
             add(new BraceTokenizer());
             add(new BracketTokenizer());
             add(new ParenthesesTokenizer());
@@ -64,8 +65,8 @@ public class Lexer implements ILexer {
                     errors.addAll(tokenizerResult.errors);
                     if (tokenizerResult.token != null) {
                         tokens.add(tokenizerResult.token);
+                        break;
                     }
-                    break;
                 }
             }
             advanceCursor();

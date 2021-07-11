@@ -1,7 +1,7 @@
 package org.pl.lexer.tokenizer;
 
 import org.pl.lexer.ILexer;
-import org.pl.lexer.token.DivideToken;
+import org.pl.lexer.token.arithmetic.DivideToken;
 
 public class DivideTokenizer implements ITokenizer {
     @Override
