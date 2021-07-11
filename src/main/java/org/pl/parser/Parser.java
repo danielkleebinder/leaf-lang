@@ -27,15 +27,10 @@ public class Parser implements IParser {
         this.cursorPosition = 0;
         this.errors.clear();
 
-        var result = new RootNode();
-        while (hasNextToken()) {
-            result.statements.add(evalExpr());
-        }
-
+        var result = evalProgram();
         for (ParserError error : errors) {
             System.err.println(error);
         }
-
         return result;
     }
 
@@ -248,6 +243,44 @@ public class Parser implements IParser {
             }
         }
         return node;
+    }
+
+    private INode evalAssign() {
+        return null;
+    }
+
+    /**
+     * Evaluates the statement semantic:
+     * <statement> ::= <statement-list>
+     * | <assign>
+     * | <expr>
+     * | <empty>
+     *
+     * @return Evaluated statement.
+     */
+    private INode evalStatement() {
+        return evalExpr();
+    }
+
+    /**
+     * Evaluates the statement list semantic:
+     * <statement-list> ::= <statement>
+     * | <statement> ';' <statement-list>
+     *
+     * @return Evaluated statement list.
+     */
+    private StatementListNode evalStatementList() {
+        var result = new ArrayList<INode>(16);
+        result.add(evalStatement());
+        while (tokenOfType(StatementSeparatorToken.class)) {
+            consumeToken(StatementSeparatorToken.class);
+            result.add(evalStatement());
+        }
+        return new StatementListNode(result);
+    }
+
+    private INode evalProgram() {
+        return evalStatementList();
     }
 
     @Override

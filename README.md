@@ -5,29 +5,36 @@
 The formal language definition looks like the following. Feel free to implement it yourself.
 
 ```
-<statement-list> ::= statement
-                   | statement SEMICOLON statement-list
+<program> ::= <statement-list>
 
-<assign> ::= VAR name ASSIGN expr
-           | CONST name ASSIGN expr
+<statement-list> ::= <statement>
+                   | <statement> ';' <statement-list>
 
-<expr> ::= NOT logical-expr
-         | logical-expr (( AND | OR ) logical-expr)*
+<statement> ::= <statement-list>
+              | <assign>
+              | <expr>
+              | <empty>
 
-<if-expr> ::= IF expr LBRACE expr RBRACE
-              (ELSE IF expr LBRACE expr RBRACE)*
-              (ELSE LBRACE expr RBRACE)?
+<assign> ::= 'var' <name> '=' <expr>
+           | 'const' <name> '=' <expr>
 
-<logical-expr> ::= arithmetic-expr (( EQ | LT | LTE | GT | GTE ) arithmetic-expr)*
-<arithmetic-expr> ::= term (( PLUS | MINUS ) term)*
+<expr> ::= NOT <logical-expr>
+         | <logical-expr> (( AND | OR ) <logical-expr>)*
 
-<term> ::= atom (( MULT | DIVIDE ) atom)*
+<if-expr> ::= 'if' <expr> '{' <expr> '}'
+              ('else' 'if' <expr> '{' <expr> '}')*
+              ('else' '{' <expr> '}')?
+
+<logical-expr> ::= <arithmetic-expr> (( EQ | LT | LTE | GT | GTE ) <arithmetic-expr>)*
+<arithmetic-expr> ::= <term> (( PLUS | MINUS ) <term>)*
+
+<term> ::= <atom> (( MULT | DIVIDE ) <atom>)*
 <name> ::= IDENTIFIER
 <atom> ::= PLUS number
          | MINUS number
          | COMPLEMENT number
-         | LPAREN expr RPAREN
-         | if-expr
+         | LPAREN <expr> RPAREN
+         | <if-expr>
 
 <empty> ::= ()
 ```
@@ -52,7 +59,7 @@ trait CanTalk {
 }
 
 class Dog is Feedable, CanTalk {
-  var fed = false;
+  fed = false;
   fun feed() { fed = true }
   fun talk(text: string) { print(text) }
   fun name(): string = "Bello"

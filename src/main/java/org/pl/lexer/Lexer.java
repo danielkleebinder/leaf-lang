@@ -19,6 +19,7 @@ public class Lexer implements ILexer {
             add("break");
             add("true");
             add("false");
+            add("new");
             add("fun");
             add("requires");
             add("ensures");
@@ -45,6 +46,7 @@ public class Lexer implements ILexer {
             add(new BracketTokenizer());
             add(new ParenthesesTokenizer());
             add(new NameTokenizer());
+            add(new StatementTokenizer());
         }
     };
 

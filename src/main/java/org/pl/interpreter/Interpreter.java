@@ -11,9 +11,6 @@ public class Interpreter implements IInterpreter {
 
     @Override
     public Object evalNode(INode node) {
-        if (node instanceof RootNode) {
-            return new RootNodeRuntime().interpret(this, (RootNode) node);
-        }
         if (node instanceof BinaryOperationNode) {
             return new BinaryOperationRuntime().interpret(this, (BinaryOperationNode) node);
         }
@@ -28,6 +25,9 @@ public class Interpreter implements IInterpreter {
         }
         if (node instanceof IfNode) {
             return new IfRuntime().interpret(this, (IfNode) node);
+        }
+        if (node instanceof StatementListNode) {
+            return new StatementListRuntime().interpret(this, (StatementListNode) node);
         }
         return null;
     }

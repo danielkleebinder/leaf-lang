@@ -8,13 +8,13 @@ public class IfRuntime implements IRuntime<IfNode, Object> {
     @Override
     public Object interpret(IInterpreter interpreter, IfNode node) {
         for (IfCase ifCase : node.cases) {
-            var conditionResult = interpreter.interpret(ifCase.condition);
+            var conditionResult = interpreter.evalNode(ifCase.condition);
             if (conditionResult instanceof Boolean && (boolean) conditionResult) {
-                return interpreter.interpret(ifCase.caseBody);
+                return interpreter.evalNode(ifCase.caseBody);
             }
         }
         if (node.elseCase != null) {
-            return interpreter.interpret(node.elseCase);
+            return interpreter.evalNode(node.elseCase);
         }
         return null;
     }
