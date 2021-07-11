@@ -5,7 +5,9 @@ import org.pl.lexer.token.arithmetic.DivideToken;
 import org.pl.lexer.token.arithmetic.MinusToken;
 import org.pl.lexer.token.arithmetic.MultiplyToken;
 import org.pl.lexer.token.arithmetic.PlusToken;
+import org.pl.lexer.token.keyword.ElseKeywordToken;
 import org.pl.lexer.token.keyword.FalseKeywordToken;
+import org.pl.lexer.token.keyword.IfKeywordToken;
 import org.pl.lexer.token.keyword.TrueKeywordToken;
 import org.pl.lexer.token.logical.*;
 import org.pl.parser.ast.*;
@@ -89,7 +91,49 @@ public class Parser implements IParser {
             consumeToken(ComplementToken.class);
             return new UnaryOperationNode(evalAtom(), UnaryOperation.BIT_COMPLEMENT);
         }
+        if (tokenOfType(IfKeywordToken.class)) {
+            return evalIfExpr();
+        }
         return null;
+    }
+
+    /**
+     * Evaluates the if semantic:
+     * <if-expr> ::= IF expr LBRACE expr RBRACE
+     * (ELSE IF expr LBRACE expr RBRACE)*
+     * (ELSE LBRACE expr RBRACE)?
+     *
+     * @return Evaluated if expression.
+     */
+    private IfNode evalIfExpr() {
+        List<IfCase> cases = new ArrayList<>(8);
+        INode elseCase = null;
+        consumeToken(IfKeywordToken.class);
+
+        var condition = evalExpr();
+        consumeToken(LeftBraceToken.class);
+        var caseBody = evalExpr();
+        consumeToken(RightBraceToken.class);
+        cases.add(new IfCase(condition, caseBody));
+
+        while (tokenOfType(ElseKeywordToken.class)) {
+            consumeToken(ElseKeywordToken.class);
+
+            if (tokenOfType(IfKeywordToken.class)) {
+                consumeToken(IfKeywordToken.class);
+                condition = evalExpr();
+                consumeToken(LeftBraceToken.class);
+                caseBody = evalExpr();
+                consumeToken(RightBraceToken.class);
+                cases.add(new IfCase(condition, caseBody));
+            } else {
+                consumeToken(LeftBraceToken.class);
+                elseCase = evalExpr();
+                consumeToken(RightBraceToken.class);
+            }
+        }
+
+        return new IfNode(cases, elseCase);
     }
 
     /**
@@ -185,11 +229,13 @@ public class Parser implements IParser {
      * @return Evaluated expression.
      */
     private INode evalExpr() {
+        INode node;
         if (tokenOfType(LogicalNotToken.class)) {
             consumeToken(LogicalNotToken.class);
-            return new UnaryOperationNode(evalLogicalExpr(), UnaryOperation.LOGICAL_NEGATE);
+            node = new UnaryOperationNode(evalLogicalExpr(), UnaryOperation.LOGICAL_NEGATE);
+        } else {
+            node = evalLogicalExpr();
         }
-        var node = evalLogicalExpr();
         while (true) {
             if (tokenOfType(LogicalAndToken.class)) {
                 consumeToken(LogicalAndToken.class);

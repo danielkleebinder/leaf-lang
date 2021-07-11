@@ -14,15 +14,20 @@ The formal language definition looks like the following. Feel free to implement 
 <expr> ::= NOT logical-expr
          | logical-expr (( AND | OR ) logical-expr)*
 
+<if-expr> ::= IF expr LBRACE expr RBRACE
+              (ELSE IF expr LBRACE expr RBRACE)*
+              (ELSE LBRACE expr RBRACE)?
+
 <logical-expr> ::= arithmetic-expr (( EQ | LT | LTE | GT | GTE ) arithmetic-expr)*
 <arithmetic-expr> ::= term (( PLUS | MINUS ) term)*
 
 <term> ::= atom (( MULT | DIVIDE ) atom)*
 <name> ::= IDENTIFIER
-<atom> ::= PLUS <number>
-         | MINUS <number>
-         | COMPLEMENT <number>
+<atom> ::= PLUS number
+         | MINUS number
+         | COMPLEMENT number
          | LPAREN expr RPAREN
+         | if-expr
 
 <empty> ::= ()
 ```

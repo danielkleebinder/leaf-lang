@@ -26,6 +26,9 @@ public class Interpreter implements IInterpreter {
         if (node instanceof BoolNode) {
             return new BoolRuntime().interpret(this, (BoolNode) node);
         }
+        if (node instanceof IfNode) {
+            return new IfRuntime().interpret(this, (IfNode) node);
+        }
         return null;
     }
 }
