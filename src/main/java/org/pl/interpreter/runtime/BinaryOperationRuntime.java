@@ -35,6 +35,8 @@ public class BinaryOperationRuntime implements IRuntime<BinaryOperationNode, Obj
                 return BigDecimal.valueOf(Math.pow(left.doubleValue(), right.doubleValue()));
             case EQUAL:
                 return left.equals(right);
+            case NOT_EQUAL:
+                return !left.equals(right);
             case LESS_THAN:
                 return left.compareTo(right) < 0;
             case LESS_THAN_OR_EQUAL:
@@ -51,6 +53,8 @@ public class BinaryOperationRuntime implements IRuntime<BinaryOperationNode, Obj
         switch (op) {
             case EQUAL:
                 return left.equals(right);
+            case NOT_EQUAL:
+                return !left.equals(right);
             case LOGICAL_AND:
                 return left && right;
             case LOGICAL_OR:

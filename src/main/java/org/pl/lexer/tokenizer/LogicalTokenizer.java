@@ -40,6 +40,10 @@ public class LogicalTokenizer implements ITokenizer {
             return new TokenizerResult(new EqualToken());
         }
         if (lexer.getSymbol() == '!') {
+            if (lexer.peekNextSymbol() == '=') {
+                lexer.advanceCursor();
+                return new TokenizerResult(new NotEqualToken());
+            }
             return new TokenizerResult(new LogicalNotToken());
         }
         return new TokenizerResult(null);

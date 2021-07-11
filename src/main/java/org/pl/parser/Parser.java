@@ -5,6 +5,8 @@ import org.pl.lexer.token.arithmetic.DivideToken;
 import org.pl.lexer.token.arithmetic.MinusToken;
 import org.pl.lexer.token.arithmetic.MultiplyToken;
 import org.pl.lexer.token.arithmetic.PlusToken;
+import org.pl.lexer.token.keyword.FalseKeywordToken;
+import org.pl.lexer.token.keyword.TrueKeywordToken;
 import org.pl.lexer.token.logical.*;
 import org.pl.parser.ast.*;
 
@@ -61,6 +63,14 @@ public class Parser implements IParser {
             consumeToken(NumberToken.class);
             return new NumberNode(((NumberToken) currentToken).getValue());
         }
+        if (tokenOfType(TrueKeywordToken.class)) {
+            consumeToken(TrueKeywordToken.class);
+            return new BoolNode(true);
+        }
+        if (tokenOfType(FalseKeywordToken.class)) {
+            consumeToken(FalseKeywordToken.class);
+            return new BoolNode(false);
+        }
         if (tokenOfType(LeftParenthesisToken.class)) {
             consumeToken(LeftParenthesisToken.class);            // Skip '('
             var result = evalExpr();
@@ -111,12 +121,21 @@ public class Parser implements IParser {
         return node;
     }
 
+    /**
+     * Evaluates the logical semantic:
+     * <logical-expr> ::= arithmetic-expr (( EQ | LT | LTE | GT | GTE ) arithmetic-expr)*
+     *
+     * @return Evaluated result.
+     */
     private INode evalLogicalExpr() {
         var node = evalArithmeticExpr();
         while (true) {
             if (tokenOfType(EqualToken.class)) {
                 consumeToken(EqualToken.class);
                 node = new BinaryOperationNode(node, evalArithmeticExpr(), BinaryOperation.EQUAL);
+            } else if (tokenOfType(NotEqualToken.class)) {
+                consumeToken(NotEqualToken.class);
+                node = new BinaryOperationNode(node, evalArithmeticExpr(), BinaryOperation.NOT_EQUAL);
             } else if (tokenOfType(LessThanToken.class)) {
                 consumeToken(LessThanToken.class);
                 node = new BinaryOperationNode(node, evalArithmeticExpr(), BinaryOperation.LESS_THAN);
@@ -137,7 +156,7 @@ public class Parser implements IParser {
     }
 
     /**
-     * Evaluates the arithemtic expression semantic:
+     * Evaluates the arithmetic expression semantic:
      * arithmetic-expr ::= term (( PLUS | MINUS ) term)*
      *
      * @return Expression evaluation.
@@ -158,6 +177,13 @@ public class Parser implements IParser {
         return node;
     }
 
+    /**
+     * Evaluates the expression semantic:
+     * <expr> ::= NOT logical-expr
+     * | logical-expr (( AND | OR ) logical-expr)*
+     *
+     * @return Evaluated expression.
+     */
     private INode evalExpr() {
         if (tokenOfType(LogicalNotToken.class)) {
             consumeToken(LogicalNotToken.class);

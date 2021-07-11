@@ -2,9 +2,9 @@ package org.pl.lexer.token.logical;
 
 import org.pl.lexer.token.IToken;
 
-public class LogicalAndToken implements IToken {
+public class NotEqualToken implements IToken {
     public Object getValue() {
-        throw new UnsupportedOperationException("Logical and token has no value");
+        throw new UnsupportedOperationException("Not equal than token has no value");
     }
 
     public boolean hasValue() {
@@ -13,6 +13,6 @@ public class LogicalAndToken implements IToken {
 
     @Override
     public String toString() {
-        return "AndToken{&&}";
+        return "NotEqualToken{!=}";
     }
 }

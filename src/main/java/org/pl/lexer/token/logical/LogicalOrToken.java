@@ -4,7 +4,7 @@ import org.pl.lexer.token.IToken;
 
 public class LogicalOrToken implements IToken {
     public Object getValue() {
-        throw new UnsupportedOperationException("Or token has no value");
+        throw new UnsupportedOperationException("Logical or token has no value");
     }
 
     public boolean hasValue() {
@@ -13,6 +13,6 @@ public class LogicalOrToken implements IToken {
 
     @Override
     public String toString() {
-        return "OrToken{|}";
+        return "LogicalOrToken{||}";
     }
 }

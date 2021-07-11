@@ -1,9 +1,6 @@
 package org.pl.interpreter;
 
-import org.pl.interpreter.runtime.BinaryOperationRuntime;
-import org.pl.interpreter.runtime.NumberRuntime;
-import org.pl.interpreter.runtime.RootNodeRuntime;
-import org.pl.interpreter.runtime.UnaryOperationRuntime;
+import org.pl.interpreter.runtime.*;
 import org.pl.parser.ast.*;
 
 public class Interpreter implements IInterpreter {
@@ -25,6 +22,9 @@ public class Interpreter implements IInterpreter {
         }
         if (node instanceof NumberNode) {
             return new NumberRuntime().interpret(this, (NumberNode) node);
+        }
+        if (node instanceof BoolNode) {
+            return new BoolRuntime().interpret(this, (BoolNode) node);
         }
         return null;
     }

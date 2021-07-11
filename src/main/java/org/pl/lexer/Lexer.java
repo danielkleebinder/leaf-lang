@@ -20,6 +20,8 @@ public class Lexer implements ILexer {
             add("true");
             add("false");
             add("fun");
+            add("requires");
+            add("ensures");
             add("native");
             add("run");
             add("entry");

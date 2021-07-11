@@ -24,6 +24,29 @@ public class InterpreterBoolTest {
         interpreter = new Interpreter();
     }
 
+
+    @Test
+    void shouldCompareTrueAndFalseKeywords() {
+        var result = interpreter.interpret(parser.parse(lexer.tokenize("true == false")));
+        assertEquals(Arrays.asList(false), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("true == true")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("true && true")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("false && true")));
+        assertEquals(Arrays.asList(false), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("false || true")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("false || (1 == 2)")));
+        assertEquals(Arrays.asList(false), result);
+    }
+
+
     @Test
     void shouldComparePositiveNumbers() {
         var result = interpreter.interpret(parser.parse(lexer.tokenize("1<2")));
@@ -61,6 +84,18 @@ public class InterpreterBoolTest {
     }
 
     @Test
+    void shouldCheckNonEquality() {
+        var result = interpreter.interpret(parser.parse(lexer.tokenize("3927!=3928")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("-392!=392")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("392!=392")));
+        assertEquals(Arrays.asList(false), result);
+    }
+
+    @Test
     void shouldCompareWithLogicalAnd() {
         var result = interpreter.interpret(parser.parse(lexer.tokenize("(1<2)&&(1==1)")));
         assertEquals(Arrays.asList(true), result);
@@ -82,5 +117,29 @@ public class InterpreterBoolTest {
 
         result = interpreter.interpret(parser.parse(lexer.tokenize("(1>2)||(1==2)")));
         assertEquals(Arrays.asList(false), result);
+    }
+
+    @Test
+    void shouldCompareWithGreaterEquals() {
+        var result = interpreter.interpret(parser.parse(lexer.tokenize("2>=2")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("3>=2")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("1>=2")));
+        assertEquals(Arrays.asList(false), result);
+    }
+
+    @Test
+    void shouldCompareWithLessEquals() {
+        var result = interpreter.interpret(parser.parse(lexer.tokenize("2<=2")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("3<=2")));
+        assertEquals(Arrays.asList(false), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("1<=2")));
+        assertEquals(Arrays.asList(true), result);
     }
 }
