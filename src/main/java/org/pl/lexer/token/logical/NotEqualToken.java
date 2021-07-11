@@ -4,7 +4,7 @@ import org.pl.lexer.token.IToken;
 
 public class NotEqualToken implements IToken {
     public Object getValue() {
-        throw new UnsupportedOperationException("Not equal than token has no value");
+        throw new UnsupportedOperationException("Not equal token has no value");
     }
 
     public boolean hasValue() {

@@ -45,6 +45,7 @@ public class Lexer implements ILexer {
             add(new BraceTokenizer());
             add(new BracketTokenizer());
             add(new ParenthesesTokenizer());
+            add(new CommaTokenizer());
             add(new NameTokenizer());
             add(new StatementTokenizer());
         }

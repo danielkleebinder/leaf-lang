@@ -11,12 +11,14 @@ The formal language definition looks like the following. Feel free to implement 
                    | <statement> ';' <statement-list>
 
 <statement> ::= <statement-list>
-              | <assign>
+              | <variable-declare>
+              | <variable-assign>
               | <expr>
               | <empty>
 
-<assign> ::= 'var' <name> '=' <expr>
-           | 'const' <name> '=' <expr>
+<variable> ::= <name>
+<variable-assign> ::= <name> '=' <expr>
+<variable-declare> ::= ('var' | 'const') <name> ('=' <expr>)? (',' <name> ('=' <expr>)?)* )*
 
 <expr> ::= NOT <logical-expr>
          | <logical-expr> (( AND | OR ) <logical-expr>)*
@@ -29,13 +31,14 @@ The formal language definition looks like the following. Feel free to implement 
 <arithmetic-expr> ::= <term> (( PLUS | MINUS ) <term>)*
 
 <term> ::= <atom> (( MULT | DIVIDE ) <atom>)*
-<name> ::= IDENTIFIER
-<atom> ::= PLUS number
-         | MINUS number
-         | COMPLEMENT number
+<atom> ::= PLUS <number>
+         | MINUS <number>
+         | COMPLEMENT <number>
          | LPAREN <expr> RPAREN
+         | <variable>
          | <if-expr>
 
+<name> ::= IDENTIFIER
 <empty> ::= ()
 ```
 

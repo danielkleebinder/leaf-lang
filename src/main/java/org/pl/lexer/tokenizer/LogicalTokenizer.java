@@ -1,6 +1,7 @@
 package org.pl.lexer.tokenizer;
 
 import org.pl.lexer.ILexer;
+import org.pl.lexer.token.AssignToken;
 import org.pl.lexer.token.logical.*;
 
 public class LogicalTokenizer implements ITokenizer {
@@ -35,9 +36,12 @@ public class LogicalTokenizer implements ITokenizer {
             }
             return new TokenizerResult(new LessThanToken());
         }
-        if (lexer.getSymbol() == '=' && lexer.peekNextSymbol() == '=') {
-            lexer.advanceCursor();
-            return new TokenizerResult(new EqualToken());
+        if (lexer.getSymbol() == '=') {
+            if (lexer.peekNextSymbol() == '=') {
+                lexer.advanceCursor();
+                return new TokenizerResult(new EqualToken());
+            }
+            return new TokenizerResult(new AssignToken());
         }
         if (lexer.getSymbol() == '!') {
             if (lexer.peekNextSymbol() == '=') {

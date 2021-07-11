@@ -5,10 +5,7 @@ import org.pl.lexer.token.arithmetic.DivideToken;
 import org.pl.lexer.token.arithmetic.MinusToken;
 import org.pl.lexer.token.arithmetic.MultiplyToken;
 import org.pl.lexer.token.arithmetic.PlusToken;
-import org.pl.lexer.token.keyword.ElseKeywordToken;
-import org.pl.lexer.token.keyword.FalseKeywordToken;
-import org.pl.lexer.token.keyword.IfKeywordToken;
-import org.pl.lexer.token.keyword.TrueKeywordToken;
+import org.pl.lexer.token.keyword.*;
 import org.pl.lexer.token.logical.*;
 import org.pl.parser.ast.*;
 
@@ -39,9 +36,9 @@ public class Parser implements IParser {
             advanceCursor();
         } else {
             if (getToken() == null) {
-                errors.add(new ParserError("Token of type " + clazz + " was expected but got nothing"));
+                errors.add(new ParserError("Token of type " + clazz + " was expected, but got nothing"));
             } else {
-                errors.add(new ParserError("Token of type " + clazz + " was expected but got " + getToken().getClass()));
+                errors.add(new ParserError("Token of type " + clazz + " was expected, but got " + getToken().getClass()));
             }
         }
     }
@@ -88,6 +85,10 @@ public class Parser implements IParser {
         }
         if (tokenOfType(IfKeywordToken.class)) {
             return evalIfExpr();
+        }
+        if (tokenOfType(NameToken.class)) {
+            consumeToken(NameToken.class);
+            return new VarAccessNode(((NameToken) currentToken).getValue());
         }
         return null;
     }
@@ -245,20 +246,89 @@ public class Parser implements IParser {
         return node;
     }
 
-    private INode evalAssign() {
-        return null;
+    /**
+     * Evaluates the variable declaration semantics:
+     * <variable-declare> ::= ('var' | 'const') <name> ('=' <expr>)? (',' <name> ('=' <expr>)?)* )*
+     *
+     * @return Evaluated declaration.
+     */
+    private INode evalVariableDeclare() {
+        if (!tokenOfType(VarKeywordToken.class) && !tokenOfType(ConstKeywordToken.class)) {
+            return null;
+        }
+
+        // Determine which type of variable this is
+        var declarationType = VarDeclarationType.CONST;
+        if (tokenOfType(VarKeywordToken.class)) {
+            declarationType = VarDeclarationType.VAR;
+        }
+        advanceCursor();
+
+        var declarations = new ArrayList<VarDeclaration>(4);
+        while (true) {
+
+            // Name identifier is required
+            if (!tokenOfType(NameToken.class)) {
+                errors.add(new ParserError("Expected identifier, but got " + getToken()));
+                return null;
+            }
+
+            var id = ((NameToken) getToken()).getValue();
+            INode assignmentExpr = null;
+            consumeToken(NameToken.class);
+
+            if (tokenOfType(AssignToken.class)) {
+                consumeToken(AssignToken.class);
+                assignmentExpr = evalExpr();
+            } else if (declarationType == VarDeclarationType.CONST) {
+                errors.add(new ParserError("Constants must be initialized on declaration"));
+                return null;
+            }
+            declarations.add(new VarDeclaration(id, assignmentExpr));
+
+            // There are no more variable declarations, break the loop and return the declaration node
+            if (!tokenOfType(CommaToken.class)) {
+                break;
+            }
+            consumeToken(CommaToken.class);
+        }
+        return new VarDeclarationNode(declarations, declarationType);
+    }
+
+    /**
+     * Evaluates the variable assignment semantic:
+     * <variable-assign> ::= <name> '=' <expr>
+     *
+     * @return Evaluated assignment.
+     */
+    private INode evalVariableAssign() {
+        if (!tokenOfType(NameToken.class)) {
+            errors.add(new ParserError("Variable identifier expected, but got " + getToken()));
+            return null;
+        }
+        var id = ((NameToken) getToken()).getValue();
+        consumeToken(NameToken.class);
+        consumeToken(AssignToken.class);
+        return new VarAssignNode(id, evalExpr());
     }
 
     /**
      * Evaluates the statement semantic:
      * <statement> ::= <statement-list>
-     * | <assign>
+     * | <variable-declare>
+     * | <variable-assign>
      * | <expr>
      * | <empty>
      *
      * @return Evaluated statement.
      */
     private INode evalStatement() {
+        if (tokenOfType(VarKeywordToken.class) || tokenOfType(ConstKeywordToken.class)) {
+            return evalVariableDeclare();
+        }
+        if (tokenOfType(NameToken.class) && nextTokenOfType(AssignToken.class)) {
+            return evalVariableAssign();
+        }
         return evalExpr();
     }
 
@@ -323,5 +393,12 @@ public class Parser implements IParser {
 
     private boolean tokenOfType(Class<? extends IToken> clazz) {
         return ParserUtils.ofType(getToken(), clazz);
+    }
+
+    private boolean nextTokenOfType(Class<? extends IToken> clazz) {
+        if (cursorPosition + 1 >= tokens.size()) {
+            return false;
+        }
+        return ParserUtils.ofType(tokens.get(cursorPosition + 1), clazz);
     }
 }
