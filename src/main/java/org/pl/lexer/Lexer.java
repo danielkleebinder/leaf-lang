@@ -12,6 +12,9 @@ public class Lexer implements ILexer {
         {
             add("var");
             add("const");
+            add("number");
+            add("bool");
+            add("string");
             add("if");
             add("else");
             add("when");
@@ -46,6 +49,7 @@ public class Lexer implements ILexer {
             add(new BracketTokenizer());
             add(new ParenthesesTokenizer());
             add(new CommaTokenizer());
+            add(new ColonTokenizer());
             add(new NameTokenizer());
             add(new StatementTokenizer());
         }

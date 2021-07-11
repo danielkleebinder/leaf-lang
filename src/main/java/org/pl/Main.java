@@ -1,5 +1,7 @@
 package org.pl;
 
+import org.pl.analyzer.ISemanticAnalyzer;
+import org.pl.analyzer.SemanticAnalyzer;
 import org.pl.interpreter.IInterpreter;
 import org.pl.interpreter.Interpreter;
 import org.pl.lexer.ILexer;
@@ -14,6 +16,7 @@ import java.io.InputStreamReader;
 public class Main {
     private ILexer lexer = new Lexer();
     private IParser parser = new Parser();
+    private ISemanticAnalyzer analyzer = new SemanticAnalyzer();
     private IInterpreter interpreter = new Interpreter();
 
     public Main() {
@@ -24,6 +27,8 @@ public class Main {
                 System.out.println("Tokens: " + tokens);
                 var ast = parser.parse(tokens);
                 System.out.println("AST   : " + ast);
+                var errors = analyzer.analyze(ast);
+                System.out.println("Errors: " + errors);
                 System.out.println("Result: " + interpreter.interpret(ast));
             }
         } catch (IOException e) {

@@ -1,6 +1,7 @@
 package org.pl.lexer;
 
 public class LexerError {
+
     private final int location;
     private final String message;
 
@@ -11,7 +12,7 @@ public class LexerError {
 
     @Override
     public String toString() {
-        return new StringBuilder("Lexer failed at position ")
+        return new StringBuilder("Lexer error at position ")
                 .append(location)
                 .append(": ")
                 .append(message)

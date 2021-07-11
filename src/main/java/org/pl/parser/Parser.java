@@ -45,9 +45,12 @@ public class Parser implements IParser {
 
     /**
      * Evaluates the atom semantics:
-     * atom ::= PLUS <number>
+     * <atom> ::= PLUS <number>
      * | MINUS <number>
      * | COMPLEMENT <number>
+     * | LPAREN <expr> RPAREN
+     * | <var>
+     * | <if-expr>
      *
      * @return Atom evaluation.
      */
@@ -248,22 +251,11 @@ public class Parser implements IParser {
 
     /**
      * Evaluates the variable declaration semantics:
-     * <variable-declare> ::= ('var' | 'const') <name> ('=' <expr>)? (',' <name> ('=' <expr>)?)* )*
+     * <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
      *
      * @return Evaluated declaration.
      */
-    private INode evalVariableDeclare() {
-        if (!tokenOfType(VarKeywordToken.class) && !tokenOfType(ConstKeywordToken.class)) {
-            return null;
-        }
-
-        // Determine which type of variable this is
-        var declarationType = VarDeclarationType.CONST;
-        if (tokenOfType(VarKeywordToken.class)) {
-            declarationType = VarDeclarationType.VAR;
-        }
-        advanceCursor();
-
+    private VarDeclarationNode evalVariableDeclare() {
         var declarations = new ArrayList<VarDeclaration>(4);
         while (true) {
 
@@ -280,9 +272,6 @@ public class Parser implements IParser {
             if (tokenOfType(AssignToken.class)) {
                 consumeToken(AssignToken.class);
                 assignmentExpr = evalExpr();
-            } else if (declarationType == VarDeclarationType.CONST) {
-                errors.add(new ParserError("Constants must be initialized on declaration"));
-                return null;
             }
             declarations.add(new VarDeclaration(id, assignmentExpr));
 
@@ -292,12 +281,12 @@ public class Parser implements IParser {
             }
             consumeToken(CommaToken.class);
         }
-        return new VarDeclarationNode(declarations, declarationType);
+        return new VarDeclarationNode(declarations);
     }
 
     /**
      * Evaluates the variable assignment semantic:
-     * <variable-assign> ::= <name> '=' <expr>
+     * <var-assign> ::= <name> '=' <expr>
      *
      * @return Evaluated assignment.
      */
@@ -314,17 +303,24 @@ public class Parser implements IParser {
 
     /**
      * Evaluates the statement semantic:
-     * <statement> ::= <statement-list>
-     * | <variable-declare>
-     * | <variable-assign>
+     * <statement> ::= ('var' | 'const') <var-declare>
+     * | <var-assign>
      * | <expr>
-     * | <empty>
      *
      * @return Evaluated statement.
      */
     private INode evalStatement() {
-        if (tokenOfType(VarKeywordToken.class) || tokenOfType(ConstKeywordToken.class)) {
+        if (tokenOfType(VarKeywordToken.class)) {
+            consumeToken(VarKeywordToken.class);
             return evalVariableDeclare();
+        }
+        if (tokenOfType(ConstKeywordToken.class)) {
+            consumeToken(ConstKeywordToken.class);
+            var node = evalVariableDeclare();
+            if (node != null) {
+                node.modifiers.add(Modifier.CONST);
+            }
+            return node;
         }
         if (tokenOfType(NameToken.class) && nextTokenOfType(AssignToken.class)) {
             return evalVariableAssign();
