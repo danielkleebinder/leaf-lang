@@ -1,8 +1,13 @@
 package org.pl.lexer.tokenizer;
 
 import org.pl.lexer.ILexer;
+import org.pl.lexer.exception.TokenizerException;
 import org.pl.lexer.token.StatementSeparatorToken;
 
+
+/**
+ * Tokenizes the statement separation symbol ';'.
+ */
 public class StatementTokenizer implements ITokenizer {
     @Override
     public boolean matches(Character c) {
@@ -10,7 +15,7 @@ public class StatementTokenizer implements ITokenizer {
     }
 
     @Override
-    public TokenizerResult tokenize(ILexer lexer) {
-        return new TokenizerResult(new StatementSeparatorToken());
+    public StatementSeparatorToken tokenize(ILexer lexer) throws TokenizerException {
+        return new StatementSeparatorToken();
     }
 }

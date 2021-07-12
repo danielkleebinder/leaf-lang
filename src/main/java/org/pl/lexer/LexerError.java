@@ -2,12 +2,12 @@ package org.pl.lexer;
 
 public class LexerError {
 
-    private final int location;
     private final String message;
+    private final int location;
 
-    public LexerError(int location, String message) {
-        this.location = location;
+    public LexerError(String message, int location) {
         this.message = message;
+        this.location = location;
     }
 
     @Override

@@ -1,8 +1,12 @@
 package org.pl.lexer.tokenizer;
 
 import org.pl.lexer.ILexer;
+import org.pl.lexer.exception.TokenizerException;
 import org.pl.lexer.token.DotToken;
 
+/**
+ * Tokenizes the symbol '.'.
+ */
 public class DotTokenizer implements ITokenizer {
     @Override
     public boolean matches(Character c) {
@@ -10,7 +14,7 @@ public class DotTokenizer implements ITokenizer {
     }
 
     @Override
-    public TokenizerResult tokenize(ILexer lexer) {
-        return new TokenizerResult(new DotToken());
+    public DotToken tokenize(ILexer lexer) throws TokenizerException {
+        return new DotToken();
     }
 }

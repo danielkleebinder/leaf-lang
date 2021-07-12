@@ -1,6 +1,8 @@
 package org.pl.lexer.tokenizer;
 
 import org.pl.lexer.ILexer;
+import org.pl.lexer.exception.TokenizerException;
+import org.pl.lexer.token.IToken;
 
 
 /**
@@ -21,6 +23,7 @@ public interface ITokenizer {
      *
      * @param lexer Lexer.
      * @return Tokenizer result.
+     * @throws TokenizerException May occur if lexical analysis fails for a certain token.
      */
-    TokenizerResult tokenize(ILexer lexer);
+    IToken tokenize(ILexer lexer) throws TokenizerException;
 }

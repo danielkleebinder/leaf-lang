@@ -1,17 +1,25 @@
 package org.pl.lexer.tokenizer;
 
 import org.pl.lexer.ILexer;
+import org.pl.lexer.exception.TokenizerException;
+import org.pl.lexer.token.IToken;
 import org.pl.lexer.token.NameToken;
 import org.pl.lexer.token.keyword.*;
 
+
+/**
+ * Tokenizes names and reserved keywords. If no keyword matches, a name token
+ * is returned.
+ */
 public class NameTokenizer implements ITokenizer {
+
     @Override
     public boolean matches(Character c) {
         return Character.isAlphabetic(c);
     }
 
     @Override
-    public TokenizerResult tokenize(ILexer lexer) {
+    public IToken tokenize(ILexer lexer) throws TokenizerException {
         var nameBuilder = new StringBuilder();
 
         while (!lexer.isEndOfProgram() && matches(lexer.getSymbol())) {
@@ -23,20 +31,20 @@ public class NameTokenizer implements ITokenizer {
         var name = nameBuilder.toString();
         switch (name) {
             case "var":
-                return new TokenizerResult(new VarKeywordToken());
+                return new VarKeywordToken();
             case "const":
-                return new TokenizerResult(new ConstKeywordToken());
+                return new ConstKeywordToken();
             case "if":
-                return new TokenizerResult(new IfKeywordToken());
+                return new IfKeywordToken();
             case "else":
-                return new TokenizerResult(new ElseKeywordToken());
+                return new ElseKeywordToken();
             case "true":
-                return new TokenizerResult(new TrueKeywordToken());
+                return new TrueKeywordToken();
             case "false":
-                return new TokenizerResult(new FalseKeywordToken());
+                return new FalseKeywordToken();
             case "fun":
-                return new TokenizerResult(new FunctionKeywordToken());
+                return new FunctionKeywordToken();
         }
-        return new TokenizerResult(new NameToken(name));
+        return new NameToken(name);
     }
 }

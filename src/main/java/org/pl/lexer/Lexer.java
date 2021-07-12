@@ -1,5 +1,6 @@
 package org.pl.lexer;
 
+import org.pl.lexer.exception.TokenizerException;
 import org.pl.lexer.token.IToken;
 import org.pl.lexer.tokenizer.*;
 
@@ -45,9 +46,7 @@ public class Lexer implements ILexer {
             add(new MultiplyTokenizer());
             add(new ComplementTokenizer());
             add(new LogicalTokenizer());
-            add(new BraceTokenizer());
             add(new BracketTokenizer());
-            add(new ParenthesesTokenizer());
             add(new CommaTokenizer());
             add(new ColonTokenizer());
             add(new DotTokenizer());
@@ -66,18 +65,18 @@ public class Lexer implements ILexer {
 
         List<IToken> tokens = new ArrayList<>(512);
         List<LexerError> errors = new ArrayList<>(32);
-        TokenizerResult tokenizerResult;
 
         while (!isEndOfProgram()) {
             for (ITokenizer tokenizer : tokenizerRegistry) {
                 if (!tokenizer.matches(getSymbol())) {
                     continue;
                 }
-                tokenizerResult = tokenizer.tokenize(this);
-                errors.addAll(tokenizerResult.errors);
-                if (tokenizerResult.token != null) {
-                    tokens.add(tokenizerResult.token);
+
+                try {
+                    tokens.add(tokenizer.tokenize(this));
                     break;
+                } catch (TokenizerException e) {
+                    errors.add(new LexerError(e.getMessage(), e.getLocation()));
                 }
             }
             advanceCursor();
