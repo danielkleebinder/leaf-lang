@@ -50,6 +50,7 @@ public class Lexer implements ILexer {
             add(new ParenthesesTokenizer());
             add(new CommaTokenizer());
             add(new ColonTokenizer());
+            add(new DotTokenizer());
             add(new NameTokenizer());
             add(new StatementTokenizer());
         }
@@ -69,13 +70,14 @@ public class Lexer implements ILexer {
 
         while (!isEndOfProgram()) {
             for (ITokenizer tokenizer : tokenizerRegistry) {
-                if (tokenizer.matches(getSymbol())) {
-                    tokenizerResult = tokenizer.tokenize(this);
-                    errors.addAll(tokenizerResult.errors);
-                    if (tokenizerResult.token != null) {
-                        tokens.add(tokenizerResult.token);
-                        break;
-                    }
+                if (!tokenizer.matches(getSymbol())) {
+                    continue;
+                }
+                tokenizerResult = tokenizer.tokenize(this);
+                errors.addAll(tokenizerResult.errors);
+                if (tokenizerResult.token != null) {
+                    tokens.add(tokenizerResult.token);
+                    break;
                 }
             }
             advanceCursor();

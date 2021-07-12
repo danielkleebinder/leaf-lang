@@ -1,0 +1,72 @@
+package org.pl.interpreter.visitor;
+
+import org.pl.interpreter.IInterpreter;
+import org.pl.interpreter.exception.VisitorException;
+import org.pl.parser.ast.INode;
+import org.pl.parser.ast.UnaryOperation;
+import org.pl.parser.ast.UnaryOperationNode;
+
+import java.math.BigDecimal;
+
+
+/**
+ * Interprets the unary operation node.
+ */
+public class UnaryOperationVisitor implements IVisitor {
+
+    @Override
+    public boolean matches(INode node) {
+        return UnaryOperationNode.class == node.getClass();
+    }
+
+    @Override
+    public Object visit(IInterpreter interpreter, INode node) throws VisitorException {
+        var unaryOperationNode = (UnaryOperationNode) node;
+        var value = interpreter.evalNode(unaryOperationNode.node);
+        var op = unaryOperationNode.op;
+
+        if (value instanceof BigDecimal) {
+            return interpretNumber((BigDecimal) value, op);
+        } else if (value instanceof Boolean) {
+            return interpretBool((Boolean) value, op);
+        }
+
+        throw new VisitorException("Given value " + value + " does not support unary operation " + unaryOperationNode.op);
+    }
+
+    /**
+     * Interprets the number unary operations.
+     *
+     * @param value Value.
+     * @param op    Operation.
+     * @return Interpreted result.
+     * @throws VisitorException May occur if the operation is not supported.
+     */
+    private Object interpretNumber(BigDecimal value, UnaryOperation op) throws VisitorException {
+        switch (op) {
+            case POSITIVE:
+                return value;
+            case NEGATE:
+                return value.negate();
+            case BIT_COMPLEMENT:
+                return BigDecimal.valueOf(~value.longValue());
+        }
+        throw new VisitorException("The operation " + op + " is not supported for data type number");
+    }
+
+    /**
+     * Interprets the bool unary operations.
+     *
+     * @param value Value.
+     * @param op    Operation.
+     * @return Interpreted result.
+     * @throws VisitorException May occur if the operation is not supported.
+     */
+    private Boolean interpretBool(Boolean value, UnaryOperation op) throws VisitorException {
+        switch (op) {
+            case LOGICAL_NEGATE:
+                return !value;
+        }
+        throw new VisitorException("The operation " + op + " is not supported for data type bool");
+    }
+}

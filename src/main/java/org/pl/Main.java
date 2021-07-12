@@ -24,12 +24,14 @@ public class Main {
             while (true) {
                 System.out.print("> ");
                 var tokens = lexer.tokenize(reader.readLine());
-                System.out.println("Tokens: " + tokens);
+                System.out.println("Lexical Analysis    : " + tokens);
                 var ast = parser.parse(tokens);
-                System.out.println("AST   : " + ast);
+                System.out.println("Abstract Syntax Tree: " + ast);
                 var errors = analyzer.analyze(ast);
-                System.out.println("Errors: " + errors);
-                System.out.println("Result: " + interpreter.interpret(ast));
+                System.out.println("Semantic Errors     : " + errors);
+                var result = interpreter.interpret(ast);
+                System.out.println("Global Symbol Table : " + interpreter.getGlobalSymbolTable());
+                System.out.println("Interpreter Result  : " + result);
             }
         } catch (IOException e) {
             e.printStackTrace();
