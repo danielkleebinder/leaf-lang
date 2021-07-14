@@ -1,5 +1,6 @@
 package org.pl.interpreter;
 
+import org.pl.interpreter.exception.InterpreterException;
 import org.pl.interpreter.exception.VisitorException;
 import org.pl.interpreter.symbol.SymbolTable;
 import org.pl.interpreter.visitor.*;
@@ -18,6 +19,7 @@ public class Interpreter implements IInterpreter {
             add(new BoolVisitor());
             add(new NumberVisitor());
             add(new IfVisitor());
+            add(new LoopVisitor());
             add(new StatementListVisitor());
             add(new VarAccessVisitor());
             add(new VarAssignVisitor());
@@ -49,8 +51,8 @@ public class Interpreter implements IInterpreter {
             }
         }
 
-        for (InterpreterError error : errors) {
-            System.err.println(error);
+        if (errors.size() > 0) {
+            throw new InterpreterException("The interpreter detected an error during runtime", errors);
         }
 
         return null;

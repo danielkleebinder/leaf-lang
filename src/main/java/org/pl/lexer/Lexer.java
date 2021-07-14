@@ -1,5 +1,6 @@
 package org.pl.lexer;
 
+import org.pl.lexer.exception.LexerException;
 import org.pl.lexer.exception.TokenizerException;
 import org.pl.lexer.token.IToken;
 import org.pl.lexer.tokenizer.*;
@@ -82,8 +83,8 @@ public class Lexer implements ILexer {
             advanceCursor();
         }
 
-        for (LexerError error : errors) {
-            System.err.println(error);
+        if (errors.size() > 0) {
+            throw new LexerException("Some syntax errors were detected during lexical analysis", errors);
         }
 
         return tokens;

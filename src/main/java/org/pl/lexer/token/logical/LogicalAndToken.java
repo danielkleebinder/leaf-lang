@@ -2,15 +2,10 @@ package org.pl.lexer.token.logical;
 
 import org.pl.lexer.token.IToken;
 
+/**
+ * Identifies the logical AND operator.
+ */
 public class LogicalAndToken implements IToken {
-    public Object getValue() {
-        throw new UnsupportedOperationException("Logical and token has no value");
-    }
-
-    public boolean hasValue() {
-        return false;
-    }
-
     @Override
     public String toString() {
         return "AndToken{&&}";

@@ -2,8 +2,9 @@ package org.pl.lexer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.pl.lexer.token.arithmetic.MinusToken;
+import org.pl.lexer.exception.LexerException;
 import org.pl.lexer.token.NumberToken;
+import org.pl.lexer.token.arithmetic.MinusToken;
 
 import java.math.BigDecimal;
 
@@ -24,8 +25,7 @@ public class LexerNumberTest {
         var tokens = lexer.tokenize("5");
         assertEquals(1, tokens.size());
         assertSame(NumberToken.class, tokens.get(0).getClass());
-        assertTrue(tokens.get(0).hasValue());
-        assertEquals(BigDecimal.valueOf(5L), tokens.get(0).getValue());
+        assertEquals(BigDecimal.valueOf(5L), ((NumberToken) tokens.get(0)).getValue());
     }
 
     @Test
@@ -34,16 +34,16 @@ public class LexerNumberTest {
         assertEquals(4, tokens.size());
 
         assertSame(NumberToken.class, tokens.get(0).getClass());
-        assertEquals(BigDecimal.valueOf(5L), tokens.get(0).getValue());
+        assertEquals(BigDecimal.valueOf(5L), ((NumberToken) tokens.get(0)).getValue());
 
         assertSame(NumberToken.class, tokens.get(1).getClass());
-        assertEquals(BigDecimal.valueOf(10L), tokens.get(1).getValue());
+        assertEquals(BigDecimal.valueOf(10L), ((NumberToken) tokens.get(1)).getValue());
 
         assertSame(NumberToken.class, tokens.get(2).getClass());
-        assertEquals(BigDecimal.valueOf(38194L), tokens.get(2).getValue());
+        assertEquals(BigDecimal.valueOf(38194L), ((NumberToken) tokens.get(2)).getValue());
 
         assertSame(NumberToken.class, tokens.get(3).getClass());
-        assertEquals(BigDecimal.valueOf(0L), tokens.get(3).getValue());
+        assertEquals(BigDecimal.valueOf(0L), ((NumberToken) tokens.get(3)).getValue());
     }
 
     @Test
@@ -52,12 +52,11 @@ public class LexerNumberTest {
         assertEquals(5, tokens.size());
 
         assertSame(MinusToken.class, tokens.get(0).getClass());
-        assertEquals(BigDecimal.valueOf(5L), tokens.get(1).getValue());
-
-        assertEquals(BigDecimal.valueOf(10L), tokens.get(2).getValue());
+        assertEquals(BigDecimal.valueOf(5L), ((NumberToken) tokens.get(1)).getValue());
+        assertEquals(BigDecimal.valueOf(10L), ((NumberToken) tokens.get(2)).getValue());
 
         assertSame(MinusToken.class, tokens.get(3).getClass());
-        assertEquals(BigDecimal.valueOf(42L), tokens.get(4).getValue());
+        assertEquals(BigDecimal.valueOf(42L), ((NumberToken) tokens.get(4)).getValue());
     }
 
     @Test
@@ -67,13 +66,13 @@ public class LexerNumberTest {
 
         assertSame(MinusToken.class, tokens.get(0).getClass());
         assertSame(NumberToken.class, tokens.get(1).getClass());
-        assertEquals(BigDecimal.valueOf(3.1415), tokens.get(1).getValue());
+        assertEquals(BigDecimal.valueOf(3.1415), ((NumberToken) tokens.get(1)).getValue());
     }
 
     @Test
-    void shouldErrorForTwoDecimalPoints() {
-        var tokens = lexer.tokenize("3.14.15");
-        System.out.println(tokens);
-        assertEquals(0, tokens.size());
+    void shouldErrorForMultipleDecimalPoints() {
+        assertThrows(LexerException.class, () -> lexer.tokenize("3.14.15"));
+        assertThrows(LexerException.class, () -> lexer.tokenize("3.14.1.5"));
+        assertThrows(LexerException.class, () -> lexer.tokenize(".314.5"));
     }
 }

@@ -7,13 +7,6 @@ public class TokenizerException extends Exception {
 
     private int location;
 
-    public TokenizerException() {
-    }
-
-    public TokenizerException(String message) {
-        super(message);
-    }
-
     public TokenizerException(String message, int location) {
         super(message);
         this.location = location;

@@ -6,6 +6,7 @@ import org.pl.parser.ast.INode;
 import org.pl.parser.ast.StatementListNode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -24,7 +25,15 @@ public class StatementListVisitor implements IVisitor {
         var statementListNode = (StatementListNode) node;
         var result = new ArrayList<Object>(statementListNode.statements.size());
         for (INode statement : statementListNode.statements) {
-            result.add(interpreter.evalNode(statement));
+            var nodeResult = interpreter.evalNode(statement);
+
+            // I want to prevent very deep lists from occurring. This check prevents that
+            // something like [true] becomes [[[true]]]
+            if (nodeResult instanceof Collection) {
+                result.addAll((Collection<?>) nodeResult);
+            } else {
+                result.add(nodeResult);
+            }
         }
         return result;
     }

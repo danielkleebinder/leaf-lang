@@ -44,6 +44,12 @@ public class NameTokenizer implements ITokenizer {
                 return new FalseKeywordToken();
             case "fun":
                 return new FunctionKeywordToken();
+            case "loop":
+                return new LoopKeywordToken();
+            case "break":
+                return new BreakKeywordToken();
+            case "continue":
+                return new ContinueKeywordToken();
         }
         return new NameToken(name);
     }

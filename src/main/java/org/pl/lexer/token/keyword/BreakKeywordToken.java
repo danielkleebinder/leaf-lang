@@ -3,11 +3,11 @@ package org.pl.lexer.token.keyword;
 import org.pl.lexer.token.IToken;
 
 /**
- * Identifies the "if" keyword.
+ * Identifies the "break" keyword.
  */
-public class IfKeywordToken implements IToken {
+public class BreakKeywordToken implements IToken {
     @Override
     public String toString() {
-        return "IfKeywordToken{if}";
+        return "BreakKeywordToken{break}";
     }
 }

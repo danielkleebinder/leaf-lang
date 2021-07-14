@@ -8,6 +8,7 @@ import org.pl.lexer.token.arithmetic.PlusToken;
 import org.pl.lexer.token.keyword.*;
 import org.pl.lexer.token.logical.*;
 import org.pl.parser.ast.*;
+import org.pl.parser.exception.ParserException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,9 @@ public class Parser implements IParser {
         this.errors.clear();
 
         var result = evalProgram();
-        for (ParserError error : errors) {
-            System.err.println(error);
+
+        if (errors.size() > 0) {
+            throw new ParserException("Some semantic errors were detected during token analysis", errors);
         }
         return result;
     }
@@ -89,6 +91,9 @@ public class Parser implements IParser {
         if (tokenOfType(IfKeywordToken.class)) {
             return evalIfExpr();
         }
+        if (tokenOfType(LoopKeywordToken.class)) {
+            return evalLoopExpr();
+        }
         if (tokenOfType(NameToken.class)) {
             consumeToken(NameToken.class);
             return new VarAccessNode(((NameToken) currentToken).getValue());
@@ -111,7 +116,7 @@ public class Parser implements IParser {
 
         var condition = evalExpr();
         consumeToken(LeftBraceToken.class);
-        var caseBody = evalExpr();
+        var caseBody = evalStatementList();
         consumeToken(RightBraceToken.class);
         cases.add(new IfCase(condition, caseBody));
 
@@ -122,17 +127,43 @@ public class Parser implements IParser {
                 consumeToken(IfKeywordToken.class);
                 condition = evalExpr();
                 consumeToken(LeftBraceToken.class);
-                caseBody = evalExpr();
+                caseBody = evalStatementList();
                 consumeToken(RightBraceToken.class);
                 cases.add(new IfCase(condition, caseBody));
             } else {
                 consumeToken(LeftBraceToken.class);
-                elseCase = evalExpr();
+                elseCase = evalStatementList();
                 consumeToken(RightBraceToken.class);
             }
         }
 
         return new IfNode(cases, elseCase);
+    }
+
+    /**
+     * Evaluates the loop semantics:
+     * <loop-expr> ::= 'loop' (<expr>)? '{' <statement-list> '}'
+     *
+     * @return Evaluated loop expression.
+     */
+    private LoopNode evalLoopExpr() {
+        INode condition = null;
+        INode loopBody = null;
+
+        consumeToken(LoopKeywordToken.class);
+
+        if (!tokenOfType(LeftBraceToken.class)) {
+            condition = evalExpr();
+        }
+
+        if (tokenOfType(LeftBraceToken.class)) {
+            consumeToken(LeftBraceToken.class);
+            loopBody = evalStatementList();
+        }
+
+        consumeToken(RightBraceToken.class);
+
+        return new LoopNode(condition, loopBody);
     }
 
     /**

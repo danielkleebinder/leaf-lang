@@ -3,11 +3,11 @@ package org.pl.lexer.token.keyword;
 import org.pl.lexer.token.IToken;
 
 /**
- * Identifies the "if" keyword.
+ * Identifies the "loop" keyword.
  */
-public class IfKeywordToken implements IToken {
+public class LoopKeywordToken implements IToken {
     @Override
     public String toString() {
-        return "IfKeywordToken{if}";
+        return "LoopKeywordToken{loop}";
     }
 }

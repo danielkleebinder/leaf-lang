@@ -3,7 +3,7 @@ package org.pl.lexer.token;
 /**
  * Represents keywords, variable and class names, etc.
  */
-public class NameToken implements IToken<String> {
+public class NameToken implements IValueToken<String> {
 
     private final String name;
 
@@ -13,10 +13,6 @@ public class NameToken implements IToken<String> {
 
     public String getValue() {
         return name;
-    }
-
-    public boolean hasValue() {
-        return true;
     }
 
     @Override

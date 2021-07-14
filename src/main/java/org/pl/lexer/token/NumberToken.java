@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 /**
  * Float tokens represent floating point numbers.
  */
-public class NumberToken implements IToken<BigDecimal> {
+public class NumberToken implements IValueToken<BigDecimal> {
 
     private final BigDecimal number;
 
@@ -15,10 +15,6 @@ public class NumberToken implements IToken<BigDecimal> {
 
     public BigDecimal getValue() {
         return number;
-    }
-
-    public boolean hasValue() {
-        return true;
     }
 
     @Override

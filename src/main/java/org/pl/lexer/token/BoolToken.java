@@ -3,7 +3,7 @@ package org.pl.lexer.token;
 /**
  * Represents a boolean value.
  */
-public class BoolToken implements IToken<Boolean> {
+public class BoolToken implements IValueToken<Boolean> {
 
     private final Boolean value;
 
@@ -13,10 +13,6 @@ public class BoolToken implements IToken<Boolean> {
 
     public Boolean getValue() {
         return value;
-    }
-
-    public boolean hasValue() {
-        return true;
     }
 
     @Override

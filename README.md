@@ -28,9 +28,11 @@ The formal language definition looks like the following. Feel free to implement 
 <expr> ::= NOT <logical-expr>
          | <logical-expr> (( AND | OR ) <logical-expr>)*
 
-<if-expr> ::= 'if' <expr> '{' <expr> '}'
-              ('else' 'if' <expr> '{' <expr> '}')*
-              ('else' '{' <expr> '}')?
+<if-expr> ::= 'if' <expr>         '{' <statement-list> '}'
+              ('else' 'if' <expr> '{' <statement-list> '}')*
+              ('else'             '{' <statement-list> '}')?
+
+<loop-expr> ::= 'loop' (<expr>)? '{' <statement-list> '}'
 
 <logical-expr> ::= <arithmetic-expr> (( EQ | LT | LTE | GT | GTE ) <arithmetic-expr>)*
 <arithmetic-expr> ::= <term> (( PLUS | MINUS ) <term>)*
@@ -42,6 +44,7 @@ The formal language definition looks like the following. Feel free to implement 
          | LPAREN <expr> RPAREN
          | <var>
          | <if-expr>
+         | <loop-expr>
 
 <var> ::= <name>
 <name> ::= IDENTIFIER

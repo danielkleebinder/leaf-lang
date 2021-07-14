@@ -2,6 +2,7 @@ package org.pl.interpreter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.pl.interpreter.exception.InterpreterException;
 import org.pl.lexer.ILexer;
 import org.pl.lexer.Lexer;
 import org.pl.parser.IParser;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class InterpreterArithmeticTest {
 
@@ -92,5 +94,11 @@ public class InterpreterArithmeticTest {
     void shouldAllowNegativeNumberCalculation2() {
         var result = interpreter.interpret(parser.parse(lexer.tokenize("5 - - - + - (3 + 4) - +2")));
         assertEquals(Arrays.asList(BigDecimal.valueOf(10)), result);
+    }
+
+    @Test
+    void shouldErrorForInvalidArithmetic() {
+        assertThrows(InterpreterException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("2 && 1"))));
+        assertThrows(InterpreterException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("*1"))));
     }
 }
