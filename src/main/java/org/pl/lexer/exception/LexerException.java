@@ -27,9 +27,8 @@ public class LexerException extends RuntimeException {
         result.append(LexerException.class);
         result.append(": ");
         result.append(getMessage());
-        result.append("\n");
         for (LexerError error : errors) {
-            result.append(" - ");
+            result.append("\n - ");
             result.append(error);
         }
         result.append("\n");

@@ -45,6 +45,7 @@ public class Lexer implements ILexer {
             add(new MinusTokenizer());
             add(new DivideTokenizer());
             add(new MultiplyTokenizer());
+            add(new ModTokenizer());
             add(new ComplementTokenizer());
             add(new LogicalTokenizer());
             add(new BracketTokenizer());

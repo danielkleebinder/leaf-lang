@@ -61,6 +61,21 @@ public class InterpreterArithmeticTest {
     }
 
     @Test
+    void shouldModulo() {
+        var result = interpreter.interpret(parser.parse(lexer.tokenize("4 % 2")));
+        assertEquals(Arrays.asList(BigDecimal.valueOf(0)), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("3 % 2")));
+        assertEquals(Arrays.asList(BigDecimal.valueOf(1)), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("2 % 3")));
+        assertEquals(Arrays.asList(BigDecimal.valueOf(2)), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("10 % 10")));
+        assertEquals(Arrays.asList(BigDecimal.valueOf(0)), result);
+    }
+
+    @Test
     void shouldUseCorrectPrecedence1() {
         var result = interpreter.interpret(parser.parse(lexer.tokenize("7 + 3 * (10 / (12 / (3 + 1) - 1))")));
         assertEquals(Arrays.asList(BigDecimal.valueOf(22)), result);

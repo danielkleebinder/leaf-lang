@@ -6,6 +6,7 @@ public enum BinaryOperation {
     DIVIDE,
     MULTIPLY,
     POWER,
+    MOD,
     EQUAL,
     NOT_EQUAL,
     LESS_THAN,

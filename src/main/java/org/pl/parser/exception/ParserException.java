@@ -26,9 +26,8 @@ public class ParserException extends RuntimeException {
         result.append(ParserException.class);
         result.append(": ");
         result.append(getMessage());
-        result.append("\n");
         for (ParserError error : errors) {
-            result.append(" - ");
+            result.append("\n - ");
             result.append(error);
         }
         result.append("\n");

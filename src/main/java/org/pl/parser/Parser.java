@@ -1,10 +1,7 @@
 package org.pl.parser;
 
 import org.pl.lexer.token.*;
-import org.pl.lexer.token.arithmetic.DivideToken;
-import org.pl.lexer.token.arithmetic.MinusToken;
-import org.pl.lexer.token.arithmetic.MultiplyToken;
-import org.pl.lexer.token.arithmetic.PlusToken;
+import org.pl.lexer.token.arithmetic.*;
 import org.pl.lexer.token.keyword.*;
 import org.pl.lexer.token.logical.*;
 import org.pl.parser.ast.*;
@@ -168,7 +165,7 @@ public class Parser implements IParser {
 
     /**
      * Evaluates the term semantic:
-     * term ::= atom (( MULT | DIVIDE ) atom)*
+     * term ::= atom (( MULT | DIVIDE | MOD ) atom)*
      *
      * @return Term evaluation.
      */
@@ -188,6 +185,9 @@ public class Parser implements IParser {
             } else if (tokenOfType(DivideToken.class)) {
                 consumeToken(DivideToken.class);
                 node = new BinaryOperationNode(node, evalAtom(), BinaryOperation.DIVIDE);
+            } else if (tokenOfType(ModToken.class)) {
+                consumeToken(ModToken.class);
+                node = new BinaryOperationNode(node, evalAtom(), BinaryOperation.MOD);
             } else {
                 break;
             }
@@ -197,12 +197,19 @@ public class Parser implements IParser {
 
     /**
      * Evaluates the logical semantic:
-     * <logical-expr> ::= arithmetic-expr (( EQ | LT | LTE | GT | GTE ) arithmetic-expr)*
+     * <logical-expr> ::= NOT <logical-expr>
+     * | <arithmetic-expr> (( EQ | LT | LTE | GT | GTE ) <arithmetic-expr>)*
      *
      * @return Evaluated result.
      */
     private INode evalLogicalExpr() {
-        var node = evalArithmeticExpr();
+        INode node;
+        if (tokenOfType(LogicalNotToken.class)) {
+            consumeToken(LogicalNotToken.class);
+            node = new UnaryOperationNode(evalLogicalExpr(), UnaryOperation.LOGICAL_NEGATE);
+        } else {
+            node = evalArithmeticExpr();
+        }
         while (true) {
             if (tokenOfType(EqualToken.class)) {
                 consumeToken(EqualToken.class);
@@ -253,19 +260,12 @@ public class Parser implements IParser {
 
     /**
      * Evaluates the expression semantic:
-     * <expr> ::= NOT logical-expr
-     * | logical-expr (( AND | OR ) logical-expr)*
+     * <expr> ::= <logical-expr> (( AND | OR ) <logical-expr>)*
      *
      * @return Evaluated expression.
      */
     private INode evalExpr() {
-        INode node;
-        if (tokenOfType(LogicalNotToken.class)) {
-            consumeToken(LogicalNotToken.class);
-            node = new UnaryOperationNode(evalLogicalExpr(), UnaryOperation.LOGICAL_NEGATE);
-        } else {
-            node = evalLogicalExpr();
-        }
+        INode node = evalLogicalExpr();
         while (true) {
             if (tokenOfType(LogicalAndToken.class)) {
                 consumeToken(LogicalAndToken.class);

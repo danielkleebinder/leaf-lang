@@ -56,6 +56,8 @@ public class BinaryOperationVisitor implements IVisitor {
                 return left.multiply(right);
             case POWER:
                 return BigDecimal.valueOf(Math.pow(left.doubleValue(), right.doubleValue()));
+            case MOD:
+                return left.remainder(right);
             case EQUAL:
                 return left.equals(right);
             case NOT_EQUAL:

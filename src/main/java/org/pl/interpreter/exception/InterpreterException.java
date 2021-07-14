@@ -26,9 +26,8 @@ public class InterpreterException extends RuntimeException {
         result.append(InterpreterException.class);
         result.append(": ");
         result.append(getMessage());
-        result.append("\n");
         for (InterpreterError error : errors) {
-            result.append(" - ");
+            result.append("\n - ");
             result.append(error);
         }
         result.append("\n");

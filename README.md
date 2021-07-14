@@ -25,19 +25,20 @@ The formal language definition looks like the following. Feel free to implement 
 
 <type> ::= <number> | <bool> | <string>
 
-<expr> ::= NOT <logical-expr>
-         | <logical-expr> (( AND | OR ) <logical-expr>)*
-
 <if-expr> ::= 'if' <expr>         '{' <statement-list> '}'
               ('else' 'if' <expr> '{' <statement-list> '}')*
               ('else'             '{' <statement-list> '}')?
 
 <loop-expr> ::= 'loop' (<expr>)? '{' <statement-list> '}'
 
-<logical-expr> ::= <arithmetic-expr> (( EQ | LT | LTE | GT | GTE ) <arithmetic-expr>)*
+<expr> ::= <logical-expr> (( AND | OR ) <logical-expr>)*
+
+<logical-expr> ::= NOT <logical-expr>
+                 | <arithmetic-expr> (( EQ | LT | LTE | GT | GTE ) <arithmetic-expr>)*
+
 <arithmetic-expr> ::= <term> (( PLUS | MINUS ) <term>)*
 
-<term> ::= <atom> (( MULT | DIVIDE ) <atom>)*
+<term> ::= <atom> (( MULT | DIVIDE | MOD ) <atom>)*
 <atom> ::= PLUS <number>
          | MINUS <number>
          | COMPLEMENT <number>
