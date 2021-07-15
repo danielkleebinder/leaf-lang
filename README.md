@@ -133,11 +133,13 @@ trait CanTalk {
 }
 
 class Dog is Feedable, CanTalk {
-  fed = false;
-  fun feed() { fed = true }
-  fun talk(text: string) { print(text) }
-  fun name(): string = "Bello"
+  fed: bool;
+  age: number;
 }
+fun Dog.feed() { fed = true }
+fun Dog.talk(text: string) { print(text) }
+fun Dog.name(): string = "Bello"
+
 
 // The programming language also supports pre- and postconditions
 // (also known as variant and covariant). The application will throw

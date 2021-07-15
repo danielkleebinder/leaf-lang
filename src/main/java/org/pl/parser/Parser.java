@@ -2,6 +2,10 @@ package org.pl.parser;
 
 import org.pl.lexer.token.*;
 import org.pl.lexer.token.arithmetic.*;
+import org.pl.lexer.token.bracket.LeftCurlyBraceToken;
+import org.pl.lexer.token.bracket.LeftParenthesisToken;
+import org.pl.lexer.token.bracket.RightCurlyBraceToken;
+import org.pl.lexer.token.bracket.RightParenthesisToken;
 import org.pl.lexer.token.keyword.*;
 import org.pl.lexer.token.logical.*;
 import org.pl.parser.ast.*;
@@ -85,7 +89,7 @@ public class Parser implements IParser {
             consumeToken(ComplementToken.class);
             return new UnaryOperationNode(evalAtom(), UnaryOperation.BIT_COMPLEMENT);
         }
-        if (tokenOfType(IfKeywordToken.class)) {
+        if (tokenOfType(ConditionalKeywordToken.class)) {
             return evalIfExpr();
         }
         if (tokenOfType(LoopKeywordToken.class)) {
@@ -109,28 +113,28 @@ public class Parser implements IParser {
     private IfNode evalIfExpr() {
         List<IfCase> cases = new ArrayList<>(8);
         INode elseCase = null;
-        consumeToken(IfKeywordToken.class);
+        consumeToken(ConditionalKeywordToken.class);
 
         var condition = evalExpr();
-        consumeToken(LeftBraceToken.class);
+        consumeToken(LeftCurlyBraceToken.class);
         var caseBody = evalStatementList();
-        consumeToken(RightBraceToken.class);
+        consumeToken(RightCurlyBraceToken.class);
         cases.add(new IfCase(condition, caseBody));
 
         while (tokenOfType(ElseKeywordToken.class)) {
             consumeToken(ElseKeywordToken.class);
 
-            if (tokenOfType(IfKeywordToken.class)) {
-                consumeToken(IfKeywordToken.class);
+            if (tokenOfType(ConditionalKeywordToken.class)) {
+                consumeToken(ConditionalKeywordToken.class);
                 condition = evalExpr();
-                consumeToken(LeftBraceToken.class);
+                consumeToken(LeftCurlyBraceToken.class);
                 caseBody = evalStatementList();
-                consumeToken(RightBraceToken.class);
+                consumeToken(RightCurlyBraceToken.class);
                 cases.add(new IfCase(condition, caseBody));
             } else {
-                consumeToken(LeftBraceToken.class);
+                consumeToken(LeftCurlyBraceToken.class);
                 elseCase = evalStatementList();
-                consumeToken(RightBraceToken.class);
+                consumeToken(RightCurlyBraceToken.class);
             }
         }
 
@@ -149,16 +153,16 @@ public class Parser implements IParser {
 
         consumeToken(LoopKeywordToken.class);
 
-        if (!tokenOfType(LeftBraceToken.class)) {
+        if (!tokenOfType(LeftCurlyBraceToken.class)) {
             condition = evalExpr();
         }
 
-        if (tokenOfType(LeftBraceToken.class)) {
-            consumeToken(LeftBraceToken.class);
+        if (tokenOfType(LeftCurlyBraceToken.class)) {
+            consumeToken(LeftCurlyBraceToken.class);
             loopBody = evalStatementList();
         }
 
-        consumeToken(RightBraceToken.class);
+        consumeToken(RightCurlyBraceToken.class);
 
         return new LoopNode(condition, loopBody);
     }

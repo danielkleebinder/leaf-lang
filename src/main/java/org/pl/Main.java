@@ -4,13 +4,10 @@ import org.pl.analyzer.ISemanticAnalyzer;
 import org.pl.analyzer.SemanticAnalyzer;
 import org.pl.interpreter.IInterpreter;
 import org.pl.interpreter.Interpreter;
-import org.pl.interpreter.exception.InterpreterException;
 import org.pl.lexer.ILexer;
 import org.pl.lexer.Lexer;
-import org.pl.lexer.exception.LexerException;
 import org.pl.parser.IParser;
 import org.pl.parser.Parser;
-import org.pl.parser.exception.ParserException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +33,7 @@ public class Main {
                     var result = interpreter.interpret(ast);
                     System.out.println("Global Symbol Table : " + interpreter.getGlobalSymbolTable());
                     System.out.println("Interpreter Result  : " + result);
-                } catch (LexerException | ParserException | InterpreterException e) {
+                } catch (Exception e) {
                     System.err.println(e);
                     Thread.sleep(500);
                 }
