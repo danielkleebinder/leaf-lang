@@ -7,6 +7,7 @@ import org.pl.lexer.ILexer;
 import org.pl.lexer.Lexer;
 import org.pl.parser.IParser;
 import org.pl.parser.Parser;
+import org.pl.parser.exception.EvalException;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -76,6 +77,12 @@ public class InterpreterArithmeticTest {
     }
 
     @Test
+    void shouldPower() {
+        var result = interpreter.interpret(parser.parse(lexer.tokenize("3**3")));
+        assertEquals(Arrays.asList(BigDecimal.valueOf(27.0)), result);
+    }
+
+    @Test
     void shouldUseCorrectPrecedence1() {
         var result = interpreter.interpret(parser.parse(lexer.tokenize("7 + 3 * (10 / (12 / (3 + 1) - 1))")));
         assertEquals(Arrays.asList(BigDecimal.valueOf(22)), result);
@@ -114,6 +121,6 @@ public class InterpreterArithmeticTest {
     @Test
     void shouldErrorForInvalidArithmetic() {
         assertThrows(InterpreterException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("2 && 1"))));
-        assertThrows(InterpreterException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("*1"))));
+        assertThrows(EvalException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("*1"))));
     }
 }

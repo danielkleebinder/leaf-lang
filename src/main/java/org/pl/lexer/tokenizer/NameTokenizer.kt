@@ -1,6 +1,7 @@
 package org.pl.lexer.tokenizer
 
 import org.pl.lexer.ILexer
+import org.pl.lexer.token.BoolToken
 import org.pl.lexer.token.IToken
 import org.pl.lexer.token.NameToken
 import org.pl.lexer.token.keyword.*
@@ -26,8 +27,8 @@ class NameTokenizer : ITokenizer {
             "const" -> return ConstKeywordToken()
             "if" -> return ConditionalKeywordToken()
             "else" -> return ElseKeywordToken()
-            "true" -> return TrueKeywordToken()
-            "false" -> return FalseKeywordToken()
+            "true" -> return BoolToken(true)
+            "false" -> return BoolToken(false)
             "fun" -> return FunctionKeywordToken()
             "loop" -> return LoopKeywordToken()
             "break" -> return BreakKeywordToken()

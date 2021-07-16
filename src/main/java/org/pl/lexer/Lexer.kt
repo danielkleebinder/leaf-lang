@@ -6,12 +6,14 @@ import org.pl.lexer.token.IToken
 import org.pl.lexer.tokenizer.*
 
 class Lexer : ILexer {
+
     override var programCode: String? = null
         private set
+
     override var cursorPosition = 0
         private set
 
-    override fun tokenize(program: String): List<IToken> {
+    override fun tokenize(program: String): Array<IToken> {
         programCode = program
         cursorPosition = 0
 
@@ -35,7 +37,7 @@ class Lexer : ILexer {
         if (errors.size > 0) {
             throw LexerException("Some syntax errors were detected during lexical analysis", errors.toTypedArray())
         }
-        return tokens
+        return tokens.toTypedArray()
     }
 
     override val isEndOfProgram: Boolean

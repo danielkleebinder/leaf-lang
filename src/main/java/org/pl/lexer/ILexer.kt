@@ -13,7 +13,7 @@ interface ILexer {
     /**
      * Tokenizes the given [program] code.
      */
-    fun tokenize(program: String): List<IToken>
+    fun tokenize(program: String): Array<IToken>
 
     /**
      * Checks if the end of the program has been reached.

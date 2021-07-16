@@ -1,5 +1,7 @@
 # Programming Language
 
+Influenced by TypeScript, Kotlin, Go, Eiffel, ML.
+
 ## Grammar
 
 The formal language definition looks like the following. Feel free to implement it yourself.
@@ -25,18 +27,20 @@ The formal language definition looks like the following. Feel free to implement 
 
 <type> ::= <number> | <bool> | <string>
 
-<if-expr> ::= 'if' <expr>         '{' <statement-list> '}'
-              ('else' 'if' <expr> '{' <statement-list> '}')*
-              ('else'             '{' <statement-list> '}')?
+<conditional-expr> ::= 'if' <expr>         '{' <statement-list> '}'
+                       ('else' 'if' <expr> '{' <statement-list> '}')*
+                       ('else'             '{' <statement-list> '}')?
 
 <loop-expr> ::= 'loop' (<expr>)? '{' <statement-list> '}'
 
 <expr> ::= <logical-expr> (( AND | OR ) <logical-expr>)*
 
-<logical-expr> ::= NOT <logical-expr>
-                 | <arithmetic-expr> (( EQ | LT | LTE | GT | GTE ) <arithmetic-expr>)*
+<equal-expr> ::= <logical-expr> (( EQ | NEQ ) <logical-expr>)*
+<arith-expr> ::= <term> (( PLUS | MINUS ) <term>)*
+<logic-expr> ::= NOT <logical-expr>
+               | <arith-expr> (( LT | LTE | GT | GTE ) <arith-expr>)*
 
-<arithmetic-expr> ::= <term> (( PLUS | MINUS ) <term>)*
+
 
 <term> ::= <atom> (( MULT | DIVIDE | MOD ) <atom>)*
 <atom> ::= PLUS <number>
@@ -44,7 +48,7 @@ The formal language definition looks like the following. Feel free to implement 
          | COMPLEMENT <number>
          | LPAREN <expr> RPAREN
          | <var>
-         | <if-expr>
+         | <conditional-expr>
          | <loop-expr>
 
 <var> ::= <name>
@@ -135,10 +139,10 @@ trait CanTalk {
 class Dog is Feedable, CanTalk {
   fed: bool;
   age: number;
+  fun feed() { fed = true }
+  fun talk(text: string) { print(text) }
+  fun name(): string = "Bello"
 }
-fun Dog.feed() { fed = true }
-fun Dog.talk(text: string) { print(text) }
-fun Dog.name(): string = "Bello"
 
 
 // The programming language also supports pre- and postconditions
@@ -155,9 +159,8 @@ fun printHelloWorld() {
   }
 }
 
-// The entry keyword specifies the function that should
-// be executed on program start.
-entry fun main() {
+// The "main" function is the entry point into the program
+fun main() {
 
   // Constants must be initialized on declaration and cannot
   // be modified at a later stage.

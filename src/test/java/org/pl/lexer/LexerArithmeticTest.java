@@ -21,10 +21,10 @@ public class LexerArithmeticTest {
     void shouldTokenizePlusOperator() {
         var tokens = lexer.tokenize("5+3");
         System.out.println(tokens);
-        assertEquals(3, tokens.size());
+        assertEquals(3, tokens.length);
 
-        assertSame(NumberToken.class, tokens.get(0).getClass());
-        assertSame(PlusToken.class, tokens.get(1).getClass());
-        assertSame(NumberToken.class, tokens.get(2).getClass());
+        assertSame(NumberToken.class, tokens[0].getClass());
+        assertSame(PlusToken.class, tokens[1].getClass());
+        assertSame(NumberToken.class, tokens[2].getClass());
     }
 }

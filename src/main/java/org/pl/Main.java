@@ -12,6 +12,7 @@ import org.pl.parser.Parser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
     private ILexer lexer = new Lexer();
@@ -25,7 +26,7 @@ public class Main {
                 System.out.print("> ");
                 try {
                     var tokens = lexer.tokenize(reader.readLine());
-                    System.out.println("Lexical Analysis    : " + tokens);
+                    System.out.println("Lexical Analysis    : " + Arrays.toString(tokens));
                     var ast = parser.parse(tokens);
                     System.out.println("Abstract Syntax Tree: " + ast);
                     var errors = analyzer.analyze(ast);
