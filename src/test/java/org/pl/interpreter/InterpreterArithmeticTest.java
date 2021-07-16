@@ -139,7 +139,7 @@ public class InterpreterArithmeticTest {
     @Test
     void shouldErrorForInvalidArithmetic() {
         assertThrows(InterpreterException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("2 && 1"))));
-        assertThrows(ParserException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("*1"))));
+        assertThrows(InterpreterException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("*1"))));
     }
 
     @Test

@@ -78,6 +78,17 @@ public class InterpreterLoopTest {
         interpreter.interpret(parser.parse(lexer.tokenize(vars + program)));
         assertEquals(false, globalMemory.get("res"));
         assertEquals(BigDecimal.valueOf(2), globalMemory.get("i"));
+    }
 
+    @Test
+    void shouldRunFactorial() {
+        var program = "" +
+                "var n = 5, res = 1;" +
+                "loop n >= 2 {" +
+                "  res = res * n;" +
+                "  n = n - 1;" +
+                "}";
+        interpreter.interpret(parser.parse(lexer.tokenize(program)));
+        assertEquals(BigDecimal.valueOf(120), globalMemory.get("res"));
     }
 }

@@ -48,6 +48,6 @@ class AtomEval(private val parser: IParser) : IEval {
                 return result
             }
         }
-        throw EvalException("Unknown atom token ${parser.token}")
+        return EmptyNode()
     }
 }

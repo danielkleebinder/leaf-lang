@@ -21,7 +21,7 @@ public class Main {
     private IInterpreter interpreter = new Interpreter();
 
     public Main() {
-        System.out.println("Welcome to the Programming Language CLI");
+        System.out.println("Welcome to nyxlang");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             while (true) {
                 var program = new StringBuilder();
