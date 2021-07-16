@@ -1,12 +1,13 @@
-package org.pl.parser.ast;
+package org.pl.parser.ast
 
 /**
  * Contains modifiers for functions, variables, etc.
  */
-public enum Modifier {
+enum class Modifier {
+
     /**
      * An immutable definition. For example:
-     * <code>const a = 1</code>
+     * `const a = 1`
      */
-    CONST
+    CONSTANT
 }

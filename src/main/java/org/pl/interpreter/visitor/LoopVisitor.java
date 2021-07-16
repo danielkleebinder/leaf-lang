@@ -23,8 +23,8 @@ public class LoopVisitor implements IVisitor {
     public Object visit(IInterpreter interpreter, INode node) throws VisitorException {
         var loopNode = (LoopNode) node;
         var result = new ArrayList<Object>(8);
-        while (loopNode.condition == null || Boolean.TRUE.equals(interpreter.evalNode(loopNode.condition))) {
-            var bodyResult = interpreter.evalNode(loopNode.loopBody);
+        while (loopNode.getCondition() == null || Boolean.TRUE.equals(interpreter.evalNode(loopNode.getCondition()))) {
+            var bodyResult = interpreter.evalNode(loopNode.getBody());
 
             // I want to prevent very deep lists from occurring. This check prevents that
             // something like [true] becomes [[[true]]]

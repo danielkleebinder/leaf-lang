@@ -20,14 +20,14 @@ public class IfVisitor implements IVisitor {
     @Override
     public Object visit(IInterpreter interpreter, INode node) throws VisitorException {
         var ifNode = (IfNode) node;
-        for (IfCase ifCase : ifNode.cases) {
+        for (IfCase ifCase : ifNode.getCases()) {
             var conditionResult = interpreter.evalNode(ifCase.getCondition());
             if (Boolean.TRUE.equals(conditionResult)) {
                 return interpreter.evalNode(ifCase.getBody());
             }
         }
-        if (ifNode.elseCase != null) {
-            return interpreter.evalNode(ifNode.elseCase);
+        if (ifNode.getElseCase() != null) {
+            return interpreter.evalNode(ifNode.getElseCase());
         }
         return null;
     }

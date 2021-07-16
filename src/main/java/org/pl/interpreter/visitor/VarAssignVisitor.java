@@ -20,8 +20,8 @@ public class VarAssignVisitor implements IVisitor {
     public String visit(IInterpreter interpreter, INode node) throws VisitorException {
         var varAssignNode = (VarAssignNode) node;
         interpreter.getGlobalMemory().set(
-                varAssignNode.identifier,
-                interpreter.evalNode(varAssignNode.assignmentExpr));
+                varAssignNode.getIdentifier(),
+                interpreter.evalNode(varAssignNode.getAssignmentExpr()));
         return "<var assign>";
     }
 }

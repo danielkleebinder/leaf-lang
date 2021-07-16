@@ -22,8 +22,8 @@ public class UnaryOperationVisitor implements IVisitor {
     @Override
     public Object visit(IInterpreter interpreter, INode node) throws VisitorException {
         var unaryOperationNode = (UnaryOperationNode) node;
-        var value = interpreter.evalNode(unaryOperationNode.node);
-        var op = unaryOperationNode.op;
+        var value = interpreter.evalNode(unaryOperationNode.getNode());
+        var op = unaryOperationNode.getOp();
 
         if (value instanceof BigDecimal) {
             return interpretNumber((BigDecimal) value, op);
@@ -31,7 +31,7 @@ public class UnaryOperationVisitor implements IVisitor {
             return interpretBool((Boolean) value, op);
         }
 
-        throw new VisitorException("Given value " + value + " does not support unary operation " + unaryOperationNode.op);
+        throw new VisitorException("Given value " + value + " does not support unary operation " + unaryOperationNode.getOp());
     }
 
     /**

@@ -23,8 +23,8 @@ public class StatementListVisitor implements IVisitor {
     @Override
     public List<Object> visit(IInterpreter interpreter, INode node) throws VisitorException {
         var statementListNode = (StatementListNode) node;
-        var result = new ArrayList<Object>(statementListNode.statements.size());
-        for (INode statement : statementListNode.statements) {
+        var result = new ArrayList<Object>(statementListNode.getStatements().size());
+        for (INode statement : statementListNode.getStatements()) {
             var nodeResult = interpreter.evalNode(statement);
 
             // I want to prevent very deep lists from occurring. This check prevents that

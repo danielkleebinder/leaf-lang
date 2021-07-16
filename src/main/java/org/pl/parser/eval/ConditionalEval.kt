@@ -26,7 +26,7 @@ class ConditionalEval(private val parser: IParser) : IEval {
 
         val cases = arrayListOf<IfCase>()
         var condition: INode? = null
-        var body: INode
+        var body: INode? = null
         var elseCase: INode? = null
 
         // Evaluate first if <expr> { <statement-list> } block

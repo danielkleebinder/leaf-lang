@@ -27,7 +27,7 @@ class StatementEval(private val parser: IParser) : IEval {
 
         if (ConstKeywordToken::class == parser.token::class) {
             parser.advanceCursor()
-            return VarDeclareEval(parser).eval().also { it.modifiers.add(Modifier.CONST) }
+            return VarDeclareEval(parser).eval().also { it.modifiers.add(Modifier.CONSTANT) }
         }
 
         if (NameToken::class == parser.token::class &&
