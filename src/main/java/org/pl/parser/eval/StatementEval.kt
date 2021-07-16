@@ -32,7 +32,6 @@ class StatementEval(private val parser: IParser) : IEval {
 
         if (NameToken::class == parser.token::class &&
                 AssignToken::class == parser.peekNextToken::class) {
-            println(parser.token)
             return VarAssignEval(parser).eval()
         }
         return ExprEval(parser).eval()

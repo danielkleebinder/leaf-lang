@@ -21,7 +21,7 @@ public class VarDeclarationVisitor implements IVisitor {
         var varDeclarationNode = (VarDeclarationNode) node;
         for (VarDeclaration declaration : varDeclarationNode.getDeclarations()) {
             interpreter.evalNode(declaration.getTypeExpr());
-            interpreter.getGlobalSymbolTable().set(
+            interpreter.getGlobalMemory().set(
                     declaration.getIdentifier(),
                     interpreter.evalNode(declaration.getAssignmentExpr()));
         }

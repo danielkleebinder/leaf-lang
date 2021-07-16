@@ -1,18 +1,23 @@
 package org.pl.interpreter;
 
+import org.jetbrains.annotations.NotNull;
 import org.pl.interpreter.exception.InterpreterException;
 import org.pl.interpreter.exception.VisitorException;
-import org.pl.interpreter.symbol.SymbolTable;
+import org.pl.interpreter.memory.ActivationRecord;
+import org.pl.interpreter.memory.IActivationRecord;
 import org.pl.interpreter.visitor.*;
 import org.pl.parser.ast.INode;
+import org.pl.symbol.ISymbolTable;
+import org.pl.symbol.SymbolTable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Interpreter implements IInterpreter {
 
-    private final SymbolTable globalSymbolTable = new SymbolTable(null);
-    private final List<IVisitor> visitorsList = new ArrayList<>(32) {
+    private IActivationRecord globalMemory = new ActivationRecord(null);
+    private ISymbolTable globalSymbolTable = new SymbolTable(null);
+    private List<IVisitor> visitorsList = new ArrayList<>(32) {
         {
             add(new UnaryOperationVisitor());
             add(new BinaryOperationVisitor());
@@ -28,8 +33,18 @@ public class Interpreter implements IInterpreter {
         }
     };
 
+    @NotNull
     @Override
-    public Object interpret(INode ast) {
+    public Object interpret(@NotNull INode ast) {
+        return interpret(ast, null);
+    }
+
+    @NotNull
+    @Override
+    public Object interpret(@NotNull INode ast, ISymbolTable symbolTable) {
+        if (symbolTable != null) {
+            globalSymbolTable = symbolTable;
+        }
         return evalNode(ast);
     }
 
@@ -59,8 +74,15 @@ public class Interpreter implements IInterpreter {
         return null;
     }
 
+    @NotNull
     @Override
-    public SymbolTable getGlobalSymbolTable() {
+    public IActivationRecord getGlobalMemory() {
+        return globalMemory;
+    }
+
+    @NotNull
+    @Override
+    public ISymbolTable getSymbolTable() {
         return globalSymbolTable;
     }
 }

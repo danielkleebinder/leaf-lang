@@ -4,11 +4,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.pl.TestUtils;
-import org.pl.interpreter.symbol.SymbolTable;
+import org.pl.interpreter.memory.IActivationRecord;
 import org.pl.lexer.ILexer;
 import org.pl.lexer.Lexer;
 import org.pl.parser.IParser;
 import org.pl.parser.Parser;
+import org.pl.symbol.ISymbolTable;
 
 import java.math.BigDecimal;
 
@@ -21,14 +22,16 @@ public class InterpreterLoopTest {
     private ILexer lexer;
     private IParser parser;
     private IInterpreter interpreter;
-    private SymbolTable gst;
+    private ISymbolTable globalSymbolTable;
+    private IActivationRecord globalMemory;
 
     @BeforeEach
     void setup() {
         lexer = new Lexer();
         parser = new Parser();
         interpreter = new Interpreter();
-        gst = interpreter.getGlobalSymbolTable();
+        globalSymbolTable = interpreter.getSymbolTable();
+        globalMemory = interpreter.getGlobalMemory();
     }
 
     @Test
@@ -53,7 +56,7 @@ public class InterpreterLoopTest {
         interpreter.interpret(parser.parse(lexer.tokenize("" +
                 "var i = 5;" +
                 "loop i > 0 { i = i - 1 }")));
-        assertEquals(BigDecimal.ZERO, gst.get("i"));
+        assertEquals(BigDecimal.ZERO, globalMemory.get("i"));
     }
 
     @Test
@@ -68,13 +71,13 @@ public class InterpreterLoopTest {
                 "  }" +
                 "}";
         interpreter.interpret(parser.parse(lexer.tokenize(vars + program)));
-        assertEquals(true, gst.get("res"));
-        assertEquals(BigDecimal.valueOf(47), gst.get("i"));
+        assertEquals(true, globalMemory.get("res"));
+        assertEquals(BigDecimal.valueOf(47), globalMemory.get("i"));
 
         vars = "var i = 2, p = 4, res = true;";
         interpreter.interpret(parser.parse(lexer.tokenize(vars + program)));
-        assertEquals(false, gst.get("res"));
-        assertEquals(BigDecimal.valueOf(2), gst.get("i"));
+        assertEquals(false, globalMemory.get("res"));
+        assertEquals(BigDecimal.valueOf(2), globalMemory.get("i"));
 
     }
 }

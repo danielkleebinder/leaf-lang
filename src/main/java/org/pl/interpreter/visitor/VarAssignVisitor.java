@@ -19,7 +19,7 @@ public class VarAssignVisitor implements IVisitor {
     @Override
     public String visit(IInterpreter interpreter, INode node) throws VisitorException {
         var varAssignNode = (VarAssignNode) node;
-        interpreter.getGlobalSymbolTable().set(
+        interpreter.getGlobalMemory().set(
                 varAssignNode.identifier,
                 interpreter.evalNode(varAssignNode.assignmentExpr));
         return "<var assign>";

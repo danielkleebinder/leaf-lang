@@ -7,7 +7,6 @@ import org.pl.lexer.ILexer;
 import org.pl.lexer.Lexer;
 import org.pl.parser.IParser;
 import org.pl.parser.Parser;
-import org.pl.parser.exception.EvalException;
 import org.pl.parser.exception.ParserException;
 
 import java.math.BigDecimal;
@@ -54,6 +53,9 @@ public class InterpreterArithmeticTest {
     void shouldMultiply() {
         var result = interpreter.interpret(parser.parse(lexer.tokenize("10*2*5")));
         assertEquals(Arrays.asList(BigDecimal.valueOf(100)), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("10*-2*5")));
+        assertEquals(Arrays.asList(BigDecimal.valueOf(-100)), result);
     }
 
     @Test
@@ -81,6 +83,12 @@ public class InterpreterArithmeticTest {
     void shouldPower() {
         var result = interpreter.interpret(parser.parse(lexer.tokenize("3**3")));
         assertEquals(Arrays.asList(BigDecimal.valueOf(27.0)), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("27**0")));
+        assertEquals(Arrays.asList(BigDecimal.valueOf(1.0)), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("27**2")));
+        assertEquals(Arrays.asList(BigDecimal.valueOf(729.0)), result);
     }
 
     @Test
@@ -99,6 +107,15 @@ public class InterpreterArithmeticTest {
     void shouldUseCorrectPrecedence3() {
         var result = interpreter.interpret(parser.parse(lexer.tokenize("7 + (((3 + 2)))")));
         assertEquals(Arrays.asList(BigDecimal.valueOf(12)), result);
+    }
+
+    @Test
+    void shouldUseCorrectPrecedence4() {
+        var result = interpreter.interpret(parser.parse(lexer.tokenize("10 - 8 / 2 < 10")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("10 > 10 - 8 / 2")));
+        assertEquals(Arrays.asList(true), result);
     }
 
     @Test

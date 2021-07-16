@@ -20,7 +20,6 @@ public class LexerArithmeticTest {
     @Test
     void shouldTokenizePlusOperator() {
         var tokens = lexer.tokenize("5+3");
-        System.out.println(tokens);
         assertEquals(3, tokens.length);
 
         assertSame(NumberToken.class, tokens[0].getClass());

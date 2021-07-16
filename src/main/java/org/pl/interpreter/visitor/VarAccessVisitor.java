@@ -19,7 +19,7 @@ public class VarAccessVisitor implements IVisitor {
     @Override
     public Object visit(IInterpreter interpreter, INode node) throws VisitorException {
         var varAccessNode = (VarAccessNode) node;
-        var result = interpreter.getGlobalSymbolTable().get(varAccessNode.identifier);
+        var result = interpreter.getGlobalMemory().get(varAccessNode.identifier);
         if (result == null) {
             throw new VisitorException("Variable with name " + varAccessNode.identifier + " not declared");
         }

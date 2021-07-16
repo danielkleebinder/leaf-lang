@@ -42,9 +42,9 @@ public class Main {
                     var ast = parser.parse(tokens);
                     System.out.println("Abstract Syntax Tree: " + ast);
                     var errors = analyzer.analyze(ast);
-                    System.out.println("Semantic Errors     : " + errors);
+                    System.out.println("Semantic Errors     : " + Arrays.toString(errors));
                     var result = interpreter.interpret(ast);
-                    System.out.println("Global Symbol Table : " + interpreter.getGlobalSymbolTable());
+                    System.out.println("Global Memory       : " + interpreter.getGlobalMemory());
                     System.out.println("Interpreter Result  : " + result);
                 } catch (Exception e) {
                     System.err.println(e);
