@@ -18,6 +18,6 @@ public class BoolVisitor implements IVisitor {
 
     @Override
     public Boolean visit(IInterpreter interpreter, INode node) throws VisitorException {
-        return ((BoolNode) node).value;
+        return ((BoolNode) node).getValue();
     }
 }

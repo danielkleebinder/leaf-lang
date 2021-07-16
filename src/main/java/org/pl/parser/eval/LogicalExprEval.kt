@@ -16,33 +16,20 @@ import org.pl.parser.ast.*
 class LogicalExprEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
+        val arithmeticExpr = ArithmeticExprEval(parser)
         var node = if (LogicalNotToken::class == parser.token::class) {
             parser.advanceCursor()
             UnaryOperationNode(eval(), UnaryOperation.LOGICAL_NEGATE)
         } else {
-            ArithmeticExprEval(parser).eval()
+            arithmeticExpr.eval()
         }
 
         while (true) {
             node = when (parser.token::class) {
-                EqualToken::class -> parser.advance {
-                    BinaryOperationNode(node, ArithmeticExprEval(parser).eval(), BinaryOperation.EQUAL)
-                }
-                NotEqualToken::class -> parser.advance {
-                    BinaryOperationNode(node, ArithmeticExprEval(parser).eval(), BinaryOperation.NOT_EQUAL)
-                }
-                LessThanToken::class -> parser.advance {
-                    BinaryOperationNode(node, ArithmeticExprEval(parser).eval(), BinaryOperation.LESS_THAN)
-                }
-                LessThanOrEqualToken::class -> parser.advance {
-                    BinaryOperationNode(node, ArithmeticExprEval(parser).eval(), BinaryOperation.LESS_THAN_OR_EQUAL)
-                }
-                GreaterThanToken::class -> parser.advance {
-                    BinaryOperationNode(node, ArithmeticExprEval(parser).eval(), BinaryOperation.GREATER_THAN)
-                }
-                GreaterThanOrEqualToken::class -> parser.advance {
-                    BinaryOperationNode(node, ArithmeticExprEval(parser).eval(), BinaryOperation.GREATER_THAN_OR_EQUAL)
-                }
+                LessThanToken::class -> parser.advance { BinaryOperationNode(node, arithmeticExpr.eval(), BinaryOperation.LESS_THAN) }
+                LessThanOrEqualToken::class -> parser.advance { BinaryOperationNode(node, arithmeticExpr.eval(), BinaryOperation.LESS_THAN_OR_EQUAL) }
+                GreaterThanToken::class -> parser.advance { BinaryOperationNode(node, arithmeticExpr.eval(), BinaryOperation.GREATER_THAN) }
+                GreaterThanOrEqualToken::class -> parser.advance { BinaryOperationNode(node, arithmeticExpr.eval(), BinaryOperation.GREATER_THAN_OR_EQUAL) }
                 else -> break
             }
         }

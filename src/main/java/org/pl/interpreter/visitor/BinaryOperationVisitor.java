@@ -22,9 +22,9 @@ public class BinaryOperationVisitor implements IVisitor {
     @Override
     public Object visit(IInterpreter interpreter, INode node) throws VisitorException {
         var binaryOperationNode = (BinaryOperationNode) node;
-        var left = interpreter.evalNode(binaryOperationNode.leftNode);
-        var right = interpreter.evalNode(binaryOperationNode.rightNode);
-        var op = binaryOperationNode.op;
+        var left = interpreter.evalNode(binaryOperationNode.getLeftNode());
+        var right = interpreter.evalNode(binaryOperationNode.getRightNode());
+        var op = binaryOperationNode.getOp();
 
         if (left instanceof BigDecimal && right instanceof BigDecimal) {
             return interpretNumbers((BigDecimal) left, (BigDecimal) right, op);

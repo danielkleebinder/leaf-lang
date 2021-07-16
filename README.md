@@ -25,7 +25,7 @@ The formal language definition looks like the following. Feel free to implement 
 <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
 <var-assign> ::= <name> '=' <expr>
 
-<type> ::= <number> | <bool> | <string>
+<type> ::= <number> | <bool>
 
 <conditional-expr> ::= 'if' <expr>         '{' <statement-list> '}'
                        ('else' 'if' <expr> '{' <statement-list> '}')*
@@ -33,14 +33,11 @@ The formal language definition looks like the following. Feel free to implement 
 
 <loop-expr> ::= 'loop' (<expr>)? '{' <statement-list> '}'
 
-<expr> ::= <logical-expr> (( AND | OR ) <logical-expr>)*
-
+<expr>       ::= <equal-expr> (( AND | OR ) <equal-expr>)*
 <equal-expr> ::= <logical-expr> (( EQ | NEQ ) <logical-expr>)*
 <arith-expr> ::= <term> (( PLUS | MINUS ) <term>)*
 <logic-expr> ::= NOT <logical-expr>
                | <arith-expr> (( LT | LTE | GT | GTE ) <arith-expr>)*
-
-
 
 <term> ::= <atom> (( MULT | DIVIDE | MOD ) <atom>)*
 <atom> ::= PLUS <number>

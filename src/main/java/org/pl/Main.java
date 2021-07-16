@@ -21,11 +21,23 @@ public class Main {
     private IInterpreter interpreter = new Interpreter();
 
     public Main() {
+        System.out.println("Welcome to the Programming Language CLI");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             while (true) {
-                System.out.print("> ");
+                var program = new StringBuilder();
+                System.out.print("Enter program code > ");
+                while (true) {
+                    var line = reader.readLine();
+                    program.append(line);
+                    if (!line.endsWith("\\")) {
+                        break;
+                    } else {
+                        program.replace(program.length() - 1, program.length(), "\n");
+                    }
+                }
+
                 try {
-                    var tokens = lexer.tokenize(reader.readLine());
+                    var tokens = lexer.tokenize(program.toString());
                     System.out.println("Lexical Analysis    : " + Arrays.toString(tokens));
                     var ast = parser.parse(tokens);
                     System.out.println("Abstract Syntax Tree: " + ast);

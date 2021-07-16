@@ -33,6 +33,8 @@ class NameTokenizer : ITokenizer {
             "loop" -> return LoopKeywordToken()
             "break" -> return BreakKeywordToken()
             "continue" -> return ContinueKeywordToken()
+            "number" -> return NumberKeywordToken()
+            "bool" -> return BoolKeywordToken()
         }
         return NameToken(name)
     }

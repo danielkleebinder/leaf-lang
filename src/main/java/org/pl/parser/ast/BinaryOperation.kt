@@ -1,6 +1,9 @@
-package org.pl.parser.ast;
+package org.pl.parser.ast
 
-public enum BinaryOperation {
+/**
+ * Contains all binary operations implemented in the programming language.
+ */
+enum class BinaryOperation {
     PLUS,
     MINUS,
     DIVIDE,

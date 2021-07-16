@@ -1,7 +1,6 @@
 package org.pl.interpreter.visitor;
 
 import org.pl.interpreter.IInterpreter;
-import org.pl.interpreter.exception.VisitorException;
 import org.pl.parser.ast.INode;
 import org.pl.parser.ast.VarDeclaration;
 import org.pl.parser.ast.VarDeclarationNode;
@@ -18,12 +17,13 @@ public class VarDeclarationVisitor implements IVisitor {
     }
 
     @Override
-    public String visit(IInterpreter interpreter, INode node) throws VisitorException {
+    public String visit(IInterpreter interpreter, INode node) {
         var varDeclarationNode = (VarDeclarationNode) node;
-        for (VarDeclaration declaration : varDeclarationNode.declarations) {
+        for (VarDeclaration declaration : varDeclarationNode.getDeclarations()) {
+            interpreter.evalNode(declaration.getTypeExpr());
             interpreter.getGlobalSymbolTable().set(
-                    declaration.identifier,
-                    interpreter.evalNode(declaration.assignmentExpr));
+                    declaration.getIdentifier(),
+                    interpreter.evalNode(declaration.getAssignmentExpr()));
         }
         return "<var create>";
     }

@@ -24,6 +24,7 @@ public class Interpreter implements IInterpreter {
             add(new VarAccessVisitor());
             add(new VarAssignVisitor());
             add(new VarDeclarationVisitor());
+            add(new TypeVisitor());
         }
     };
 

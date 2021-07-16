@@ -1,8 +1,9 @@
 package org.pl.parser.eval
 
-import org.pl.lexer.token.arithmetic.MinusToken
-import org.pl.lexer.token.arithmetic.PlusToken
+import org.pl.lexer.token.logical.EqualToken
+import org.pl.lexer.token.logical.NotEqualToken
 import org.pl.parser.IParser
+import org.pl.parser.advance
 import org.pl.parser.ast.BinaryOperation
 import org.pl.parser.ast.BinaryOperationNode
 import org.pl.parser.ast.INode
@@ -16,19 +17,13 @@ import org.pl.parser.ast.INode
 class EqualExprEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
-        val term = TermEval(parser)
+        val logicalExpr = LogicalExprEval(parser)
 
-        var node = term.eval()
+        var node = logicalExpr.eval()
         while (true) {
-            when (parser.token::class) {
-                PlusToken::class -> {
-                    parser.advanceCursor()
-                    node = BinaryOperationNode(node, term.eval(), BinaryOperation.PLUS)
-                }
-                MinusToken::class -> {
-                    parser.advanceCursor()
-                    node = BinaryOperationNode(node, term.eval(), BinaryOperation.MINUS)
-                }
+            node = when (parser.token::class) {
+                EqualToken::class -> parser.advance { BinaryOperationNode(node, logicalExpr.eval(), BinaryOperation.EQUAL) }
+                NotEqualToken::class -> parser.advance { BinaryOperationNode(node, logicalExpr.eval(), BinaryOperation.NOT_EQUAL) }
                 else -> break
             }
         }

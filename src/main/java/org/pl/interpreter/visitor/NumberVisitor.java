@@ -20,6 +20,6 @@ public class NumberVisitor implements IVisitor {
 
     @Override
     public BigDecimal visit(IInterpreter interpreter, INode node) throws VisitorException {
-        return ((NumberNode) node).value;
+        return ((NumberNode) node).getValue();
     }
 }

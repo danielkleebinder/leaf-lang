@@ -21,9 +21,9 @@ public class IfVisitor implements IVisitor {
     public Object visit(IInterpreter interpreter, INode node) throws VisitorException {
         var ifNode = (IfNode) node;
         for (IfCase ifCase : ifNode.cases) {
-            var conditionResult = interpreter.evalNode(ifCase.condition);
+            var conditionResult = interpreter.evalNode(ifCase.getCondition());
             if (Boolean.TRUE.equals(conditionResult)) {
-                return interpreter.evalNode(ifCase.caseBody);
+                return interpreter.evalNode(ifCase.getBody());
             }
         }
         if (ifNode.elseCase != null) {

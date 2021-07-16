@@ -17,13 +17,13 @@ import org.pl.parser.ast.INode
 class ExprEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
-        val logicalExpr = LogicalExprEval(parser)
+        val equalExpr = EqualExprEval(parser)
 
-        var node = logicalExpr.eval()
+        var node = equalExpr.eval()
         while (true) {
             node = when (parser.token::class) {
-                LogicalAndToken::class -> parser.advance { BinaryOperationNode(node, logicalExpr.eval(), BinaryOperation.LOGICAL_AND) }
-                LogicalOrToken::class -> parser.advance { BinaryOperationNode(node, logicalExpr.eval(), BinaryOperation.LOGICAL_OR) }
+                LogicalAndToken::class -> parser.advance { BinaryOperationNode(node, equalExpr.eval(), BinaryOperation.LOGICAL_AND) }
+                LogicalOrToken::class -> parser.advance { BinaryOperationNode(node, equalExpr.eval(), BinaryOperation.LOGICAL_OR) }
                 else -> break
             }
         }
