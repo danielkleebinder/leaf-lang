@@ -25,9 +25,14 @@ interface IParser {
      */
     fun advanceCursor(by: Int): Int
 
-    val cursorPosition: Int
-    fun hasNextToken(): Boolean
+    /**
+     * The current token.
+     */
     val token: IToken
+
+    /**
+     * Peeks the next token without advancing the cursor.
+     */
     val peekNextToken: IToken
 
     /**
@@ -45,8 +50,14 @@ interface IParser {
  * Advances the cursor by one and runs the given [body] function. The parameter
  * of the inline function is the new current token.
  */
-inline fun <T> IParser.advance(body: (token: IToken) -> T): T {
-    advanceCursor()
+inline fun <T> IParser.advance(body: (token: IToken) -> T): T = advanceBy(1, body)
+
+/**
+ * Advances the cursor [by] the given amount and runs the given [body] function.
+ * The parameter of the inline function is the new current token.
+ */
+inline fun <T> IParser.advanceBy(by: Int, body: (token: IToken) -> T): T {
+    advanceCursor(by)
     return body(token)
 }
 

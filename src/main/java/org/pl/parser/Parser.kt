@@ -8,8 +8,7 @@ import org.pl.parser.eval.ProgramEval
 class Parser : IParser {
 
     private var tokens = arrayOf<IToken>()
-    override var cursorPosition = 0
-        private set
+    private var cursorPosition = 0
 
     override fun parse(tokens: Array<IToken>): INode {
         this.tokens = tokens
@@ -17,13 +16,14 @@ class Parser : IParser {
         return ProgramEval(this).eval()
     }
 
+    /**
+     * Tests if a next token is available.
+     */
+    private fun hasNextToken() = cursorPosition < tokens.size
+
     override fun advanceCursor(by: Int): Int {
         cursorPosition += by
         return cursorPosition
-    }
-
-    override fun hasNextToken(): Boolean {
-        return cursorPosition < tokens.size
     }
 
     override val token: IToken

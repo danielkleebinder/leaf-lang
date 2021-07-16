@@ -9,6 +9,8 @@ import org.pl.lexer.Lexer;
 import org.pl.parser.IParser;
 import org.pl.parser.Parser;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -151,5 +153,14 @@ public class InterpreterBoolTest {
     void shouldErrorForInvalidBoolLogic() {
         assertThrows(InterpreterException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("true - false"))));
         assertThrows(InterpreterException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("-false"))));
+    }
+
+    @Test
+    void shouldHaveCorrectPrecedenceForEquals() {
+        var result = interpreter.interpret(parser.parse(lexer.tokenize("1 < 2 == true")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("true == 1 < 2")));
+        assertEquals(Arrays.asList(true), result);
     }
 }

@@ -123,4 +123,19 @@ public class InterpreterArithmeticTest {
         assertThrows(InterpreterException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("2 && 1"))));
         assertThrows(EvalException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("*1"))));
     }
+
+    @Test
+    void shouldHaveCorrectPrecedenceForEquals() {
+        var result = interpreter.interpret(parser.parse(lexer.tokenize("1 == 1")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("1 - 1 == 0")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("0 == 1 - 1")));
+        assertEquals(Arrays.asList(true), result);
+
+        result = interpreter.interpret(parser.parse(lexer.tokenize("5 == 2 * 2 + 1")));
+        assertEquals(Arrays.asList(true), result);
+    }
 }
