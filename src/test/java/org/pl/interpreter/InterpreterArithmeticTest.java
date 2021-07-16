@@ -8,6 +8,7 @@ import org.pl.lexer.Lexer;
 import org.pl.parser.IParser;
 import org.pl.parser.Parser;
 import org.pl.parser.exception.EvalException;
+import org.pl.parser.exception.ParserException;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -121,7 +122,7 @@ public class InterpreterArithmeticTest {
     @Test
     void shouldErrorForInvalidArithmetic() {
         assertThrows(InterpreterException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("2 && 1"))));
-        assertThrows(EvalException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("*1"))));
+        assertThrows(ParserException.class, () -> interpreter.interpret(parser.parse(lexer.tokenize("*1"))));
     }
 
     @Test

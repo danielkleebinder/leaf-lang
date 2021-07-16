@@ -1,15 +1,13 @@
-package org.pl.analyzer;
+package org.pl.analyzer
 
-import org.pl.parser.ast.INode;
-
-import java.util.List;
+import org.pl.parser.ast.INode
 
 /**
  * The semantic analyzer is used to traverse a given abstract syntax tree
  * and look for semantic program errors that will inevitably lead to failure
  * if fed to an interpreter.
  */
-public interface ISemanticAnalyzer {
+interface ISemanticAnalyzer {
 
     /**
      * Analyses a given abstract syntax tree (AST) and returns a list of errors. The
@@ -18,5 +16,5 @@ public interface ISemanticAnalyzer {
      * @param ast Abstract syntax tree.
      * @return List of semantic errors.
      */
-    List<SemanticError> analyze(INode ast);
+    fun analyze(ast: INode): Array<SemanticError>?
 }

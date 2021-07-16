@@ -27,7 +27,6 @@ public class InterpreterBoolTest {
         interpreter = new Interpreter();
     }
 
-
     @Test
     void shouldCompareTrueAndFalseKeywords() {
         var result = interpreter.interpret(parser.parse(lexer.tokenize("true == false")));

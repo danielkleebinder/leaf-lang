@@ -49,7 +49,7 @@ public class InterpreterVarTest {
         interpreter.interpret(parser.parse(lexer.tokenize("var b = 42;")));
         assertEquals(BigDecimal.valueOf(42), gst.get("b"));
 
-        interpreter.interpret(parser.parse(lexer.tokenize("var c")));
+        interpreter.interpret(parser.parse(lexer.tokenize("var c: bool")));
         assertNull(gst.get("c"));
     }
 

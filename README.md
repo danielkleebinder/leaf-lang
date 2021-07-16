@@ -1,6 +1,8 @@
-# Programming Language
+# Nyx Programming Language
 
-Influenced by TypeScript, Kotlin, Go, Eiffel, ML.
+![Nyx Icon](https://github.com/danielkleebinder/nyxlang/blob/main/nyxlang.png?raw=true)
+
+(influenced by TypeScript, Kotlin, Go, Eiffel, ML)
 
 ## Grammar
 
