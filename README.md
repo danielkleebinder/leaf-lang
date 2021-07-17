@@ -15,13 +15,14 @@ The formal language definition looks like the following. Feel free to implement 
                    | <statement> ';' <statement-list>
 
 <statement> ::= ('var' | 'const') <var-declare>
-              | <var-assign>
               | <fun-declare>
+              | <var-assign>
               | <expr>
 
 <fun-declare> ::= ('entry')? 'fun' <name> '(' <var-declare> ')'
                               (':' '(' <expr> ')')?
                               (':' '(' <expr> ')')?
+                              ('->' <type>)?
                              '{' <statement-list> '}'
 
 <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*

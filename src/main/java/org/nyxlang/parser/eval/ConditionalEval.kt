@@ -20,13 +20,13 @@ import org.nyxlang.parser.exception.EvalException
  */
 class ConditionalEval(private val parser: IParser) : IEval {
 
-    override fun eval(): INode {
+    override fun eval(): IfNode {
         val expr = ExprEval(parser)
         val statementList = StatementListEval(parser)
 
         val cases = arrayListOf<IfCase>()
         var condition: INode? = null
-        var body: INode? = null
+        var body: INode
         var elseCase: INode? = null
 
         // Evaluate first if <expr> { <statement-list> } block

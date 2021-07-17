@@ -3,6 +3,7 @@ package org.nyxlang.parser.eval
 import org.nyxlang.lexer.token.AssignToken
 import org.nyxlang.lexer.token.NameToken
 import org.nyxlang.lexer.token.keyword.ConstKeywordToken
+import org.nyxlang.lexer.token.keyword.FunKeywordToken
 import org.nyxlang.lexer.token.keyword.VarKeywordToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.INode
@@ -13,8 +14,8 @@ import org.nyxlang.parser.ast.Modifier
  * Evaluates the statement semantics:
  *
  * <statement> ::= ('var' | 'const') <var-declare>
- *               | <var-assign>
  *               | <fun-declare>
+ *               | <var-assign>
  *               | <expr>
  *
  */
@@ -28,6 +29,10 @@ class StatementEval(private val parser: IParser) : IEval {
         if (ConstKeywordToken::class == parser.token::class) {
             parser.advanceCursor()
             return VarDeclareEval(parser).eval().also { it.modifiers.add(Modifier.CONSTANT) }
+        }
+
+        if (FunKeywordToken::class == parser.token::class) {
+            return FunDeclareEval(parser).eval()
         }
 
         if (NameToken::class == parser.token::class &&

@@ -16,7 +16,7 @@ import org.nyxlang.parser.exception.EvalException
  */
 class LoopEval(private val parser: IParser) : IEval {
 
-    override fun eval(): INode {
+    override fun eval(): LoopNode {
         var condition: INode? = null
         var body: INode? = null
 

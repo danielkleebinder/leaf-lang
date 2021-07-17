@@ -30,7 +30,7 @@ class NameTokenizer : ITokenizer {
             "else" -> return ElseKeywordToken()
             "true" -> return BoolToken(true)
             "false" -> return BoolToken(false)
-            "fun" -> return FunctionKeywordToken()
+            "fun" -> return FunKeywordToken()
             "loop" -> return LoopKeywordToken()
             "break" -> return BreakKeywordToken()
             "continue" -> return ContinueKeywordToken()
