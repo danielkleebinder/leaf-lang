@@ -26,8 +26,19 @@ class SemanticAnalyzer : ISemanticAnalyzer {
         )
     }
 
-    override val symbolTable: ISymbolTable = SymbolTable(null)
+    // Scoping
+    override var currentScope: ISymbolTable = SymbolTable(name = "global", withBuiltIns = true)
 
+    override fun enterScope(name: String?) {
+        currentScope = SymbolTable(name = name, parent = currentScope)
+    }
+
+    override fun leaveScope() {
+        println(currentScope)
+        currentScope = currentScope.parent!!
+    }
+
+    // Recursive analysis
     override fun analyze(ast: INode): Array<SemanticError>? {
         val errors = arrayListOf<SemanticError>()
 

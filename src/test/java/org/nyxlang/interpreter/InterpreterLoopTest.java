@@ -64,7 +64,7 @@ public class InterpreterLoopTest extends TestSuit {
         assertEquals(true, globalMemory.get("res"));
         assertEquals(BigDecimal.valueOf(47), globalMemory.get("i"));
 
-        vars = "i = 2; p = 4; res = true;";
+        vars = "var i = 2, p = 4, res = true;";
         execute(vars + program);
         assertEquals(false, globalMemory.get("res"));
         assertEquals(BigDecimal.valueOf(2), globalMemory.get("i"));

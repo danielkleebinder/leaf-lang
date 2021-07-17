@@ -17,7 +17,17 @@ interface ISemanticAnalyzer {
     fun analyze(ast: INode): Array<SemanticError>?
 
     /**
-     * The global symbol table used by the semantic analyzer.
+     * The current symbol table used by the semantic analyzer in the current scope.
      */
-    val symbolTable: ISymbolTable
+    var currentScope: ISymbolTable
+
+    /**
+     * Enters a new scope with an optional [name].
+     */
+    fun enterScope(name: String? = null)
+
+    /**
+     * Leaves the current scope.
+     */
+    fun leaveScope()
 }

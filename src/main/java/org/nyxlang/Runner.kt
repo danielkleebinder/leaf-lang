@@ -34,7 +34,6 @@ fun execute(programCode: String, debug: Boolean = false) {
 
         val errors = analyzer.analyze(ast!!)
         if (debug) {
-            println("Symbol Table        : " + analyzer.symbolTable)
             println("Semantic Errors     : " + Arrays.toString(errors))
         }
 

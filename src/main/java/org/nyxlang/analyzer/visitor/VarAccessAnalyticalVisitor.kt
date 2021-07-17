@@ -12,7 +12,7 @@ class VarAccessAnalyticalVisitor : IAnalyticalVisitor {
     override fun matches(node: INode) = VarAccessNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val varAccessNode = node as VarAccessNode
-        if (analyzer.symbolTable.get(varAccessNode.identifier) == null) {
+        if (analyzer.currentScope.get(varAccessNode.identifier) == null) {
             throw AnalyticalVisitorException("Symbol with name \"${varAccessNode.identifier}\" not defined")
         }
     }

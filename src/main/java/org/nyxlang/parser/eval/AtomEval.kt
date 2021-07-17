@@ -15,13 +15,13 @@ import org.nyxlang.parser.ast.*
 /**
  * Evaluates atoms with the following semantic:
  *
- * <atom> ::= PLUS <number>
- *          | MINUS <number>
- *          | COMPLEMENT <number>
- *          | LPAREN <expr> RPAREN
- *          | <var>
+ * <atom> ::= ('+' | '-' | '~' | '++' | '--')? (<number> | <var>)
+ *          | '(' <expr> ')'
  *          | <conditional-expr>
  *          | <loop-expr>
+ *          | <native-expr>
+ *          | <inc-dec>
+ *          | <empty>
  *
  */
 class AtomEval(private val parser: IParser) : IEval {

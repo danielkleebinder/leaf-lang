@@ -20,19 +20,19 @@ class VarDeclareAnalyticalVisitor : IAnalyticalVisitor {
                     val name = it.identifier
 
                     // Check if a variable with the same name is already declared
-                    if (analyzer.symbolTable.has(name)) {
+                    if (analyzer.currentScope.hasLocal(name)) {
                         throw AnalyticalVisitorException("Symbol \"${name}\" is already declared")
                     }
 
                     // Check if the type exists that is declared
                     var type: Symbol? = null
                     if (it.typeExpr != null) {
-                        type = analyzer.symbolTable.get(it.typeExpr.type)
+                        type = analyzer.currentScope.get(it.typeExpr.type)
                         if (type == null) throw AnalyticalVisitorException("Type \"${it.typeExpr.type}\" is unknown")
                     }
 
                     // Register in symbol table
-                    analyzer.symbolTable.define(VarSymbol(name, type, *varDeclareNode.modifiers.toTypedArray()))
+                    analyzer.currentScope.define(VarSymbol(name, type, *varDeclareNode.modifiers.toTypedArray()))
                 }
     }
 }

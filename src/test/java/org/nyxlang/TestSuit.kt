@@ -50,7 +50,7 @@ open class TestSuit {
         parser = Parser()
         analyzer = SemanticAnalyzer()
         interpreter = Interpreter()
-        globalSymbolTable = analyzer.symbolTable
+        globalSymbolTable = analyzer.currentScope
         globalMemory = interpreter.globalMemory
     }
 

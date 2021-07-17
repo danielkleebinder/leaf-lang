@@ -16,7 +16,7 @@ import java.util.List;
 public class Interpreter implements IInterpreter {
 
     private IActivationRecord globalMemory = new ActivationRecord(null);
-    private ISymbolTable globalSymbolTable = new SymbolTable(null);
+    private ISymbolTable globalSymbolTable = new SymbolTable();
     private List<IVisitor> visitorsList = new ArrayList<>(32) {
         {
             add(new ProgramVisitor());

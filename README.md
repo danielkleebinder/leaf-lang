@@ -37,7 +37,7 @@ The formal language definition in Backus-Naur form looks like the following. Fee
                        ('else' 'if' <expr> '{' <statement-list> '}')*
                        ('else'             '{' <statement-list> '}')?
 
-<loop-expr>   ::= 'loop' (<var-declare>)? (':' <expr>)? (':' <statement>)? '{' <statement-list> '}'
+<loop-expr>   ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? '{' <statement-list> '}'
 <native-expr> ::= 'native' '{' <any> '}'
 
 <expr>       ::= <equal-expr> (( '&&' | '||' ) <equal-expr>)*
@@ -47,11 +47,12 @@ The formal language definition in Backus-Naur form looks like the following. Fee
                | <arith-expr> (( '<' | '<=' | '>' | '>=' ) <arith-expr>)*
 
 <term> ::= <atom> (( '*' | '/' | '%' ) <atom>)*
-<atom> ::= ('+' | '-' | '~' | '--' | '++')? (<number> | <var>)
+<atom> ::= ('+' | '-' | '~' | '++' | '--')? (<number> | <var>)
          | '(' <expr> ')'
          | <conditional-expr>
          | <loop-expr>
          | <native-expr>
+         | <empty>
 
 <type>  ::= <number> | <bool>
 <var>   ::= <name>
@@ -160,10 +161,14 @@ fun main() {
 
   // There is only the "loop" in this programming language. No
   // for, while or do-whiles. You can do everything with this.
-  loop var i = 0 :: ++i {
+  loop var i = 0 :: i++ {
     if dog.fed {
       break
     }
+    dog.feed()
+  }
+
+  loop !dog.fed {
     dog.feed()
   }
 
