@@ -20,8 +20,8 @@ The formal language definition looks like the following. Feel free to implement 
               | <expr>
 
 <fun-declare> ::= ('entry')? 'fun' <name> '(' <var-declare> ')'
-                              ('requires' '(' <expr> ')')?
-                              ('ensures' '(' <expr> ')')?
+                              (':' '(' <expr> ')')?
+                              (':' '(' <expr> ')')?
                              '{' <statement-list> '}'
 
 <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
