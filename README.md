@@ -33,7 +33,8 @@ The formal language definition looks like the following. Feel free to implement 
                        ('else' 'if' <expr> '{' <statement-list> '}')*
                        ('else'             '{' <statement-list> '}')?
 
-<loop-expr> ::= 'loop' (<expr>)? '{' <statement-list> '}'
+<loop-expr>   ::= 'loop' (<expr>)? '{' <statement-list> '}'
+<native-expr> ::= 'native' '{' <any> '}'
 
 <expr>       ::= <equal-expr> (( AND | OR ) <equal-expr>)*
 <equal-expr> ::= <logical-expr> (( EQ | NEQ ) <logical-expr>)*
@@ -49,6 +50,7 @@ The formal language definition looks like the following. Feel free to implement 
          | <var>
          | <conditional-expr>
          | <loop-expr>
+         | <native-expr>
 
 <var> ::= <name>
 <name> ::= IDENTIFIER
@@ -72,7 +74,7 @@ A reduction of the constant function is the zero function which always returns `
 as follows:
 
 ```
-fun c(arr: number[]): number = 0;
+fun c(arr: number[]) -> number = 0;
 ```
 
 #### Successor Function
@@ -80,7 +82,7 @@ The successor function returns the successor value of the given parameter. Since
 functions, simply increasing the value completes the task.
 
 ```
-fun s(x: number): number = (x + 1);
+fun s(x: number) -> number = (x + 1);
 ```
 
 #### Projection Function
@@ -88,7 +90,7 @@ The projection function requires that the value of `i` is in the range of the ar
 the `requires` function property of the programming language.
 
 ```
-fun p(i: number, arr: number[]) requires (0 <= i && i < arr.size): number = arr[i];
+fun p(i: number, arr: number[]) | (0 <= i && i < arr.size) -> number = arr[i];
 ```
 
 Therefore, the proof is done and Turing completeness has been shown.
@@ -118,9 +120,7 @@ Program Source Code
 
 ## Example Program
 
-```
-#pragma precision 12
-
+```kotlin
 package MyProgram;
 
 import "system.io";
@@ -135,22 +135,30 @@ trait CanTalk {
   fun talk(text: string);
 }
 
-class Dog is Feedable, CanTalk {
-  fed: bool;
+type Dog : Feedable, CanTalk {
+
+  fed: bool, happy: bool;
   age: number;
-  fun feed() { fed = true }
-  fun talk(text: string) { print(text) }
-  fun name(): string = "Bello"
+
+  fun feed() = fed = true
+  fun name() -> string = "Bello"
+  fun talk(text: string) = print(name . " says: " . text)
+
 }
 
 
 // The programming language also supports pre- and postconditions
 // (also known as variant and covariant). The application will throw
 // an error if one of those is not fullfilled.
-fun add(a: number, b: number) requires (a > 0 && b > 0) ensures (_ >= (a + b)) {
-  return a + b;
-}
+//
+// The first statement after the parameter list and after the ':' symbol
+// is the precondition that the parameters have to fulfill. The statement
+// after that is the postcondition. The '_' represents the functions result.
+//
+fun add(a: number, b: number) : (a > 0 && b > 0) : (_ >= (a + b)) -> number = a + b
+fun sub(a: number, b: number) :: (_ <= (a - b)) -> number = a - b
 
+// Simple function without pre- or postcondition
 fun printHelloWorld() {
   // Runs the code block in the interpreters native language
   native {
@@ -165,29 +173,32 @@ fun main() {
   // be modified at a later stage.
   const pi: number = 3.141592654;
 
-  // var dog = new Dog;
-  // var dog = new Dog { fed: false };
-  var dog = new Dog { false };
+  // var dog = Dog;
+  // var dog = Dog { fed: false };
+  var dog = Dog { false };
 
   // There is only the "loop" in this programming language. No
   // for, while or do-whiles. You can do everything with this.
-  loop 1..10 {
-    if (dog.fed) {
-      break;
+  loop var i = 0 :: i++ {
+    if dog.fed {
+      break
     }
     dog.feed()
   }
 
   // When is similar to switch-case in other languages
   when dog.fed {
-    true:  { print("Yummy, I am full!") }
-    false: { print("I want some more food") }
-    else:  { print("This is not possible") }
+    true {
+      dog.happy = true;
+      print("Yummy, I am full!");
+    }
+    false { print("I want some more food") }
+    else { print("This is not possible") }
   }
 
-  print(dog.fed);       // true
-  print(dog == dog);    // true
-  print(~(-7+3**2));    // -3
+  print(dog.fed)       // true
+  print(dog == dog)    // true
+  print(~(-7+3**2))    // -3
 
   // Starts the given block in a coroutine
   run { dog.feed() }

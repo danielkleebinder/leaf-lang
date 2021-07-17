@@ -4,6 +4,7 @@ import org.pl.lexer.ILexer
 import org.pl.lexer.token.BoolToken
 import org.pl.lexer.token.IToken
 import org.pl.lexer.token.NameToken
+import org.pl.lexer.token.NativeToken
 import org.pl.lexer.token.keyword.*
 
 /**
@@ -35,6 +36,29 @@ class NameTokenizer : ITokenizer {
             "continue" -> return ContinueKeywordToken()
             "number" -> return NumberKeywordToken()
             "bool" -> return BoolKeywordToken()
+            "native" -> {
+                // The native keyword needs some special treatment since the lexer has
+                // to completely ignore this part
+                val programCodeBuilder = StringBuilder()
+                var braceCount = 1
+                while (lexer.symbol != '{') {
+                    lexer.advanceCursor()
+                }
+                while (true) {
+                    lexer.advanceCursor()
+                    if (lexer.symbol == '{') {
+                        braceCount++
+                    } else if (lexer.symbol == '}') {
+                        braceCount--
+                        if (braceCount <= 0) {
+                            break
+                        }
+                    }
+                    programCodeBuilder.append(lexer.symbol)
+                }
+                val programCode = programCodeBuilder.toString().trim()
+                return NativeToken(programCode)
+            }
         }
         return NameToken(name)
     }

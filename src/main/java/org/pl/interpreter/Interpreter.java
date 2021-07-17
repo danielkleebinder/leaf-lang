@@ -25,6 +25,7 @@ public class Interpreter implements IInterpreter {
             add(new NumberVisitor());
             add(new IfVisitor());
             add(new LoopVisitor());
+            add(new NativeVisitor());
             add(new StatementListVisitor());
             add(new VarAccessVisitor());
             add(new VarAssignVisitor());

@@ -4,5 +4,5 @@ package org.pl.lexer.token
  * The token that separates statements.
  */
 class StatementSeparatorToken : IToken {
-    override fun toString() = "StatementSeparatorToken{;}"
+    override fun toString() = "StatementSeparatorToken{; or \\n}"
 }

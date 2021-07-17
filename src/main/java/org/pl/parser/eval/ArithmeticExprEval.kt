@@ -18,7 +18,6 @@ class ArithmeticExprEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
         val term = TermEval(parser)
-
         var node = term.eval()
         while (true) {
             node = when (parser.token::class) {

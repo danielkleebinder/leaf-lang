@@ -52,6 +52,14 @@ public class InterpreterLoopTest {
     }
 
     @Test
+    void shouldLoopConditionOnly() {
+    }
+
+    @Test
+    void shouldLoopInitConditionUpdate() {
+    }
+
+    @Test
     void shouldEvaluateConditionNotJustOnce() {
         interpreter.interpret(parser.parse(lexer.tokenize("" +
                 "var i = 5;" +

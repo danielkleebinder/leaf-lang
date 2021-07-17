@@ -9,7 +9,6 @@ import org.pl.lexer.token.keyword.LoopKeywordToken
 import org.pl.parser.IParser
 import org.pl.parser.advance
 import org.pl.parser.ast.*
-import org.pl.parser.exception.EvalException
 
 /**
  * Evaluates atoms with the following semantic:
@@ -35,7 +34,7 @@ class AtomEval(private val parser: IParser) : IEval {
 
             ConditionalKeywordToken::class -> return ConditionalEval(parser).eval()
             LoopKeywordToken::class -> return LoopEval(parser).eval()
-
+            NativeToken::class -> return NativeEval(parser).eval()
 
             PlusToken::class -> parser.advance { return UnaryOperationNode(eval(), UnaryOperation.POSITIVE) }
             MinusToken::class -> parser.advance { return UnaryOperationNode(eval(), UnaryOperation.NEGATE) }
