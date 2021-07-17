@@ -2,6 +2,11 @@
 
 ![Nyx Icon](https://github.com/danielkleebinder/nyxlang/blob/main/nyxlang.png?raw=true)
 
+The Nyx programming language (also known as nyxlang) is a statically and strongly typed interpreted programming language that allows the developer
+to implement traits and custom types. It is object oriented, but does not support inheritance since inheritance is a common source of
+maintainability issues.
+
+
 (influenced by TypeScript, Kotlin, Go, Eiffel, ML)
 
 ## Grammar
@@ -91,7 +96,7 @@ The projection function requires that the value of `i` is in the range of the ar
 the `requires` function property of the programming language.
 
 ```
-fun p(i: number, arr: number[]) | (0 <= i && i < arr.size) -> number = arr[i];
+fun p(i: number, arr: number[]) : (0 <= i && i < arr.size) -> number = arr[i];
 ```
 
 Therefore, the proof is done and Turing completeness has been shown.
@@ -180,7 +185,7 @@ fun main() {
 
   // There is only the "loop" in this programming language. No
   // for, while or do-whiles. You can do everything with this.
-  loop var i = 0 :: i++ {
+  loop i = 0 :: i++ {
     if dog.fed {
       break
     }
