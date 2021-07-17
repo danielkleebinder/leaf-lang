@@ -2,7 +2,7 @@
 
 ![Nyx Icon](https://github.com/danielkleebinder/nyxlang/blob/main/nyxlang.png?raw=true)
 
-The Nyx programming language (also known as nyxlang) is a statically and strongly typed interpreted programming language that allows the developer
+The nyx programming language (also known as nyxlang) is a statically and strongly typed interpreted programming language that allows the developer
 to implement traits and custom types. It is object oriented, but does not support inheritance since inheritance is a common source of
 maintainability issues.
 
@@ -11,7 +11,7 @@ maintainability issues.
 
 ## Grammar
 
-The formal language definition looks like the following. Feel free to implement it yourself.
+The formal language definition in Backus-Naur form looks like the following. Feel free to implement it yourself.
 
 ```
 <program> ::= <statement-list>
@@ -24,14 +24,14 @@ The formal language definition looks like the following. Feel free to implement 
               | <var-assign>
               | <expr>
 
-<fun-declare> ::= ('entry')? 'fun' <name> '(' <var-declare> ')'
-                              (':' '(' <expr> ')')?
-                              (':' '(' <expr> ')')?
-                              ('->' <type>)?
-                             '{' <statement-list> '}'
+<fun-declare> ::= 'fun' <name> ('(' <var-declare> ')')?
+                   (':' '(' <expr> ')')?
+                   (':' '(' <expr> ')')?
+                   ('->' <type>)?
+                   (('{' <statement-list> '}') | ('=' <statement>)))
 
 <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
-<var-assign> ::= <name> '=' <expr>
+<var-assign>  ::= <name> '=' <expr>
 
 <type> ::= <number> | <bool>
 
@@ -178,10 +178,11 @@ fun main() {
   // Constants must be initialized on declaration and cannot
   // be modified at a later stage.
   const pi: number = 3.141592654;
+  const square = fun (x: number) -> number = x * x
 
   // var dog = Dog;
   // var dog = Dog { fed: false };
-  var dog = Dog { false };
+  var dog = Dog { false }
 
   // There is only the "loop" in this programming language. No
   // for, while or do-whiles. You can do everything with this.

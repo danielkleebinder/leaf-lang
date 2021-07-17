@@ -3,7 +3,7 @@ package org.nyxlang.parser.ast
 /**
  * Node that allows function declaration and definition.
  */
-class FunDeclareNode(val name: String,
+class FunDeclareNode(val name: String?,
                      val params: VarDeclareNode?,
                      val requires: INode?,
                      val ensures: INode?,

@@ -36,7 +36,7 @@ class Parser : IParser {
     /**
      * Tests if a next token is available.
      */
-    private fun hasNextToken() = cursorPosition < tokens.size
+    private fun hasNextToken() = cursorPosition + 1 < tokens.size
 
     override fun advanceCursor(by: Int): Int {
         cursorPosition += by
@@ -44,7 +44,7 @@ class Parser : IParser {
     }
 
     override val token: IToken
-        get() = if (!hasNextToken()) {
+        get() = if (cursorPosition >= tokens.size) {
             EndOfProgramToken()
         } else tokens[cursorPosition]
 

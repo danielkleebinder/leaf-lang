@@ -20,16 +20,18 @@ class FunDeclareAnalyticalVisitor : IAnalyticalVisitor {
         var funParams = listOf<VarSymbol>()
         var funReturns: Symbol? = null
 
-        if (analyzer.symbolTable.has(funName)) {
+        if (funName != null && analyzer.symbolTable.has(funName)) {
             throw AnalyticalVisitorException("Symbol with name \"${funName}\" already declared")
         }
 
-        if (funDeclareNode.requires != null) analyzer.analyze(funDeclareNode.requires)
-        if (funDeclareNode.ensures != null) analyzer.analyze(funDeclareNode.ensures)
-        if (funDeclareNode.body != null) analyzer.analyze(funDeclareNode.body)
+        // TODO: Fix this
+        // if (funDeclareNode.requires != null) analyzer.analyze(funDeclareNode.requires)
+        // if (funDeclareNode.ensures != null) analyzer.analyze(funDeclareNode.ensures)
+        // if (funDeclareNode.body != null) analyzer.analyze(funDeclareNode.body)
 
         if (funDeclareNode.params != null) {
-            analyzer.analyze(funDeclareNode.params)
+            // TODO: Fix this
+            // analyzer.analyze(funDeclareNode.params)
             funParams = funDeclareNode.params.declarations.map {
                 var typeSymbol: Symbol? = null
                 if (it.typeExpr != null) typeSymbol = analyzer.symbolTable.get(it.typeExpr!!.type)
@@ -45,6 +47,8 @@ class FunDeclareAnalyticalVisitor : IAnalyticalVisitor {
             }
         }
 
-        analyzer.symbolTable.define(FunSymbol(funName, funParams, funReturns))
+        if (funName != null) {
+            analyzer.symbolTable.define(FunSymbol(funName, funParams, funReturns))
+        }
     }
 }

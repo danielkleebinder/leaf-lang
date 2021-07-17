@@ -19,11 +19,11 @@ import org.nyxlang.parser.exception.EvalException
 /**
  * Evaluates the function declaration semantics:
  *
- * <fun-declare> ::= ('entry')? 'fun' <name> '(' <var-declare> ')'
- *                              (':' '(' <expr> ')')?
- *                              (':' '(' <expr> ')')?
- *                              ('->' <type>)?
- *                              '{' <statement-list> '}'
+ * <fun-declare> ::= 'fun' <name> ('(' <var-declare> ')')?
+ *                    (':' '(' <expr> ')')?
+ *                    (':' '(' <expr> ')')?
+ *                    ('->' <type>)?
+ *                    (('{' <statement-list> '}') | ('=' <statement>)))
  *
  * Example of a function:
  *
@@ -49,7 +49,7 @@ class FunDeclareEval(private val parser: IParser) : IEval {
         funBody { body = if (it) StatementEval(parser).eval() else StatementListEval(parser).eval() }
 
         return FunDeclareNode(
-                name = name!!,
+                name = name,
                 params = params,
                 requires = requires,
                 ensures = ensures,
@@ -67,13 +67,10 @@ class FunDeclareEval(private val parser: IParser) : IEval {
         }
         parser.advanceCursor()
 
-        // Every function needs a name
-        if (NameToken::class != parser.token::class) {
-            throw EvalException("Function name expected, but got ${parser.token}")
+        // Functions do not require a name. Functions without names are anonymous functions.
+        if (NameToken::class == parser.token::class) {
+            name()
         }
-
-        // Run the name expression now
-        name()
     }
 
     /**
@@ -84,8 +81,10 @@ class FunDeclareEval(private val parser: IParser) : IEval {
         if (LeftParenthesisToken::class != parser.token::class) return
         parser.advanceCursor()
 
-        // Evaluate the param list
-        paramList()
+        // Evaluate the param list if there is a non-empty list at all
+        if (RightParenthesisToken::class != parser.token::class) {
+            paramList()
+        }
 
         if (RightParenthesisToken::class != parser.token::class) {
             throw EvalException("Closing parenthesis is required for parameter list in function definition")
