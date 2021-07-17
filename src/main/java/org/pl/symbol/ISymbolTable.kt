@@ -8,23 +8,23 @@ interface ISymbolTable {
 
     /**
      * Defines a new [symbol] in the symbol table which is associated
-     * with the given [identifier].
+     * with its name property. Returns the previous symbol with this name.
      */
-    fun set(identifier: String, symbol: Symbol)
+    fun define(symbol: Symbol): Symbol?
 
     /**
-     * Returns the symbol associated with the given [identifier].
+     * Returns the symbol associated with the given [name].
      */
-    fun get(identifier: String): Symbol?
+    fun get(name: String): Symbol?
 
     /**
-     * Returns true if a symbol with the given [identifier] exists, otherwise
+     * Returns true if a symbol with the given [name] exists, otherwise
      * false is returned.
      */
-    fun has(identifier: String) = get(identifier) != null
+    fun has(name: String) = get(name) != null
 
     /**
-     * Removes the symbol with the given [identifier] from this symbol table.
+     * Removes the symbol with the given [name] from this symbol table.
      */
-    fun remove(identifier: String): Symbol?
+    fun remove(name: String): Symbol?
 }

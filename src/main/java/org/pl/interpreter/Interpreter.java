@@ -19,6 +19,7 @@ public class Interpreter implements IInterpreter {
     private ISymbolTable globalSymbolTable = new SymbolTable(null);
     private List<IVisitor> visitorsList = new ArrayList<>(32) {
         {
+            add(new ProgramVisitor());
             add(new UnaryOperationVisitor());
             add(new BinaryOperationVisitor());
             add(new BoolVisitor());
@@ -29,7 +30,7 @@ public class Interpreter implements IInterpreter {
             add(new StatementListVisitor());
             add(new VarAccessVisitor());
             add(new VarAssignVisitor());
-            add(new VarDeclarationVisitor());
+            add(new VarDeclareVisitor());
             add(new TypeVisitor());
         }
     };

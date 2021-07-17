@@ -8,18 +8,21 @@ class SymbolTable(private val parent: ISymbolTable?) : ISymbolTable {
 
     private val symbols = hashMapOf<String, Symbol>()
 
-    override fun set(identifier: String, symbol: Symbol) {
-        symbols[identifier] = symbol
+    init {
+        define(BuiltInSymbol("number"))
+        define(BuiltInSymbol("bool"))
+        define(BuiltInSymbol("string"))
     }
 
-    override fun get(identifier: String): Symbol? {
-        val symbol = symbols[identifier]
+    override fun get(name: String): Symbol? {
+        val symbol = symbols[name]
         if (parent != null && symbol == null) {
-            return parent.get(identifier)
+            return parent.get(name)
         }
         return symbol
     }
 
-    override fun remove(identifier: String) = symbols.remove(identifier)
+    override fun define(symbol: Symbol) = symbols.put(symbol.name, symbol)
+    override fun remove(name: String) = symbols.remove(name)
     override fun toString() = "SymbolTable(parent=$parent, symbols=$symbols)"
 }

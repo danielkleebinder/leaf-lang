@@ -9,7 +9,7 @@ import org.pl.parser.advanceIf
 import org.pl.parser.ast.INode
 import org.pl.parser.ast.TypeNode
 import org.pl.parser.ast.VarDeclaration
-import org.pl.parser.ast.VarDeclarationNode
+import org.pl.parser.ast.VarDeclareNode
 import org.pl.parser.exception.EvalException
 import java.util.*
 
@@ -21,7 +21,7 @@ import java.util.*
  */
 class VarDeclareEval(private val parser: IParser) : IEval {
 
-    override fun eval(): VarDeclarationNode {
+    override fun eval(): VarDeclareNode {
         val declarations = ArrayList<VarDeclaration>(4)
         while (true) {
 
@@ -49,6 +49,6 @@ class VarDeclareEval(private val parser: IParser) : IEval {
             }
             parser.advanceCursor()
         }
-        return VarDeclarationNode(declarations)
+        return VarDeclareNode(declarations)
     }
 }

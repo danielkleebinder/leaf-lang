@@ -1,6 +1,7 @@
 package org.pl.analyzer
 
 import org.pl.parser.ast.INode
+import org.pl.symbol.ISymbolTable
 
 /**
  * The semantic analyzer is used to traverse a given abstract syntax tree
@@ -10,11 +11,13 @@ import org.pl.parser.ast.INode
 interface ISemanticAnalyzer {
 
     /**
-     * Analyses a given abstract syntax tree (AST) and returns a list of errors. The
+     * Analyses a given abstract syntax tree ([ast]) and returns a list of errors. The
      * list is empty if no errors are found.
-     *
-     * @param ast Abstract syntax tree.
-     * @return List of semantic errors.
      */
     fun analyze(ast: INode): Array<SemanticError>?
+
+    /**
+     * The global symbol table used by the semantic analyzer.
+     */
+    val symbolTable: ISymbolTable
 }

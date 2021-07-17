@@ -10,7 +10,7 @@ import org.pl.parser.ast.INode;
 public interface IVisitor {
 
     /**
-     * Tests if this runtime is applicable for the given node.
+     * Tests if this visitor is applicable for the given node.
      *
      * @param node Node to be run.
      * @return True if applicable, otherwise false.

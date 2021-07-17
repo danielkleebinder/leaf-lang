@@ -3,22 +3,22 @@ package org.pl.interpreter.visitor;
 import org.pl.interpreter.IInterpreter;
 import org.pl.parser.ast.INode;
 import org.pl.parser.ast.VarDeclaration;
-import org.pl.parser.ast.VarDeclarationNode;
+import org.pl.parser.ast.VarDeclareNode;
 
 
 /**
  * Interprets the var declaration node.
  */
-public class VarDeclarationVisitor implements IVisitor {
+public class VarDeclareVisitor implements IVisitor {
 
     @Override
     public boolean matches(INode node) {
-        return VarDeclarationNode.class == node.getClass();
+        return VarDeclareNode.class == node.getClass();
     }
 
     @Override
     public String visit(IInterpreter interpreter, INode node) {
-        var varDeclarationNode = (VarDeclarationNode) node;
+        var varDeclarationNode = (VarDeclareNode) node;
         for (VarDeclaration declaration : varDeclarationNode.getDeclarations()) {
             interpreter.evalNode(declaration.getTypeExpr());
             interpreter.getGlobalMemory().set(

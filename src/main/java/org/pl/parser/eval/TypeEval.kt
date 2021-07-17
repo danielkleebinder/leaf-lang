@@ -1,5 +1,6 @@
 package org.pl.parser.eval
 
+import org.pl.lexer.token.NameToken
 import org.pl.lexer.token.keyword.BoolKeywordToken
 import org.pl.lexer.token.keyword.NumberKeywordToken
 import org.pl.parser.IParser
@@ -14,10 +15,10 @@ import org.pl.parser.exception.EvalException
  *
  */
 class TypeEval(private val parser: IParser) : IEval {
-
     override fun eval() = when (parser.token::class) {
         NumberKeywordToken::class -> parser.advance { TypeNode("number") }
         BoolKeywordToken::class -> parser.advance { TypeNode("bool") }
-        else -> throw EvalException("Unknown type ${parser.token}")
+        NameToken::class -> TypeNode((parser.tokenAndAdvance as NameToken).getValue())
+        else -> throw EvalException("Unknown type \"${parser.token}\"")
     }
 }
