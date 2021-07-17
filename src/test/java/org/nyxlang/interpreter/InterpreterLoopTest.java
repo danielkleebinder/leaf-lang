@@ -31,10 +31,14 @@ public class InterpreterLoopTest extends TestSuit {
 
     @Test
     void shouldLoopConditionOnly() {
+        execute("var i = 5; loop i > 1 { --i }");
+        assertEquals(BigDecimal.ONE, globalMemory.get("i"));
     }
 
     @Test
-    void shouldLoopInitConditionUpdate() {
+    void shouldLoopInitConditionStep() {
+        execute("loop var i = 0 : i < 5 : ++i {}");
+        assertEquals(BigDecimal.valueOf(5), globalMemory.get("i"));
     }
 
     @Test

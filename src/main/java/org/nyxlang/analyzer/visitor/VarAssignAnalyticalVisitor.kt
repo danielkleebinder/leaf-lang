@@ -15,9 +15,8 @@ class VarAssignAnalyticalVisitor : IAnalyticalVisitor {
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val varAssignNode = node as VarAssignNode
         val symbol = analyzer.symbolTable.get(varAssignNode.identifier)
-        if (symbol == null) {
-            throw AnalyticalVisitorException("Symbol with name \"${varAssignNode.identifier}\" not defined")
-        }
+                ?: throw AnalyticalVisitorException("Symbol with name \"${varAssignNode.identifier}\" not defined")
+
         if (VarSymbol::class == symbol::class) {
             (symbol as VarSymbol).modifiers.forEach {
                 when (it) {

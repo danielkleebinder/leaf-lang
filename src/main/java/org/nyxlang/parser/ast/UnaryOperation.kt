@@ -6,6 +6,8 @@ package org.nyxlang.parser.ast
 enum class UnaryOperation {
     POSITIVE,
     NEGATE,
+    INCREMENT,
+    DECREMENT,
     LOGICAL_NEGATE,
     BIT_COMPLEMENT
 }

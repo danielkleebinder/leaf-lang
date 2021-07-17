@@ -11,7 +11,9 @@ class LoopAnalyticalVisitor : IAnalyticalVisitor {
     override fun matches(node: INode) = LoopNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val loopNode = node as LoopNode
+        if (loopNode.init != null) analyzer.analyze(loopNode.init)
         if (loopNode.condition != null) analyzer.analyze(loopNode.condition)
+        if (loopNode.step != null) analyzer.analyze(loopNode.step)
         if (loopNode.body != null) analyzer.analyze(loopNode.body)
     }
 }

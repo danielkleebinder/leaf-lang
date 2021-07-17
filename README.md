@@ -2,7 +2,7 @@
 
 ![Nyx Icon](https://github.com/danielkleebinder/nyxlang/blob/main/nyxlang.png?raw=true)
 
-The nyx programming language (also known as nyxlang) is a statically and strongly typed interpreted programming language that allows the developer
+The nyx programming language (also known as nyxlang) is a statically and strongly typed, lexically scoped and interpreted programming language that allows the developer
 to implement traits and custom types. It is object oriented, but does not support inheritance since inheritance is a common source of
 maintainability issues.
 
@@ -33,33 +33,29 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
 <var-assign>  ::= <name> '=' <expr>
 
-<type> ::= <number> | <bool>
-
 <conditional-expr> ::= 'if' <expr>         '{' <statement-list> '}'
                        ('else' 'if' <expr> '{' <statement-list> '}')*
                        ('else'             '{' <statement-list> '}')?
 
-<loop-expr>   ::= 'loop' (<expr>)? '{' <statement-list> '}'
+<loop-expr>   ::= 'loop' (<var-declare>)? (':' <expr>)? (':' <statement>)? '{' <statement-list> '}'
 <native-expr> ::= 'native' '{' <any> '}'
 
-<expr>       ::= <equal-expr> (( AND | OR ) <equal-expr>)*
-<equal-expr> ::= <logical-expr> (( EQ | NEQ ) <logical-expr>)*
-<arith-expr> ::= <term> (( PLUS | MINUS ) <term>)*
+<expr>       ::= <equal-expr> (( '&&' | '||' ) <equal-expr>)*
+<equal-expr> ::= <logical-expr> (( '==' | '!=' ) <logical-expr>)*
+<arith-expr> ::= <term> (( '+' | '-' ) <term>)*
 <logic-expr> ::= NOT <logical-expr>
-               | <arith-expr> (( LT | LTE | GT | GTE ) <arith-expr>)*
+               | <arith-expr> (( '<' | '<=' | '>' | '>=' ) <arith-expr>)*
 
-<term> ::= <atom> (( MULT | DIVIDE | MOD ) <atom>)*
-<atom> ::= PLUS <number>
-         | MINUS <number>
-         | COMPLEMENT <number>
-         | LPAREN <expr> RPAREN
-         | <var>
+<term> ::= <atom> (( '*' | '/' | '%' ) <atom>)*
+<atom> ::= ('+' | '-' | '~' | '--' | '++')? (<number> | <var>)
+         | '(' <expr> ')'
          | <conditional-expr>
          | <loop-expr>
          | <native-expr>
 
-<var> ::= <name>
-<name> ::= IDENTIFIER
+<type>  ::= <number> | <bool>
+<var>   ::= <name>
+<name>  ::= IDENTIFIER
 <empty> ::= ()
 ```
 
@@ -100,28 +96,6 @@ fun p(i: number, arr: number[]) : (0 <= i && i < arr.size) -> number = arr[i];
 ```
 
 Therefore, the proof is done and Turing completeness has been shown.
-
-
-## Interpreter Workflow
-
-```
-Program Source Code
-         |
-         V
-       Lexer
-         |
-         V
-       Parser
-         |
-         V
-       Linker
-         |
-         V
-      Analyzer
-         |
-         V
-     Interpreter
-```
 
 
 ## Example Program
@@ -186,7 +160,7 @@ fun main() {
 
   // There is only the "loop" in this programming language. No
   // for, while or do-whiles. You can do everything with this.
-  loop i = 0 :: i++ {
+  loop var i = 0 :: ++i {
     if dog.fed {
       break
     }

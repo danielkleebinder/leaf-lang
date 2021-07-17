@@ -1,6 +1,8 @@
 package org.nyxlang.parser.eval
 
 import org.nyxlang.lexer.token.*
+import org.nyxlang.lexer.token.arithmetic.DecrementToken
+import org.nyxlang.lexer.token.arithmetic.IncrementToken
 import org.nyxlang.lexer.token.arithmetic.MinusToken
 import org.nyxlang.lexer.token.arithmetic.PlusToken
 import org.nyxlang.lexer.token.bracket.LeftParenthesisToken
@@ -38,6 +40,8 @@ class AtomEval(private val parser: IParser) : IEval {
 
             PlusToken::class -> parser.advance { return UnaryOperationNode(eval(), UnaryOperation.POSITIVE) }
             MinusToken::class -> parser.advance { return UnaryOperationNode(eval(), UnaryOperation.NEGATE) }
+            IncrementToken::class -> parser.advance { return UnaryOperationNode(eval(), UnaryOperation.INCREMENT) }
+            DecrementToken::class -> parser.advance { return UnaryOperationNode(eval(), UnaryOperation.DECREMENT) }
             ComplementToken::class -> parser.advance { return UnaryOperationNode(eval(), UnaryOperation.BIT_COMPLEMENT) }
 
             LeftParenthesisToken::class -> {
