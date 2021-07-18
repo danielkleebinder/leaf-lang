@@ -1,5 +1,7 @@
 package org.nyxlang.interpreter.memory
 
+import org.nyxlang.interpreter.exception.MemoryException
+
 /**
  * Implementation of the activation record specification. The given parameter [staticLink]
  * represents the static program context in which record is used.
@@ -10,6 +12,13 @@ class ActivationRecord(override val staticLink: IActivationRecord? = null,
     private val localVariables = hashMapOf<String, Any?>()
 
     override operator fun set(identifier: String, value: Any?) {
+        if (!localVariables.containsKey(identifier)) {
+            throw MemoryException("Variable with name \"$identifier\" not found in local scope")
+        }
+        localVariables[identifier] = value
+    }
+
+    override fun define(identifier: String, value: Any?) {
         localVariables[identifier] = value
     }
 

@@ -15,7 +15,7 @@ class VarDeclareVisitor : IVisitor {
             val name = declaration.identifier
             val type = interpreter.evalNode(declaration.typeExpr)
             val value = interpreter.evalNode(declaration.assignmentExpr)
-            interpreter.activationRecord!![name] = value
+            interpreter.activationRecord!!.define(name, value)
         }
         return "<var create>"
     }

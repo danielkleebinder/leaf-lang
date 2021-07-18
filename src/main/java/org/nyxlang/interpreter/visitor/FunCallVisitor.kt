@@ -25,7 +25,7 @@ class FunCallVisitor : IVisitor {
         // Push a new activation record onto the stack and assign the variables
         interpreter.withActivationRecord(funName) { activationRecord ->
             spec!!.params.zip(actualArgs).forEach {
-                activationRecord[it.first.name] = it.second
+                activationRecord.define(it.first.name, it.second)
             }
 
             if (false == interpreter.evalNode(spec.requires)) {
@@ -35,7 +35,7 @@ class FunCallVisitor : IVisitor {
             val result = interpreter.evalNode(spec.body)
 
             if (spec.returns != null) {
-                activationRecord["_"] = result
+                activationRecord.define("_", result)
                 if (false == interpreter.evalNode(spec.ensures)) {
                     throw VisitorException("Ensures expression of function \"$funName\" failed")
                 }

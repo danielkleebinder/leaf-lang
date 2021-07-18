@@ -1,0 +1,8 @@
+// Shows the concept of recursion on a
+// very simple example
+
+fun test(a: number) {
+  if a > 0 { test(a - 1) }
+}
+
+test(5)

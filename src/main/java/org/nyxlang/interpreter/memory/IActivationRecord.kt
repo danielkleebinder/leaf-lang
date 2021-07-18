@@ -16,11 +16,18 @@ interface IActivationRecord {
      */
     val name: String?
 
+
+    /**
+     * Sets the value of a variable in this activation record or any parent using
+     * the given [identifier] and the new [value].
+     */
+    operator fun set(identifier: String, value: Any?)
+
     /**
      * Places a new local variable into the activation record using the
      * given [value] for the given [identifier].
      */
-    operator fun set(identifier: String, value: Any?)
+    fun define(identifier: String, value: Any?)
 
     /**
      * Returns the value associated with the given [identifier].
