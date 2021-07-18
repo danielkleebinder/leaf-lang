@@ -40,18 +40,18 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
 <var-assign>  ::= <name> '=' <expr>
 
-<conditional-stmt> ::= 'if' <expr>         <block-stmt>
-                       ('else' 'if' <expr> <block-stmt>)*
-                       ('else'             <block-stmt>)?
+<conditional-stmt> ::= 'if' <expr>         <statement>
+                       ('else' 'if' <expr> <statement>)*
+                       ('else'             <statement>)?
 
 <block-stmt> ::= '{' <statement-list> '}'
 <loop-stmt>  ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? <statement>
 <when-stmt>  ::= 'when' (<expr>)? '{' ((<expr> | 'else') ':' <statement> ))* '}'
 
 <expr>       ::= <equal-expr> (( '&&' | '||' ) <equal-expr>)*
-<equal-expr> ::= <logical-expr> (( '==' | '!=' ) <logical-expr>)*
+<equal-expr> ::= <logic-expr> (( '==' | '!=' ) <logic-expr>)*
 <arith-expr> ::= <term> (( '+' | '-' ) <term>)*
-<logic-expr> ::= NOT <logical-expr>
+<logic-expr> ::= NOT <logic-expr>
                | <arith-expr> (( '<' | '<=' | '>' | '>=' ) <arith-expr>)*
 
 <term> ::= <atom> (( '*' | '/' | '%' ) <atom>)*
@@ -98,7 +98,7 @@ as follows:
 fun c(arr: number[]) -> number = 0
 ```
 
-#### Successor Function
+##### Successor Function
 The successor function returns the successor value of the given parameter. Since numbers are sufficient for µ-recursive
 functions, simply increasing the value completes the task.
 
@@ -106,7 +106,7 @@ functions, simply increasing the value completes the task.
 fun s(x: number) -> number = (x + 1)
 ```
 
-#### Projection Function
+##### Projection Function
 The projection function requires that the value of `i` is in the range of the arrays size. This can be assured by using
 the `requires` function property of the programming language.
 

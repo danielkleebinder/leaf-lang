@@ -21,7 +21,7 @@ class ConditionalEval(private val parser: IParser) : IEval {
 
     override fun eval(): ConditionalNode {
         val expr = ExprEval(parser)
-        val block = BlockEval(parser)
+        val statement = StatementEval(parser)
 
         val cases = arrayListOf<ConditionalCase>()
         var condition: INode? = null
@@ -30,7 +30,7 @@ class ConditionalEval(private val parser: IParser) : IEval {
 
         // Evaluate first if <expr> <block-stmt> block
         conditionalHead { condition = expr.eval() }
-        cases.add(ConditionalCase(condition, block.eval()))
+        cases.add(ConditionalCase(condition, statement.eval()))
 
         // Evaluate further case blocks
         while (ElseKeywordToken::class == parser.token::class) {
@@ -40,9 +40,9 @@ class ConditionalEval(private val parser: IParser) : IEval {
                 parser.advanceCursor()
 
                 condition = expr.eval()
-                cases.add(ConditionalCase(condition, block.eval()))
+                cases.add(ConditionalCase(condition, statement.eval()))
             } else {
-                elseCase = block.eval()
+                elseCase = statement.eval()
             }
         }
 
