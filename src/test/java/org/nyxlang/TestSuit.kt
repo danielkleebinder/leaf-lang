@@ -6,6 +6,7 @@ import org.nyxlang.analyzer.SemanticAnalyzer
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.Interpreter
 import org.nyxlang.interpreter.memory.IActivationRecord
+import org.nyxlang.interpreter.memory.ICallStack
 import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
 import org.nyxlang.parser.IParser
@@ -42,7 +43,8 @@ open class TestSuit {
     lateinit var analyzer: ISemanticAnalyzer
     lateinit var interpreter: IInterpreter
     lateinit var globalSymbolTable: ISymbolTable
-    lateinit var globalMemory: IActivationRecord
+    lateinit var globalActivationRecord: IActivationRecord
+    lateinit var callStack: ICallStack
 
     @BeforeEach
     open fun beforeEach() {
@@ -51,7 +53,8 @@ open class TestSuit {
         analyzer = SemanticAnalyzer()
         interpreter = Interpreter()
         globalSymbolTable = analyzer.currentScope
-        globalMemory = interpreter.globalMemory
+        globalActivationRecord = interpreter.activationRecord!!
+        callStack = interpreter.callStack
     }
 
     /**
@@ -71,7 +74,7 @@ open class TestSuit {
     /**
      * Executes the given [programCode] by running all stages.
      */
-    fun execute(programCode: String): Any {
+    fun execute(programCode: String): Any? {
         val tokens = lexer.tokenize(programCode)
         val ast = parser.parse(tokens)
         analyzer.analyze(ast!!)

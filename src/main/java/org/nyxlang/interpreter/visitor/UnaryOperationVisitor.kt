@@ -24,11 +24,13 @@ class UnaryOperationVisitor : IVisitor {
             val result = interpretNumber(value, op)
             if (VarAccessNode::class == unaryOperationNode.node::class) {
                 val varAccessNode = unaryOperationNode.node as VarAccessNode
+                val varName = varAccessNode.identifier
 
                 // Write back variable values
+                val activationRecord = interpreter.activationRecord!!
                 when (op) {
-                    UnaryOperation.INCREMENT -> interpreter.globalMemory.set(varAccessNode.identifier, result)
-                    UnaryOperation.DECREMENT -> interpreter.globalMemory.set(varAccessNode.identifier, result)
+                    UnaryOperation.INCREMENT -> activationRecord[varName] = result
+                    UnaryOperation.DECREMENT -> activationRecord[varName] = result
                 }
             }
             return result

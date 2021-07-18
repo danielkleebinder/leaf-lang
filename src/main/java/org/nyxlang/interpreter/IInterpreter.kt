@@ -1,8 +1,8 @@
 package org.nyxlang.interpreter
 
 import org.nyxlang.interpreter.memory.IActivationRecord
+import org.nyxlang.interpreter.memory.ICallStack
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.symbol.ISymbolTable
 
 /**
  * The interpreter walks through an abstract syntax tree, fetches the
@@ -12,29 +12,54 @@ import org.nyxlang.symbol.ISymbolTable
 interface IInterpreter {
 
     /**
-     * Interprets the given abstract syntax tree ([ast]) without using static
-     * type semantic.
+     * The activation record call stack.
      */
-    fun interpret(ast: INode) = interpret(ast, null)
+    val callStack: ICallStack
 
     /**
-     * Interprets the given abstract syntax tree ([ast]) using the static type
-     * information provided by the [symbolTable].
+     * The current activation record on top of the stack. This is
+     * equivalent to calling `peekActivationRecord()`.
      */
-    fun interpret(ast: INode, symbolTable: ISymbolTable?): Any
+    val activationRecord: IActivationRecord?
+        get() = peekActivationRecord()
+
+    /**
+     * Interprets the given abstract syntax tree ([ast]).
+     */
+    fun interpret(ast: INode): Any?
 
     /**
      * Evaluates a single [node].
      */
-    fun evalNode(node: INode?): Any
+    fun evalNode(node: INode?): Any?
 
     /**
-     * The global memory to which everyone has access.
+     * Pushes a new activation record with the given [name] onto the
+     * call stack and automatically performs linking.
      */
-    val globalMemory: IActivationRecord
+    fun pushActivationRecord(name: String? = null)
 
     /**
-     * The global symbol table containing type information.
+     * Pops the top most activation record from the call stack and
+     * returns it.
      */
-    val symbolTable: ISymbolTable
+    fun popActivationRecord(): IActivationRecord?
+
+    /**
+     * Returns the top most activation record on the call stack without
+     * removing it.
+     */
+    fun peekActivationRecord(): IActivationRecord?
+}
+
+/**
+ * Pushes a new activation record with the given [name] onto the call
+ * stack, runs the given inline lambda and then pops the activation
+ * record from the stack.
+ */
+inline fun IInterpreter.withActivationRecord(name: String? = null,
+                                             body: (activationRecord: IActivationRecord) -> Unit) {
+    pushActivationRecord(name)
+    body(peekActivationRecord()!!)
+    popActivationRecord()
 }

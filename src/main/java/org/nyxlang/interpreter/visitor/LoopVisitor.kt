@@ -27,7 +27,7 @@ class LoopVisitor : IVisitor {
             // something like [true] becomes [[[true]]]
             if (bodyResult is Collection<*>) {
                 result.addAll(bodyResult as Collection<Any>)
-            } else {
+            } else if (bodyResult != null) {
                 result.add(bodyResult)
             }
 

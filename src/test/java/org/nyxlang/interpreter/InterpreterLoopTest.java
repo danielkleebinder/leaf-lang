@@ -32,13 +32,13 @@ public class InterpreterLoopTest extends TestSuit {
     @Test
     void shouldLoopConditionOnly() {
         execute("var i = 5; loop i > 1 { --i }");
-        assertEquals(BigDecimal.ONE, globalMemory.get("i"));
+        assertEquals(BigDecimal.ONE, globalActivationRecord.get("i"));
     }
 
     @Test
     void shouldLoopInitConditionStep() {
         execute("loop var i = 0 : i < 5 : ++i {}");
-        assertEquals(BigDecimal.valueOf(5), globalMemory.get("i"));
+        assertEquals(BigDecimal.valueOf(5), globalActivationRecord.get("i"));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class InterpreterLoopTest extends TestSuit {
         execute("" +
                 "var i = 5;" +
                 "loop i > 0 { i = i - 1 }");
-        assertEquals(BigDecimal.ZERO, globalMemory.get("i"));
+        assertEquals(BigDecimal.ZERO, globalActivationRecord.get("i"));
     }
 
     @Test
@@ -61,13 +61,13 @@ public class InterpreterLoopTest extends TestSuit {
                 "  }" +
                 "}";
         execute(vars + program);
-        assertEquals(true, globalMemory.get("res"));
-        assertEquals(BigDecimal.valueOf(47), globalMemory.get("i"));
+        assertEquals(true, globalActivationRecord.get("res"));
+        assertEquals(BigDecimal.valueOf(47), globalActivationRecord.get("i"));
 
         vars = "var i = 2, p = 4, res = true;";
         execute(vars + program);
-        assertEquals(false, globalMemory.get("res"));
-        assertEquals(BigDecimal.valueOf(2), globalMemory.get("i"));
+        assertEquals(false, globalActivationRecord.get("res"));
+        assertEquals(BigDecimal.valueOf(2), globalActivationRecord.get("i"));
     }
 
     @Test
@@ -79,6 +79,6 @@ public class InterpreterLoopTest extends TestSuit {
                 "  n = n - 1;" +
                 "}";
         execute(program);
-        assertEquals(BigDecimal.valueOf(120), globalMemory.get("res"));
+        assertEquals(BigDecimal.valueOf(120), globalActivationRecord.get("res"));
     }
 }

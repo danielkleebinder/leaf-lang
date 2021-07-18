@@ -39,7 +39,7 @@ fun execute(programCode: String, debug: Boolean = false) {
 
         val result = interpreter.interpret(ast)
         if (debug) {
-            println("Global Memory       : " + interpreter.globalMemory)
+            println("Global Memory       : " + interpreter.callStack)
         }
 
         println("Interpreter Result  : $result")
