@@ -31,3 +31,13 @@ interface ISemanticAnalyzer {
      */
     fun leaveScope()
 }
+
+/**
+ * Enters a new scope with the given [name] and runs the given function inside this
+ * scope. After execution is complete, the scope is left.
+ */
+inline fun ISemanticAnalyzer.withScope(name: String? = null, scoped: (scope: ISymbolTable) -> Unit) {
+    enterScope(name)
+    scoped(currentScope)
+    leaveScope()
+}

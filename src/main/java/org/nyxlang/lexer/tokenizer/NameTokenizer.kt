@@ -13,7 +13,7 @@ import org.nyxlang.lexer.token.keyword.*
  */
 class NameTokenizer : ITokenizer {
 
-    override fun matches(c: Char) = c.isLetter()
+    override fun matches(c: Char) = c.isLetter() || c == '_'
 
     override fun tokenize(lexer: ILexer): IToken {
         val nameBuilder = StringBuilder()

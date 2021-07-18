@@ -136,7 +136,8 @@ type Dog : Feedable, CanTalk {
 //
 // The first statement after the parameter list and after the ':' symbol
 // is the precondition that the parameters have to fulfill. The statement
-// after that is the postcondition. The '_' represents the functions result.
+// after that is the postcondition. The '_' is a reserved token and
+// represents the functions result.
 //
 fun add(a: number, b: number) : (a > 0 && b > 0) : (_ >= (a + b)) -> number = a + b
 fun sub(a: number, b: number) :: (_ <= (a - b)) -> number = a - b

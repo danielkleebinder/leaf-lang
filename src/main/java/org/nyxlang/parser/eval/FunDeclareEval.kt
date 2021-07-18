@@ -101,8 +101,10 @@ class FunDeclareEval(private val parser: IParser) : IEval {
         if (ColonToken::class != parser.token::class) return
         parser.advanceCursor()
 
-        // Evaluate the block
-        requires()
+        // Evaluate the block if it is non-empty
+        if (ColonToken::class != parser.token::class) {
+            requires()
+        }
     }
 
     /**

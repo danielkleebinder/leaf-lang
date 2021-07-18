@@ -17,7 +17,8 @@ class FunCallAnalyticalVisitor : IAnalyticalVisitor {
         val funSymbol = analyzer.currentScope.get(funName)
 
         if (funSymbol != null && FunSymbol::class == funSymbol::class) {
-            val paramCount = (funSymbol as FunSymbol).params.size
+            funCallNode.spec = funSymbol as FunSymbol
+            val paramCount = funCallNode.spec!!.params.size
             val argsCount = funCallNode.args.size
             if (paramCount != argsCount) {
                 throw AnalyticalVisitorException("Expected $paramCount arguments in function \"$funName\" but got $argsCount")
