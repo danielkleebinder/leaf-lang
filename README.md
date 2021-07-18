@@ -139,7 +139,7 @@ fun f(x1: number, x2: number) = h(g(x1, y2, ...), g(x1, x2, ...))
 Therefore, the proof is done and Turing completeness has been shown.
 
 
-## Example Program
+## Example Programs
 
 ```kotlin
 program test
@@ -162,8 +162,8 @@ type Dog : Feedable, CanTalk {
   age: number
 
   fun feed() = fed = true
-  fun name() -> string = "Bello"
-  fun talk(text: string) = print(name . " says: " . text)
+  fun name() -> string = 'Bello'
+  fun talk(text: string) = print(name . ' says: ' . text)
 
 }
 
@@ -181,11 +181,9 @@ fun add(a: number, b: number) : (a > 0 && b > 0) : (_ >= (a + b)) -> number = a 
 fun sub(a: number, b: number) :: (_ <= (a - b)) -> number = a - b
 
 // Simple function without pre- or postcondition
-fun printHelloWorld() {
+fun greeting(msg: string) {
   // Runs the code block in the interpreters native language
-  native {
-    println("Hello from Kotlin")
-  }
+  native('System.out.println("Hello ' . msg . '")')
 }
 
 // The "main" function is the entry point into the program
@@ -202,7 +200,7 @@ fun main() {
 
   // There is only the "loop" in this programming language. No
   // for, while or do-whiles. You can do everything with this.
-  loop var i = 0 :: i++ {
+  loop var i = 0 :: ++i {
     if dog.fed {
       break
     }
@@ -217,19 +215,43 @@ fun main() {
   when dog.fed {
     true {
       dog.happy = true;
-      print("Yummy, I am full!");
+      print('Yummy, I am full!');
     }
-    false { print("I want some more food") }
-    else { print("This is not possible") }
+    false { print('I want some more food') }
+    else { print('This is not possible') }
   }
 
+  // Use the print function from system.io
   print(dog.fed)       // true
   print(dog == dog)    // true
   print(~(-7+3**2))    // -3
 
   // Starts the given block in a coroutine
-  run { dog.feed() }
+  async { dog.feed() }
+  async dog.feed()
+  async 25 * 3
 
-  printHelloWorld()
+  greetings("Peter Parker")
 }
+```
+
+#### Recursion
+The following program shows a very simple example on how recursion can be implemented. The function does
+not return any value and is invoked 5 times:
+
+```kotlin
+fun recursion(a: number) = if a > 0 { recursion(a - 1) }
+recursion(5)
+```
+
+The next example shows how factorial can be implemented:
+```kotlin
+fun fact(n: number) : n > 0 -> number {
+  when n {
+    n > 1: return n * fact(n-1)
+    else : return 1
+  }
+}
+
+fact(6) // outputs 720
 ```

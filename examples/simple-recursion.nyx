@@ -1,8 +1,7 @@
-// Shows the concept of recursion on a
-// very simple example
+// RECURSION
+// Shows the concept of recursion on a very simple example
 
-fun test(a: number) {
-  if a > 0 { test(a - 1) }
-}
+fun recursion(a: number) : a >= 0 = if a > 0 { recursion(a - 1) }
 
-test(5)
+// Call the function
+recursion(5)

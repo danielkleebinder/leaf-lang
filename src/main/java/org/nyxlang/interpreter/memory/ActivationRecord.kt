@@ -37,8 +37,8 @@ class ActivationRecord(override val staticLink: IActivationRecord? = null,
     override fun toString() = """
         |Activation Record
         |--------------------------------
-        |Name: $name
-        |Static Link: ${staticLink?.name}
+        |Record Name : $name
+        |Static Link : ${staticLink?.name}
         |Dynamic Link: ${dynamicLink?.name}
         |--------------------------------
         |${

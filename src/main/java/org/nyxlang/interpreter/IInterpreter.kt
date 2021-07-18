@@ -36,9 +36,9 @@ interface IInterpreter {
 }
 
 /**
- * Pushes a new activation record with the given [name] onto the call
- * stack, runs the given inline lambda and then pops the activation
- * record from the stack. This is the dynamic scope activation record.
+ * Pushes a new activation record with the given [name] onto the call stack, runs
+ * the given inline lambda and then pops the activation record from the stack. The
+ * parent scope is used as dynamic link.
  */
 inline fun IInterpreter.withDynamicScope(name: String? = null,
                                          body: (activationRecord: IActivationRecord) -> Unit) {
@@ -48,6 +48,11 @@ inline fun IInterpreter.withDynamicScope(name: String? = null,
     callStack.pop()
 }
 
+/**
+ * Pushes a new activation record with the given [name] onto the stack. This
+ * is similar to [withDynamicScope] except that the parent scope will be used
+ * as static link and not as dynamic link.
+ */
 inline fun IInterpreter.withStaticScope(name: String? = null,
                                         body: (activationRecord: IActivationRecord) -> Unit) {
     callStack.push(ActivationRecord(name = name, staticLink = activationRecord))
