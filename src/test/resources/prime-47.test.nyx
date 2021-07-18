@@ -1,13 +1,13 @@
 // PRIME TESTER
 // Modify the variable "n" to check if it is a prime number or not
 
-const n = 4;
+const n = 47;
 var i = 2, isPrime = true;
 
 loop i < n && isPrime {
   if n % i == 0 {
-	isPrime = false
+    isPrime = false
   } else {
-	i = i + 1
+    ++i
   }
 }

@@ -4,7 +4,6 @@ import org.nyxlang.interpreter.exception.InterpreterException
 import org.nyxlang.interpreter.exception.VisitorException
 import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.CallStack
-import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.visitor.*
 import org.nyxlang.parser.ast.INode
 
@@ -36,7 +35,7 @@ class Interpreter : IInterpreter {
     override fun interpret(ast: INode) = evalNode(ast)
 
     init {
-        pushActivationRecord("global")
+        callStack.push(ActivationRecord(name = "global"))
     }
 
     override fun evalNode(node: INode?): Any? {
@@ -56,12 +55,5 @@ class Interpreter : IInterpreter {
             throw InterpreterException("The interpreter detected an error during runtime", errors)
         }
         return null
-    }
-
-    override fun pushActivationRecord(name: String?) = callStack.push(ActivationRecord(callStack.peek(), name))
-    override fun peekActivationRecord() = callStack.peek()
-    override fun popActivationRecord(): IActivationRecord? {
-        println(callStack.peek())
-        return callStack.pop()
     }
 }

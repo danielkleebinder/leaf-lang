@@ -1,5 +1,6 @@
 package org.nyxlang.interpreter
 
+import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.memory.ICallStack
 import org.nyxlang.parser.ast.INode
@@ -21,7 +22,7 @@ interface IInterpreter {
      * equivalent to calling `peekActivationRecord()`.
      */
     val activationRecord: IActivationRecord?
-        get() = peekActivationRecord()
+        get() = callStack.peek()
 
     /**
      * Interprets the given abstract syntax tree ([ast]).
@@ -32,34 +33,25 @@ interface IInterpreter {
      * Evaluates a single [node].
      */
     fun evalNode(node: INode?): Any?
-
-    /**
-     * Pushes a new activation record with the given [name] onto the
-     * call stack and automatically performs linking.
-     */
-    fun pushActivationRecord(name: String? = null)
-
-    /**
-     * Pops the top most activation record from the call stack and
-     * returns it.
-     */
-    fun popActivationRecord(): IActivationRecord?
-
-    /**
-     * Returns the top most activation record on the call stack without
-     * removing it.
-     */
-    fun peekActivationRecord(): IActivationRecord?
 }
 
 /**
  * Pushes a new activation record with the given [name] onto the call
  * stack, runs the given inline lambda and then pops the activation
- * record from the stack.
+ * record from the stack. This is the dynamic scope activation record.
  */
-inline fun IInterpreter.withActivationRecord(name: String? = null,
-                                             body: (activationRecord: IActivationRecord) -> Unit) {
-    pushActivationRecord(name)
-    body(peekActivationRecord()!!)
-    popActivationRecord()
+inline fun IInterpreter.withDynamicScope(name: String? = null,
+                                         body: (activationRecord: IActivationRecord) -> Unit) {
+    callStack.push(ActivationRecord(name = name, dynamicLink = activationRecord))
+    body(activationRecord!!)
+    println(activationRecord)
+    callStack.pop()
+}
+
+inline fun IInterpreter.withStaticScope(name: String? = null,
+                                        body: (activationRecord: IActivationRecord) -> Unit) {
+    callStack.push(ActivationRecord(name = name, staticLink = activationRecord))
+    body(activationRecord!!)
+    println(activationRecord)
+    callStack.pop()
 }

@@ -1,0 +1,5 @@
+var n = 5, res = 1;
+loop n >= 2 {
+  res = res * n;
+  n = n - 1;
+}

@@ -40,12 +40,12 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
 <var-assign>  ::= <name> '=' <expr>
 
-<conditional-stmt> ::= 'if' <expr>         <statement>
-                       ('else' 'if' <expr> <statement>)*
-                       ('else'             <statement>)?
+<conditional-stmt> ::= 'if' <expr>         <block-stmt>
+                       ('else' 'if' <expr> <block-stmt>)*
+                       ('else'             <block-stmt>)?
 
 <block-stmt> ::= '{' <statement-list> '}'
-<loop-stmt>  ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? <statement>
+<loop-stmt>  ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? <block-stmt>
 <when-stmt>  ::= 'when' (<expr>)? '{' ((<expr> | 'else') ':' <statement> ))* '}'
 
 <expr>       ::= <equal-expr> (( '&&' | '||' ) <equal-expr>)*
@@ -85,7 +85,7 @@ In addition to the primitive functions, the µ-recursive operators must be suppo
 - **Minimization operator**.
 
 It is left to write those three µ-recursive functions and the three operators in this programming language to prove
-Turing completeness and therefore interchangeability with every other Turing machine.
+Turing completeness and therefore interchangeability with any other Turing machine.
 
 #### µ-recursive functions in nyxlang
 This section shows that µ-recursive functions can be defined in nyxlang.
@@ -142,24 +142,24 @@ Therefore, the proof is done and Turing completeness has been shown.
 ## Example Program
 
 ```kotlin
-package MyProgram;
+program test
 
-import "system.io";
-import "math";
+use "system.io"
+use "math"
 
 
 trait Feedable {
-  fun feed();
+  fun feed()
 }
 
 trait CanTalk {
-  fun talk(text: string);
+  fun talk(text: string)
 }
 
 type Dog : Feedable, CanTalk {
 
-  fed: bool, happy: bool;
-  age: number;
+  fed: bool, happy: bool
+  age: number
 
   fun feed() = fed = true
   fun name() -> string = "Bello"
@@ -184,7 +184,7 @@ fun sub(a: number, b: number) :: (_ <= (a - b)) -> number = a - b
 fun printHelloWorld() {
   // Runs the code block in the interpreters native language
   native {
-    println("Hello from Kotlin");
+    println("Hello from Kotlin")
   }
 }
 

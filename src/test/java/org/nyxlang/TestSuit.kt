@@ -12,6 +12,7 @@ import org.nyxlang.lexer.Lexer
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.Parser
 import org.nyxlang.symbol.ISymbolTable
+import java.io.File
 
 /**
  * Base class for all nyxlang test classes.
@@ -79,5 +80,12 @@ open class TestSuit {
         val ast = parser.parse(tokens)
         analyzer.analyze(ast!!)
         return interpreter.interpret(ast)
+    }
+
+    /**
+     * Reads the text inside the given file.
+     */
+    fun readResourceFile(fileName: String): String {
+        return File("src/test/resources/$fileName").readText()
     }
 }
