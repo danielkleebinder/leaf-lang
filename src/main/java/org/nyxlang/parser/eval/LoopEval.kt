@@ -11,7 +11,7 @@ import org.nyxlang.parser.exception.EvalException
 /**
  * Evaluates the loop semantics:
  *
- * <loop-expr>   ::= 'loop' (<expr>)? (':' <expr>)? (':' <expr>)? '{' <statement-list> '}'
+ * <loop-stmt>  ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? <block-stmt>
  *
  */
 class LoopEval(private val parser: IParser) : IEval {
