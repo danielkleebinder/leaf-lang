@@ -24,19 +24,20 @@ class FunCallVisitor : IVisitor {
         // otherwise, I would already execute the arguments in the context of the
         // function itself.
         val actualArgs = args.map { interpreter.evalNode(it) }
+        var result: Any? = null
 
         // Push a new activation record onto the stack and assign the variables
         interpreter.withDynamicScope(funName) { activationRecord ->
-            spec!!.params.zip(actualArgs).forEach {
+            spec.params.zip(actualArgs).forEach {
                 activationRecord.define(it.first.name, it.second)
             }
-            activationRecord.staticLink = spec!!.staticScope
+            activationRecord.staticLink = spec.staticScope
 
             if (false == interpreter.evalNode(spec.requires)) {
                 throw VisitorException("Requires expression of function \"$funName\" failed")
             }
 
-            val result = interpreter.evalNode(spec.body)
+            result = interpreter.evalNode(spec.body)
 
             if (spec.returns != null) {
                 activationRecord.define("_", result)
@@ -44,9 +45,7 @@ class FunCallVisitor : IVisitor {
                     throw VisitorException("Ensures expression of function \"$funName\" failed")
                 }
             }
-
-            return result
         }
-        return null
+        return result
     }
 }

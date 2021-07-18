@@ -1,0 +1,21 @@
+var res = 0
+
+fun fa(x: number) {
+  var c = 10 + x
+  fun fb(x: number) {
+    fun fc {
+	  x = x * x
+	}
+	fc()
+    c = c + x
+  }
+  fun fc(x: number) {
+    c = c + x
+  }
+  fc(10)
+  c = c + x
+  fb(4)
+  res = c
+}
+
+fa(5)

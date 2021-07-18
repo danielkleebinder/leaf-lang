@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
 import org.nyxlang.analyzer.exception.StaticSemanticException
 import org.nyxlang.interpreter.exception.DynamicSemanticException
+import java.math.BigDecimal
 
 class InterpreterFunctionTest : TestSuit() {
 
@@ -84,6 +85,12 @@ class InterpreterFunctionTest : TestSuit() {
     @Test
     fun shouldFollowStaticLink2() {
         assertThrows(DynamicSemanticException::class.java) { execute(readResourceFile("static-link-2.test.nyx")) }
+    }
+
+    @Test
+    fun shouldFollowStaticLink3() {
+        execute(readResourceFile("static-link-3.test.nyx"))
+        assertEquals(BigDecimal.valueOf(46), globalActivationRecord["res"])
     }
 
     @Test

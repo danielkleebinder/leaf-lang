@@ -13,9 +13,10 @@ class BlockVisitor : IVisitor {
     override fun matches(node: INode) = BlockNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): Any? {
         val blockNode = node as BlockNode
+        var result: Any? = null
         interpreter.withStaticScope("block-${UUID.randomUUID()}") {
-            return interpreter.evalNode(blockNode.statements)
+            result = interpreter.evalNode(blockNode.statements)
         }
-        return null
+        return result
     }
 }
