@@ -2,6 +2,7 @@ package org.nyxlang.parser.eval
 
 import org.nyxlang.lexer.token.AssignToken
 import org.nyxlang.lexer.token.NameToken
+import org.nyxlang.lexer.token.bracket.LeftParenthesisToken
 import org.nyxlang.lexer.token.keyword.ConstKeywordToken
 import org.nyxlang.lexer.token.keyword.FunKeywordToken
 import org.nyxlang.lexer.token.keyword.VarKeywordToken
@@ -35,9 +36,11 @@ class StatementEval(private val parser: IParser) : IEval {
             return FunDeclareEval(parser).eval()
         }
 
-        if (NameToken::class == parser.token::class &&
-                AssignToken::class == parser.peekNextToken::class) {
-            return VarAssignEval(parser).eval()
+        if (NameToken::class == parser.token::class) {
+            when (parser.peekNextToken::class) {
+                AssignToken::class -> return VarAssignEval(parser).eval()
+                LeftParenthesisToken::class -> return FunCallEval(parser).eval()
+            }
         }
         return ExprEval(parser).eval()
     }

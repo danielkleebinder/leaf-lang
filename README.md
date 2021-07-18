@@ -21,9 +21,11 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 
 <statement> ::= ('var' | 'const') <var-declare>
               | <fun-declare>
+              | <fun-call>
               | <var-assign>
               | <expr>
 
+<fun-call>    ::= <name> '(' (<expr> (',' <expr>)*)? ')'
 <fun-declare> ::= 'fun' <name> ('(' <var-declare> ')')?
                    (':' '(' <expr> ')')?
                    (':' '(' <expr> ')')?
@@ -33,12 +35,12 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
 <var-assign>  ::= <name> '=' <expr>
 
-<conditional-expr> ::= 'if' <expr>         '{' <statement-list> '}'
+<conditional-stmt> ::= 'if' <expr>         '{' <statement-list> '}'
                        ('else' 'if' <expr> '{' <statement-list> '}')*
                        ('else'             '{' <statement-list> '}')?
 
-<loop-expr>   ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? '{' <statement-list> '}'
-<native-expr> ::= 'native' '{' <any> '}'
+<loop-stmt>   ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? '{' <statement-list> '}'
+<native-stmt> ::= 'native' '{' <any> '}'
 
 <expr>       ::= <equal-expr> (( '&&' | '||' ) <equal-expr>)*
 <equal-expr> ::= <logical-expr> (( '==' | '!=' ) <logical-expr>)*
@@ -49,9 +51,9 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <term> ::= <atom> (( '*' | '/' | '%' ) <atom>)*
 <atom> ::= ('+' | '-' | '~' | '++' | '--')? (<number> | <var>)
          | '(' <expr> ')'
-         | <conditional-expr>
-         | <loop-expr>
-         | <native-expr>
+         | <conditional-stmt>
+         | <loop-stmt>
+         | <native-stmt>
          | <empty>
 
 <type>  ::= <number> | <bool>
@@ -143,7 +145,7 @@ fun sub(a: number, b: number) :: (_ <= (a - b)) -> number = a - b
 fun printHelloWorld() {
   // Runs the code block in the interpreters native language
   native {
-    System.out.println("Hello from Java");
+    println("Hello from Kotlin");
   }
 }
 
