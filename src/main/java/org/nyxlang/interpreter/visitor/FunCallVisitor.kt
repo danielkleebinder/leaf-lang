@@ -11,7 +11,7 @@ import org.nyxlang.parser.ast.INode
  */
 class FunCallVisitor : IVisitor {
     override fun matches(node: INode) = FunCallNode::class == node::class
-    override fun visit(interpreter: IInterpreter, node: INode) {
+    override fun visit(interpreter: IInterpreter, node: INode): Any? {
         val funCallNode = node as FunCallNode
         val funName = funCallNode.name
         val spec = funCallNode.spec
@@ -40,6 +40,9 @@ class FunCallVisitor : IVisitor {
                     throw VisitorException("Ensures expression of function \"$funName\" failed")
                 }
             }
+
+            return result
         }
+        return null
     }
 }

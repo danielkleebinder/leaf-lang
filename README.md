@@ -20,6 +20,9 @@ The formal language definition in Backus-Naur form looks like the following. Fee
                    | <statement> ';' <statement-list>
 
 <statement> ::= ('var' | 'const') <var-declare>
+              | 'return' (<expr>)?
+              | 'break'
+              | 'continue'
               | <fun-declare>
               | <fun-call>
               | <var-assign>
