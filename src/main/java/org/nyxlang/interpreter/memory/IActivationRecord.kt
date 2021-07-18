@@ -9,12 +9,12 @@ interface IActivationRecord {
     /**
      * The static context of this activation record.
      */
-    val staticLink: IActivationRecord?
+    var staticLink: IActivationRecord?
 
     /**
      * The dynamic context of this activation record.
      */
-    val dynamicLink: IActivationRecord?
+    var dynamicLink: IActivationRecord?
 
     /**
      * The optional name of this activation record.

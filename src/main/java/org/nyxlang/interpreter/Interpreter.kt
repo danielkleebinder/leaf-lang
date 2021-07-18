@@ -1,6 +1,6 @@
 package org.nyxlang.interpreter
 
-import org.nyxlang.interpreter.exception.InterpreterException
+import org.nyxlang.interpreter.exception.DynamicSemanticException
 import org.nyxlang.interpreter.exception.VisitorException
 import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.CallStack
@@ -52,7 +52,7 @@ class Interpreter : IInterpreter {
             }
         }
         if (errors.size > 0) {
-            throw InterpreterException("The interpreter detected an error during runtime", errors)
+            throw DynamicSemanticException("The interpreter detected an error during runtime", errors)
         }
         return null
     }

@@ -1,10 +1,10 @@
 package org.nyxlang.interpreter
 
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.fail
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
 import org.nyxlang.analyzer.exception.StaticSemanticException
+import org.nyxlang.interpreter.exception.DynamicSemanticException
 
 class InterpreterFunctionTest : TestSuit() {
 
@@ -73,5 +73,16 @@ class InterpreterFunctionTest : TestSuit() {
             System.err.println(e)
             fail()
         }
+    }
+
+    @Test
+    fun shouldFollowStaticLink1() {
+        execute(readResourceFile("static-link-1.test.nyx"))
+        assertEquals(true, globalActivationRecord["res"])
+    }
+
+    @Test
+    fun shouldFollowStaticLink2() {
+        assertThrows(DynamicSemanticException::class.java) { execute(readResourceFile("static-link-2.test.nyx")) }
     }
 }

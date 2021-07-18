@@ -1,7 +1,7 @@
 package org.nyxlang.interpreter.native
 
 import org.nyxlang.interpreter.InterpreterError
-import org.nyxlang.interpreter.exception.InterpreterException
+import org.nyxlang.interpreter.exception.DynamicSemanticException
 import javax.script.ScriptEngineManager
 
 /**
@@ -15,7 +15,7 @@ class KotlinNativeExecutor : INativeExecutor {
 
     override fun run(programCode: String): Any {
         if (kotlinScriptEngine == null) {
-            throw InterpreterException("Native code is not supported on this machine", arrayListOf(InterpreterError("Kotlin scripting engine could not be instantiated")))
+            throw DynamicSemanticException("Native code is not supported on this machine", arrayListOf(InterpreterError("Kotlin scripting engine could not be instantiated")))
         }
         return kotlinScriptEngine.eval(programCode)
     }

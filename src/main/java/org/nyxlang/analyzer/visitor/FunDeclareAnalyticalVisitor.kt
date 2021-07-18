@@ -24,6 +24,7 @@ class FunDeclareAnalyticalVisitor : IAnalyticalVisitor {
                 ensures = funDeclareNode.ensures,
                 body = funDeclareNode.body)
 
+        funDeclareNode.spec = funSymbol
         analyzer.currentScope.define(funSymbol)
 
         analyzer.withScope(funName) {

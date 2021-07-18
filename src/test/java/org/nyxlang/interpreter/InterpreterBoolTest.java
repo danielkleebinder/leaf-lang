@@ -2,7 +2,7 @@ package org.nyxlang.interpreter;
 
 import org.junit.jupiter.api.Test;
 import org.nyxlang.TestSuit;
-import org.nyxlang.interpreter.exception.InterpreterException;
+import org.nyxlang.interpreter.exception.DynamicSemanticException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -132,8 +132,8 @@ public class InterpreterBoolTest extends TestSuit {
 
     @Test
     void shouldErrorForInvalidBoolLogic() {
-        assertThrows(InterpreterException.class, () -> execute("true - false"));
-        assertThrows(InterpreterException.class, () -> execute("-false"));
+        assertThrows(DynamicSemanticException.class, () -> execute("true - false"));
+        assertThrows(DynamicSemanticException.class, () -> execute("-false"));
     }
 
     @Test

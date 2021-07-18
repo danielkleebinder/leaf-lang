@@ -1,0 +1,6 @@
+fun funcA{
+  fun funcB {}
+}
+
+funcA()
+funcB()

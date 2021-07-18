@@ -17,6 +17,9 @@ class FunCallVisitor : IVisitor {
         val spec = funCallNode.spec
         val args = funCallNode.args
 
+        // Do we even have access to this function in this scope?
+        if (spec == null) throw VisitorException("Function with name \"$funName\" not defined in this scope")
+
         // Execute the arguments first before creating a new activation record,
         // otherwise, I would already execute the arguments in the context of the
         // function itself.
@@ -27,6 +30,7 @@ class FunCallVisitor : IVisitor {
             spec!!.params.zip(actualArgs).forEach {
                 activationRecord.define(it.first.name, it.second)
             }
+            activationRecord.staticLink = spec!!.staticScope
 
             if (false == interpreter.evalNode(spec.requires)) {
                 throw VisitorException("Requires expression of function \"$funName\" failed")

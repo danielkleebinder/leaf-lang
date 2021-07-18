@@ -2,7 +2,7 @@ package org.nyxlang.interpreter;
 
 import org.junit.jupiter.api.Test;
 import org.nyxlang.TestSuit;
-import org.nyxlang.interpreter.exception.InterpreterException;
+import org.nyxlang.interpreter.exception.DynamicSemanticException;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -122,8 +122,8 @@ public class InterpreterArithmeticTest extends TestSuit {
 
     @Test
     void shouldErrorForInvalidArithmetic() {
-        assertThrows(InterpreterException.class, () -> execute("2 && 1"));
-        assertThrows(InterpreterException.class, () -> execute("*1"));
+        assertThrows(DynamicSemanticException.class, () -> execute("2 && 1"));
+        assertThrows(DynamicSemanticException.class, () -> execute("*1"));
     }
 
     @Test

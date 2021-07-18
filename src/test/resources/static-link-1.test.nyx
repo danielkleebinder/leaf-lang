@@ -1,0 +1,10 @@
+var res: bool = false
+
+fun update = res = true
+
+fun main {
+  var res: bool = false
+  update()
+}
+
+main()
