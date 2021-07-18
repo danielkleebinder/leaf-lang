@@ -85,4 +85,19 @@ class InterpreterFunctionTest : TestSuit() {
     fun shouldFollowStaticLink2() {
         assertThrows(DynamicSemanticException::class.java) { execute(readResourceFile("static-link-2.test.nyx")) }
     }
+
+    @Test
+    fun shouldErrorWhenRequiresNotFulfilled() {
+        assertThrows(DynamicSemanticException::class.java) { execute("fun f(a: bool) : a { true }; f(false)") }
+        assertThrows(DynamicSemanticException::class.java) { execute("fun f(a: number) : a > 0 { true }; f(0)") }
+        assertThrows(DynamicSemanticException::class.java) { execute("fun f(a: number, b: number) : a + b > 5 { true }; f(1, 1)") }
+    }
+
+    @Test
+    fun shouldErrorWhenEnsuresNotFulfilled() {
+        assertThrows(DynamicSemanticException::class.java) { execute("fun f :: _ -> bool = false; f()") }
+        assertThrows(DynamicSemanticException::class.java) { execute("fun f :: _ > 1 -> number = 0; f()") }
+        assertThrows(DynamicSemanticException::class.java) { execute("fun f(a: bool) :: _ == a -> bool = true; f(false)") }
+        assertThrows(DynamicSemanticException::class.java) { execute("fun f(a: number) :: ((_ - 1) == (a * a)) -> number = a * a; f(5)") }
+    }
 }

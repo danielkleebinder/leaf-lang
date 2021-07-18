@@ -161,7 +161,7 @@ type Dog : Feedable, CanTalk {
   fed: bool, happy: bool
   age: number
 
-  fun feed() = fed = true
+  fun feed = fed = true
   fun name() -> string = 'Bello'
   fun talk(text: string) = print(name . ' says: ' . text)
 
@@ -187,7 +187,7 @@ fun greeting(msg: string) {
 }
 
 // The "main" function is the entry point into the program
-fun main() {
+fun main {
 
   // Constants must be initialized on declaration and cannot
   // be modified at a later stage.
