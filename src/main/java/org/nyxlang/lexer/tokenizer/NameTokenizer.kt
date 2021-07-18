@@ -37,29 +37,8 @@ class NameTokenizer : ITokenizer {
             "return" -> return ReturnKeywordToken()
             "number" -> return NumberKeywordToken()
             "bool" -> return BoolKeywordToken()
-            "native" -> {
-                // The native keyword needs some special treatment since the lexer has
-                // to completely ignore this part
-                val programCodeBuilder = StringBuilder()
-                var braceCount = 1
-                while (lexer.symbol != '{') {
-                    lexer.advanceCursor()
-                }
-                while (true) {
-                    lexer.advanceCursor()
-                    if (lexer.symbol == '{') {
-                        braceCount++
-                    } else if (lexer.symbol == '}') {
-                        braceCount--
-                        if (braceCount <= 0) {
-                            break
-                        }
-                    }
-                    programCodeBuilder.append(lexer.symbol)
-                }
-                val programCode = programCodeBuilder.toString().trim()
-                return NativeToken(programCode)
-            }
+            "when" -> return WhenKeywordToken()
+            "native" -> return NativeToken("undefined")
         }
         return NameToken(name)
     }

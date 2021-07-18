@@ -15,11 +15,13 @@ class Interpreter : IInterpreter {
 
     private val visitorsList = arrayListOf(
             ProgramVisitor(),
+            BlockVisitor(),
             UnaryOperationVisitor(),
             BinaryOperationVisitor(),
             BoolVisitor(),
             NumberVisitor(),
             IfVisitor(),
+            WhenVisitor(),
             LoopVisitor(),
             NativeVisitor(),
             StatementListVisitor(),

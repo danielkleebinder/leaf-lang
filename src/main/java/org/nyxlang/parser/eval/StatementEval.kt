@@ -2,6 +2,7 @@ package org.nyxlang.parser.eval
 
 import org.nyxlang.lexer.token.AssignToken
 import org.nyxlang.lexer.token.NameToken
+import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
 import org.nyxlang.lexer.token.bracket.LeftParenthesisToken
 import org.nyxlang.lexer.token.keyword.*
 import org.nyxlang.parser.IParser
@@ -16,6 +17,7 @@ import org.nyxlang.parser.ast.*
  *               | 'return' (<expr>)?
  *               | 'break'
  *               | 'continue'
+ *               | <block-stmt>
  *               | <fun-declare>
  *               | <fun-call>
  *               | <var-assign>
@@ -34,6 +36,7 @@ class StatementEval(private val parser: IParser) : IEval {
             ReturnKeywordToken::class -> parser.advance { return ReturnNode(ExprEval(parser).eval()) }
             BreakKeywordToken::class -> parser.advance { return BreakNode() }
             ContinueKeywordToken::class -> parser.advance { return ContinueNode() }
+            LeftCurlyBraceToken::class -> return BlockEval(parser).eval()
         }
 
         if (NameToken::class == parser.token::class) {

@@ -8,6 +8,7 @@ import org.nyxlang.lexer.token.arithmetic.PlusToken
 import org.nyxlang.lexer.token.bracket.LeftParenthesisToken
 import org.nyxlang.lexer.token.keyword.ConditionalKeywordToken
 import org.nyxlang.lexer.token.keyword.LoopKeywordToken
+import org.nyxlang.lexer.token.keyword.WhenKeywordToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advance
 import org.nyxlang.parser.ast.*
@@ -17,10 +18,10 @@ import org.nyxlang.parser.ast.*
  *
  * <atom> ::= ('+' | '-' | '~' | '++' | '--')? (<number> | <var>)
  *          | '(' <expr> ')'
- *          | <conditional-expr>
- *          | <loop-expr>
- *          | <native-expr>
- *          | <inc-dec>
+ *          | <conditional-stmt>
+ *          | <when-stmt>
+ *          | <loop-stmt>
+ *          | <native-stmt>
  *          | <empty>
  *
  */
@@ -35,6 +36,7 @@ class AtomEval(private val parser: IParser) : IEval {
             EndOfProgramToken::class -> return EmptyNode()
 
             ConditionalKeywordToken::class -> return ConditionalEval(parser).eval()
+            WhenKeywordToken::class -> return WhenEval(parser).eval()
             LoopKeywordToken::class -> return LoopEval(parser).eval()
             NativeToken::class -> return NativeEval(parser).eval()
 

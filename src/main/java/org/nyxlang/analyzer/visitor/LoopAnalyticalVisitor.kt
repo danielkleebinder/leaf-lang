@@ -14,6 +14,6 @@ class LoopAnalyticalVisitor : IAnalyticalVisitor {
         if (loopNode.init != null) analyzer.analyze(loopNode.init)
         if (loopNode.condition != null) analyzer.analyze(loopNode.condition)
         if (loopNode.step != null) analyzer.analyze(loopNode.step)
-        if (loopNode.body != null) analyzer.analyze(loopNode.body)
+        analyzer.analyze(loopNode.body)
     }
 }

@@ -23,10 +23,12 @@ The formal language definition in Backus-Naur form looks like the following. Fee
               | 'return' (<expr>)?
               | 'break'
               | 'continue'
+              | <block-stmt>
               | <fun-declare>
               | <fun-call>
               | <var-assign>
               | <expr>
+
 
 <fun-call>    ::= <name> '(' (<expr> (',' <expr>)*)? ')'
 <fun-declare> ::= 'fun' <name> ('(' <var-declare> ')')?
@@ -38,12 +40,13 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
 <var-assign>  ::= <name> '=' <expr>
 
-<conditional-stmt> ::= 'if' <expr>         '{' <statement-list> '}'
-                       ('else' 'if' <expr> '{' <statement-list> '}')*
-                       ('else'             '{' <statement-list> '}')?
+<conditional-stmt> ::= 'if' <expr>         <block-stmt>
+                       ('else' 'if' <expr> <block-stmt>)*
+                       ('else'             <block-stmt>)?
 
-<loop-stmt>   ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? '{' <statement-list> '}'
-<native-stmt> ::= 'native' '{' <any> '}'
+<block-stmt> ::= '{' <statement-list> '}'
+<loop-stmt>  ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? <statement>
+<when-stmt>  ::= 'when' (<expr>)? '{' ((<expr> | 'else') ':' <statement> ))* '}'
 
 <expr>       ::= <equal-expr> (( '&&' | '||' ) <equal-expr>)*
 <equal-expr> ::= <logical-expr> (( '==' | '!=' ) <logical-expr>)*
@@ -55,6 +58,7 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <atom> ::= ('+' | '-' | '~' | '++' | '--')? (<number> | <var>)
          | '(' <expr> ')'
          | <conditional-stmt>
+         | <when-stmt>
          | <loop-stmt>
          | <native-stmt>
          | <empty>

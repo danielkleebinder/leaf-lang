@@ -23,7 +23,9 @@ class SemanticAnalyzer : ISemanticAnalyzer {
                 FunCallAnalyticalVisitor(),
                 FunDeclareAnalyticalVisitor(),
                 IfAnalyticalVisitor(),
-                LoopAnalyticalVisitor()
+                WhenAnalyticalVisitor(),
+                LoopAnalyticalVisitor(),
+                BlockAnalyticalVisitor()
         )
     }
 
