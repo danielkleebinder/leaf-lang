@@ -67,3 +67,14 @@ inline fun <T> IParser.advanceIf(cond: Boolean, body: (token: IToken) -> T): T? 
     }
     return null
 }
+
+/**
+ * Advances the cursor, then executes the given [body] and afterwards advances
+ * the cursor once more.
+ */
+inline fun <T> IParser.advanceBeforeAfter(body: (token: IToken) -> T): T {
+    advanceCursor()
+    val result = body(token)
+    advanceCursor()
+    return result
+}
