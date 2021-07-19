@@ -3,6 +3,8 @@ package org.nyxlang.interpreter.visitor
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.exception.VisitorException
 import org.nyxlang.interpreter.result.IRuntimeResult
+import org.nyxlang.interpreter.result.ReturnRuntimeResult
+import org.nyxlang.interpreter.result.dataResult
 import org.nyxlang.interpreter.result.emptyResult
 import org.nyxlang.interpreter.withDynamicScope
 import org.nyxlang.parser.ast.FunCallNode
@@ -41,9 +43,15 @@ class FunCallVisitor : IVisitor {
 
             result = interpreter.interpret(spec.body)
 
-            activationRecord.define("_", result.data)
-            if (false == interpreter.interpret(spec.ensures).data) {
-                throw VisitorException("Ensures expression of function \"$funName\" failed")
+            if (result is ReturnRuntimeResult) {
+                result = if (result.hasData()) dataResult(result.data!!) else emptyResult()
+            }
+
+            if (result.hasData()) {
+                activationRecord.define("_", result.data)
+                if (false == interpreter.interpret(spec.ensures).data) {
+                    throw VisitorException("Ensures expression of function \"$funName\" failed")
+                }
             }
         }
         return result

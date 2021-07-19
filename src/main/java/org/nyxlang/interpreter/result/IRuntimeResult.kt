@@ -10,6 +10,11 @@ interface IRuntimeResult {
      * Some data that is the result of a runtime analysis.
      */
     val data: Any?
+
+    /**
+     * Checks if data is available.
+     */
+    fun hasData() = data != null
 }
 
 /**
