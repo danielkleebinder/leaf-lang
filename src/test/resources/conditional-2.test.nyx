@@ -1,4 +1,6 @@
-var a = 5, res = false
+var a
+  =
+  5, res = false
 
 if a != 5 {
   res = false }
