@@ -97,18 +97,18 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldFollowStaticLink1() {
-        execute(readResourceFile("static-link-1.test.nyx"))
+        execute(readResourceFile("fun-static-link-1.test.nyx"))
         assertEquals(true, globalActivationRecord["res"])
     }
 
     @Test
     fun shouldFollowStaticLink2() {
-        assertThrows(DynamicSemanticException::class.java) { execute(readResourceFile("static-link-2.test.nyx")) }
+        assertThrows(DynamicSemanticException::class.java) { execute(readResourceFile("fun-static-link-2.test.nyx")) }
     }
 
     @Test
     fun shouldFollowStaticLink3() {
-        execute(readResourceFile("static-link-3.test.nyx"))
+        execute(readResourceFile("fun-static-link-3.test.nyx"))
         assertEquals(BigDecimal.valueOf(46), globalActivationRecord["res"])
     }
 
@@ -139,5 +139,44 @@ class InterpreterFunctionTest : TestSuit() {
         assertThrows(StaticSemanticException::class.java) { execute("fun f -> bool = false; f(1)") }
         assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) -> bool = false; f()") }
         assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) -> bool = false; f(1, 2)") }
+    }
+
+    @Test
+    fun shouldAssignReturnValue() {
+        execute(readResourceFile("fun-return-1.test.nyx"))
+        assertEquals(BigDecimal.valueOf(771), globalActivationRecord["x"])
+    }
+
+    @Test
+    fun shouldReturnLocalVariableValue() {
+        execute(readResourceFile("fun-return-2.test.nyx"))
+        assertEquals(BigDecimal.valueOf(11), globalActivationRecord["x"])
+    }
+
+    @Test
+    fun shouldReturnBeforeEnd() {
+        execute(readResourceFile("fun-return-3.test.nyx"))
+        assertEquals(BigDecimal.valueOf(21), globalActivationRecord["c"])
+    }
+
+    @Test
+    fun shouldContainMultipleReturns() {
+        execute(readResourceFile("fun-return-4.test.nyx"))
+        assertEquals(BigDecimal.valueOf(0), globalActivationRecord["x"])
+        assertEquals(BigDecimal.valueOf(26), globalActivationRecord["y"])
+    }
+
+    @Test
+    fun shouldReturnWithoutResult() {
+        execute(readResourceFile("fun-return-5.test.nyx"))
+        assertFalse(globalActivationRecord["res"] as Boolean)
+    }
+
+    @Test
+    fun shouldReturnResultFromFunctionLoop() {
+        execute(readResourceFile("fun-return-6.test.nyx"))
+        assertEquals(BigDecimal.valueOf(205), globalActivationRecord["x"])
+        assertEquals(BigDecimal.valueOf(305), globalActivationRecord["y"])
+        assertEquals(BigDecimal.valueOf(0), globalActivationRecord["z"])
     }
 }

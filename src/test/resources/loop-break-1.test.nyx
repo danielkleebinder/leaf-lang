@@ -1,0 +1,6 @@
+var a = 5
+
+loop a > 0 {
+  --a
+  if a == 3 { break }
+}

@@ -1,0 +1,2 @@
+fun a() -> number = 771
+const x = a()

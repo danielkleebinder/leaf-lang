@@ -14,12 +14,12 @@ class IfVisitor : IVisitor {
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val ifNode = node as ConditionalNode
         for (ifCase in ifNode.cases) {
-            val conditionResult = interpreter.evalNode(ifCase.condition).data
+            val conditionResult = interpreter.interpret(ifCase.condition).data
             if (conditionResult == true) {
-                return interpreter.evalNode(ifCase.body)
+                return interpreter.interpret(ifCase.body)
             }
         }
-        if (ifNode.elseCase != null) return interpreter.evalNode(ifNode.elseCase)
+        if (ifNode.elseCase != null) return interpreter.interpret(ifNode.elseCase)
         return emptyResult()
     }
 }

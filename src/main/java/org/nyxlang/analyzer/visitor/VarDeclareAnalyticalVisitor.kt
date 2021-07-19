@@ -31,6 +31,11 @@ class VarDeclareAnalyticalVisitor : IAnalyticalVisitor {
                         if (type == null) throw AnalyticalVisitorException("Type \"${it.typeExpr.type}\" is unknown")
                     }
 
+                    // Test if the assignment expression is valid
+                    if (it.assignmentExpr != null) {
+                        analyzer.analyze(it.assignmentExpr)
+                    }
+
                     // Register in symbol table
                     analyzer.currentScope.define(VarSymbol(name, type, *varDeclareNode.modifiers.toTypedArray()))
                 }

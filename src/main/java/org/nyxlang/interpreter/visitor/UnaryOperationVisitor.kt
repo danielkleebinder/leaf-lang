@@ -19,7 +19,7 @@ class UnaryOperationVisitor : IVisitor {
 
     override fun visit(interpreter: IInterpreter, node: INode): DataRuntimeResult {
         val unaryOperationNode = node as UnaryOperationNode
-        val value = interpreter.evalNode(unaryOperationNode.node).data
+        val value = interpreter.interpret(unaryOperationNode.node).data
         val op = unaryOperationNode.op
 
         if (value is BigDecimal) {

@@ -1,0 +1,9 @@
+fun a(x: number) {
+  const tmp = x * x
+  if tmp == 9 {
+    return 0
+  }
+  return tmp + 10
+}
+
+const x = a(3), y = a(4)

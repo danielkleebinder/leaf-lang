@@ -12,6 +12,6 @@ class ProgramVisitor : IVisitor {
     override fun matches(node: INode) = ProgramNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val programNode = node as ProgramNode
-        return interpreter.evalNode(programNode.statements)
+        return interpreter.interpret(programNode.statements)
     }
 }

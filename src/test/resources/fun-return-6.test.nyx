@@ -1,0 +1,11 @@
+fun test(x: number) -> number {
+  if x == 1 { return 0 }
+  loop var a = 10 : a > 0 : --a {
+    if a == 5 { return 10 * x + a }
+  }
+  return -1
+}
+
+const x = test(20)
+const y = test(30)
+var z = test(1)

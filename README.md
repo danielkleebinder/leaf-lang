@@ -55,7 +55,7 @@ The formal language definition in Backus-Naur form looks like the following. Fee
                | <arith-expr> (( '<' | '<=' | '>' | '>=' ) <arith-expr>)*
 
 <term> ::= <atom> (( '*' | '/' | '%' ) <atom>)*
-<atom> ::= ('+' | '-' | '~' | '++' | '--')? (<number> | <var>)
+<atom> ::= ('+' | '-' | '~' | '++' | '--')? (<number> | <var> | <fun-call>)
          | '(' <expr> ')'
          | <conditional-stmt>
          | <when-stmt>

@@ -1,0 +1,7 @@
+fun a() {
+  var c = 1
+  c = c + 10
+  return c
+}
+
+const x = a()

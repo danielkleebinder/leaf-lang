@@ -17,7 +17,7 @@ class BlockVisitor : IVisitor {
         val blockNode = node as BlockNode
         var result: IRuntimeResult = emptyResult()
         interpreter.withStaticScope("block-${UUID.randomUUID()}") {
-            result = interpreter.evalNode(blockNode.statements)
+            result = interpreter.interpret(blockNode.statements)
         }
         return result
     }

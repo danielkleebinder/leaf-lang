@@ -1,0 +1,11 @@
+var a = 5, res = false
+
+loop {
+  --a
+  if a == -1 {
+    if !res {
+      res = true
+      break
+    }
+  }
+}

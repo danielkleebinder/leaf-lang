@@ -46,8 +46,7 @@ class InterpreterLoopTest : TestSuit() {
 
     @Test
     fun shouldRunPrimeChecker1() {
-        var program = readResourceFile("prime-4.test.nyx")
-        execute(program)
+        execute(readResourceFile("prime-4.test.nyx"))
         assertEquals(BigDecimal.valueOf(4), globalActivationRecord["n"])
         assertEquals(BigDecimal.valueOf(2), globalActivationRecord["i"])
         assertEquals(false, globalActivationRecord["isPrime"])
@@ -55,8 +54,7 @@ class InterpreterLoopTest : TestSuit() {
 
     @Test
     fun shouldRunPrimeChecker2() {
-        var program = readResourceFile("prime-47.test.nyx")
-        execute(program)
+        execute(readResourceFile("prime-47.test.nyx"))
         assertEquals(BigDecimal.valueOf(47), globalActivationRecord["n"])
         assertEquals(BigDecimal.valueOf(47), globalActivationRecord["i"])
         assertEquals(true, globalActivationRecord["isPrime"])
@@ -64,20 +62,50 @@ class InterpreterLoopTest : TestSuit() {
 
     @Test
     fun shouldRunFactorial() {
-        val program = readResourceFile("factorial.test.nyx")
-        execute(program)
+        execute(readResourceFile("factorial.test.nyx"))
         assertEquals(BigDecimal.valueOf(120), globalActivationRecord["res"])
     }
 
     @Test
+    fun shouldBreakLoopImmediately() {
+        execute("loop { break }")
+        assertTrue(true)
+    }
+
+    @Test
+    fun shouldBreakLoop1() {
+        execute(readResourceFile("loop-break-1.test.nyx"))
+        assertEquals(BigDecimal.valueOf(3), globalActivationRecord["a"])
+    }
+
+    @Test
+    fun shouldBreakLoop2() {
+        execute(readResourceFile("loop-break-2.test.nyx"))
+        assertEquals(BigDecimal.valueOf(-1), globalActivationRecord["a"])
+        assertTrue(globalActivationRecord["res"] as Boolean)
+    }
+
+    @Test
+    fun shouldContinueLoop1() {
+        execute(readResourceFile("loop-continue-1.test.nyx"))
+        assertFalse(globalActivationRecord["res"] as Boolean)
+    }
+
+    @Test
+    fun shouldContinueLoop2() {
+        execute(readResourceFile("loop-continue-2.test.nyx"))
+        assertFalse(globalActivationRecord["res"] as Boolean)
+    }
+
+    @Test
     fun shouldIgnoreNewLines1() {
-//        execute(readResourceFile("loop-1.test.nyx"))
+//        execute(readResourceFile("loop-structure-1.test.nyx"))
 //        assertEquals(0, globalActivationRecord["a"])
     }
 
     @Test
     fun shouldIgnoreNewLines2() {
-//        execute(readResourceFile("loop-2.test.nyx"))
+//        execute(readResourceFile("loop-structure-2.test.nyx"))
 //        assertEquals(0, globalActivationRecord["a"])
 //        assertEquals(true, globalActivationRecord["res"])
     }

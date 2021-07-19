@@ -4,6 +4,7 @@ import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.SemanticAnalyzer
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.Interpreter
+import org.nyxlang.interpreter.result.unroll
 import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
 import org.nyxlang.parser.IParser
@@ -37,7 +38,7 @@ fun execute(programCode: String, debug: Boolean = false) {
             println("Semantic Errors     : " + Arrays.toString(errors))
         }
 
-        val result = interpreter.interpret(ast)
+        val result = interpreter.interpret(ast).unroll()
         if (debug) {
             println("Global Memory       : " + interpreter.callStack)
         }

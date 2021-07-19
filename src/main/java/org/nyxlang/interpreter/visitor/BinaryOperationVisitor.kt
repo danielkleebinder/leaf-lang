@@ -19,8 +19,8 @@ class BinaryOperationVisitor : IVisitor {
 
     override fun visit(interpreter: IInterpreter, node: INode): DataRuntimeResult {
         val binaryOperationNode = node as BinaryOperationNode
-        val left = interpreter.evalNode(binaryOperationNode.leftNode).data
-        val right = interpreter.evalNode(binaryOperationNode.rightNode).data
+        val left = interpreter.interpret(binaryOperationNode.leftNode).data
+        val right = interpreter.interpret(binaryOperationNode.rightNode).data
         val op = binaryOperationNode.op
 
         if (left is BigDecimal && right is BigDecimal) {

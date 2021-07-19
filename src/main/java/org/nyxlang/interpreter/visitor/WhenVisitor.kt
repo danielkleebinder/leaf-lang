@@ -13,15 +13,15 @@ class WhenVisitor : IVisitor {
     override fun matches(node: INode) = WhenNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val whenNode = node as WhenNode
-        val argument = interpreter.evalNode(whenNode.arg).data
+        val argument = interpreter.interpret(whenNode.arg).data
 
         for (whenCase in whenNode.cases) {
-            val match = interpreter.evalNode(whenCase.matches).data
+            val match = interpreter.interpret(whenCase.matches).data
             if (argument == match) {
-                return interpreter.evalNode(whenCase.body)
+                return interpreter.interpret(whenCase.body)
             }
         }
-        if (whenNode.elseCase != null) return interpreter.evalNode(whenNode.elseCase)
+        if (whenNode.elseCase != null) return interpreter.interpret(whenNode.elseCase)
         return emptyResult()
     }
 }

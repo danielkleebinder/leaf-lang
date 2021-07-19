@@ -25,7 +25,7 @@ class FunCallVisitor : IVisitor {
         // Execute the arguments first before creating a new activation record,
         // otherwise, I would already execute the arguments in the context of the
         // function itself.
-        val actualArgs = args.map { interpreter.evalNode(it).data }
+        val actualArgs = args.map { interpreter.interpret(it).data }
         var result: IRuntimeResult = emptyResult()
 
         // Push a new activation record onto the stack and assign the variables
@@ -35,17 +35,15 @@ class FunCallVisitor : IVisitor {
             }
             activationRecord.staticLink = spec.staticScope
 
-            if (false == interpreter.evalNode(spec.requires).data) {
+            if (false == interpreter.interpret(spec.requires).data) {
                 throw VisitorException("Requires expression of function \"$funName\" failed")
             }
 
-            result = interpreter.evalNode(spec.body)
+            result = interpreter.interpret(spec.body)
 
-            if (spec.returns != null) {
-                activationRecord.define("_", result.data)
-                if (false == interpreter.evalNode(spec.ensures).data) {
-                    throw VisitorException("Ensures expression of function \"$funName\" failed")
-                }
+            activationRecord.define("_", result.data)
+            if (false == interpreter.interpret(spec.ensures).data) {
+                throw VisitorException("Ensures expression of function \"$funName\" failed")
             }
         }
         return result

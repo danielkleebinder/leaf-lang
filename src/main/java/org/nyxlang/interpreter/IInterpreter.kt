@@ -28,12 +28,7 @@ interface IInterpreter {
     /**
      * Interprets the given abstract syntax tree ([ast]).
      */
-    fun interpret(ast: INode): Any?
-
-    /**
-     * Evaluates a single [node].
-     */
-    fun evalNode(node: INode?): IRuntimeResult
+    fun interpret(ast: INode?): IRuntimeResult
 }
 
 /**

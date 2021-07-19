@@ -7,6 +7,7 @@ import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.Interpreter
 import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.memory.ICallStack
+import org.nyxlang.interpreter.result.unroll
 import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
 import org.nyxlang.parser.IParser
@@ -20,19 +21,14 @@ import java.io.File
 open class TestSuit {
 
     /**
-     * A list with one entry which is null.
-     */
-    val nullList = arrayListOf(null)
-
-    /**
      * A list with one entry which is true.
      */
-    val trueList = arrayListOf(true)
+    val trueList = listOf(true)
 
     /**
      * A list with one entry which is false.
      */
-    val falseList = arrayListOf(false)
+    val falseList = listOf(false)
 
     /**
      * A list with zero entry.
@@ -79,7 +75,7 @@ open class TestSuit {
         val tokens = lexer.tokenize(programCode)
         val ast = parser.parse(tokens)
         analyzer.analyze(ast!!)
-        return interpreter.interpret(ast)
+        return interpreter.interpret(ast).unroll()
     }
 
     /**

@@ -1,0 +1,5 @@
+var res = false
+loop var a = 0 : a < 5 : ++a {
+  continue
+  res = true
+}

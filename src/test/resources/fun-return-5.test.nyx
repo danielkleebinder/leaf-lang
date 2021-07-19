@@ -1,0 +1,8 @@
+var res = false
+
+fun test(x: bool) {
+  if x { return }
+  res = true
+}
+
+test(true)
