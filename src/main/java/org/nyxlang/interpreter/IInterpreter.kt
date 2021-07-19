@@ -3,6 +3,7 @@ package org.nyxlang.interpreter
 import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.memory.ICallStack
+import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.parser.ast.INode
 
 /**
@@ -32,7 +33,7 @@ interface IInterpreter {
     /**
      * Evaluates a single [node].
      */
-    fun evalNode(node: INode?): Any?
+    fun evalNode(node: INode?): IRuntimeResult
 }
 
 /**
@@ -44,7 +45,6 @@ inline fun IInterpreter.withDynamicScope(name: String? = null,
                                          body: (activationRecord: IActivationRecord) -> Unit) {
     callStack.push(ActivationRecord(name = name, dynamicLink = activationRecord))
     body(activationRecord!!)
-    println(activationRecord)
     callStack.pop()
 }
 
@@ -57,6 +57,5 @@ inline fun IInterpreter.withStaticScope(name: String? = null,
                                         body: (activationRecord: IActivationRecord) -> Unit) {
     callStack.push(ActivationRecord(name = name, staticLink = activationRecord))
     body(activationRecord!!)
-    println(activationRecord)
     callStack.pop()
 }

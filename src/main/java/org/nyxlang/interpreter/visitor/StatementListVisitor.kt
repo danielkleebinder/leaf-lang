@@ -1,6 +1,10 @@
 package org.nyxlang.interpreter.visitor
 
 import org.nyxlang.interpreter.IInterpreter
+import org.nyxlang.interpreter.result.BreakRuntimeResult
+import org.nyxlang.interpreter.result.ContinueRuntimeResult
+import org.nyxlang.interpreter.result.IRuntimeResult
+import org.nyxlang.interpreter.result.listResult
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.StatementListNode
 
@@ -9,19 +13,14 @@ import org.nyxlang.parser.ast.StatementListNode
  */
 class StatementListVisitor : IVisitor {
     override fun matches(node: INode) = StatementListNode::class == node::class
-    override fun visit(interpreter: IInterpreter, node: INode): List<Any?> {
+    override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val statementListNode = node as StatementListNode
-        val result = arrayListOf<Any?>()
+        val result = listResult()
         for (statement in statementListNode.statements) {
-            val nodeResult = interpreter.evalNode(statement)
-
-            // I want to prevent very deep lists from occurring. This check prevents that
-            // something like [true] becomes [[[true]]]
-            if (nodeResult is Collection<*>) {
-                result.addAll((nodeResult as Collection<*>?)!!)
-            } else {
-                result.add(nodeResult)
-            }
+            val statementResult = interpreter.evalNode(statement)
+            if (statementResult is BreakRuntimeResult) return statementResult
+            if (statementResult is ContinueRuntimeResult) return statementResult
+            result.data.add(statementResult)
         }
         return result
     }

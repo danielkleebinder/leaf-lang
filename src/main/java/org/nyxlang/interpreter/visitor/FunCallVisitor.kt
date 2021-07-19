@@ -2,6 +2,8 @@ package org.nyxlang.interpreter.visitor
 
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.exception.VisitorException
+import org.nyxlang.interpreter.result.IRuntimeResult
+import org.nyxlang.interpreter.result.emptyResult
 import org.nyxlang.interpreter.withDynamicScope
 import org.nyxlang.parser.ast.FunCallNode
 import org.nyxlang.parser.ast.INode
@@ -11,7 +13,7 @@ import org.nyxlang.parser.ast.INode
  */
 class FunCallVisitor : IVisitor {
     override fun matches(node: INode) = FunCallNode::class == node::class
-    override fun visit(interpreter: IInterpreter, node: INode): Any? {
+    override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val funCallNode = node as FunCallNode
         val funName = funCallNode.name
         val spec = funCallNode.spec
@@ -23,8 +25,8 @@ class FunCallVisitor : IVisitor {
         // Execute the arguments first before creating a new activation record,
         // otherwise, I would already execute the arguments in the context of the
         // function itself.
-        val actualArgs = args.map { interpreter.evalNode(it) }
-        var result: Any? = null
+        val actualArgs = args.map { interpreter.evalNode(it).data }
+        var result: IRuntimeResult = emptyResult()
 
         // Push a new activation record onto the stack and assign the variables
         interpreter.withDynamicScope(funName) { activationRecord ->
@@ -33,15 +35,15 @@ class FunCallVisitor : IVisitor {
             }
             activationRecord.staticLink = spec.staticScope
 
-            if (false == interpreter.evalNode(spec.requires)) {
+            if (false == interpreter.evalNode(spec.requires).data) {
                 throw VisitorException("Requires expression of function \"$funName\" failed")
             }
 
             result = interpreter.evalNode(spec.body)
 
             if (spec.returns != null) {
-                activationRecord.define("_", result)
-                if (false == interpreter.evalNode(spec.ensures)) {
+                activationRecord.define("_", result.data)
+                if (false == interpreter.evalNode(spec.ensures).data) {
                     throw VisitorException("Ensures expression of function \"$funName\" failed")
                 }
             }

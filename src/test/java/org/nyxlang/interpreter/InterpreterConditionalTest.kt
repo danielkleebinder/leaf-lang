@@ -1,7 +1,6 @@
 package org.nyxlang.interpreter
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
 import java.math.BigDecimal
@@ -14,29 +13,29 @@ class InterpreterConditionalTest : TestSuit() {
         var result = execute("if true { true }")
         assertEquals(trueList, result)
         result = execute("if false { true }")
-        assertEquals(nullList, result)
+        assertEquals(emptyList, result)
     }
 
     @Test
     fun shouldInterpretEmptyBody() {
         val result = execute("if true {}")
-        assertEquals(nullList, result)
+        assertEquals(emptyList, result)
     }
 
     @Test
     fun shouldInterpretEmptyCondition() {
         val result = execute("if { true }")
-        assertEquals(nullList, result)
+        assertEquals(emptyList, result)
     }
 
     @Test
     fun shouldInterpretConditionExpression() {
         var result = execute("if (1 == -4) { true }")
-        assertEquals(nullList, result)
+        assertEquals(emptyList, result)
         result = execute("if !(1 == 2) && (~3 == -4) { true }")
         assertEquals(trueList, result)
         result = execute("if (1 == 2) && (~3 == -4) { true }")
-        assertEquals(nullList, result)
+        assertEquals(emptyList, result)
     }
 
     @Test

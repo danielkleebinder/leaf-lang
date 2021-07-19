@@ -4,6 +4,10 @@ import org.nyxlang.interpreter.exception.DynamicSemanticException
 import org.nyxlang.interpreter.exception.VisitorException
 import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.CallStack
+import org.nyxlang.interpreter.result.IRuntimeResult
+import org.nyxlang.interpreter.result.ListRuntimeResult
+import org.nyxlang.interpreter.result.RuntimeResult
+import org.nyxlang.interpreter.result.emptyResult
 import org.nyxlang.interpreter.visitor.*
 import org.nyxlang.parser.ast.INode
 
@@ -22,7 +26,8 @@ class Interpreter : IInterpreter {
             IfVisitor(),
             WhenVisitor(),
             LoopVisitor(),
-            NativeVisitor(),
+            BreakVisitor(),
+            ContinueVisitor(),
             StatementListVisitor(),
             VarAccessVisitor(),
             VarAssignVisitor(),
@@ -32,15 +37,15 @@ class Interpreter : IInterpreter {
             TypeVisitor())
 
     override val callStack = CallStack()
-    override fun interpret(ast: INode) = evalNode(ast)
+    override fun interpret(ast: INode) = unrollResult(evalNode(ast))
 
     init {
         callStack.push(ActivationRecord(name = "global"))
     }
 
-    override fun evalNode(node: INode?): Any? {
+    override fun evalNode(node: INode?): IRuntimeResult {
         if (node == null) {
-            return null
+            return emptyResult()
         }
         val errors = arrayListOf<InterpreterError>()
         for (visitor in visitorsList) {
@@ -54,6 +59,16 @@ class Interpreter : IInterpreter {
         if (errors.size > 0) {
             throw DynamicSemanticException("The interpreter detected an error during runtime", errors)
         }
-        return null
+        return emptyResult()
+    }
+
+    fun unrollResult(result: Any): List<Any> {
+        if (result is ListRuntimeResult) {
+            return result.data.flatMap { unrollResult(it) }
+        }
+        if (result is RuntimeResult && result.data != null) {
+            return listOf(result.data!!)
+        }
+        return listOf()
     }
 }

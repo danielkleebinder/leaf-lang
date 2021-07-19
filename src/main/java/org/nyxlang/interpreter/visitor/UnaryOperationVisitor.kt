@@ -2,6 +2,8 @@ package org.nyxlang.interpreter.visitor
 
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.exception.VisitorException
+import org.nyxlang.interpreter.result.DataRuntimeResult
+import org.nyxlang.interpreter.result.dataResult
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.UnaryOperation
 import org.nyxlang.parser.ast.UnaryOperationNode
@@ -15,13 +17,13 @@ class UnaryOperationVisitor : IVisitor {
 
     override fun matches(node: INode) = UnaryOperationNode::class == node::class
 
-    override fun visit(interpreter: IInterpreter, node: INode): Any {
+    override fun visit(interpreter: IInterpreter, node: INode): DataRuntimeResult {
         val unaryOperationNode = node as UnaryOperationNode
-        val value = interpreter.evalNode(unaryOperationNode.node)
+        val value = interpreter.evalNode(unaryOperationNode.node).data
         val op = unaryOperationNode.op
 
         if (value is BigDecimal) {
-            val result = interpretNumber(value, op)
+            val result = dataResult(interpretNumber(value, op))
             if (VarAccessNode::class == unaryOperationNode.node::class) {
                 val varAccessNode = unaryOperationNode.node as VarAccessNode
                 val varName = varAccessNode.identifier
@@ -29,13 +31,13 @@ class UnaryOperationVisitor : IVisitor {
                 // Write back variable values
                 val activationRecord = interpreter.activationRecord!!
                 when (op) {
-                    UnaryOperation.INCREMENT -> activationRecord[varName] = result
-                    UnaryOperation.DECREMENT -> activationRecord[varName] = result
+                    UnaryOperation.INCREMENT -> activationRecord[varName] = result.data
+                    UnaryOperation.DECREMENT -> activationRecord[varName] = result.data
                 }
             }
             return result
         } else if (value is Boolean) {
-            return interpretBool(value, op)
+            return dataResult(interpretBool(value, op))
         }
 
         throw VisitorException("Given value " + value + " does not support unary operation " + unaryOperationNode.op)

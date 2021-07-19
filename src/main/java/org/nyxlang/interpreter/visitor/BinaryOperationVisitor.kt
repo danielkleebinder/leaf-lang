@@ -2,6 +2,8 @@ package org.nyxlang.interpreter.visitor
 
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.exception.VisitorException
+import org.nyxlang.interpreter.result.DataRuntimeResult
+import org.nyxlang.interpreter.result.dataResult
 import org.nyxlang.parser.ast.BinaryOperation
 import org.nyxlang.parser.ast.BinaryOperationNode
 import org.nyxlang.parser.ast.INode
@@ -15,16 +17,16 @@ class BinaryOperationVisitor : IVisitor {
 
     override fun matches(node: INode) = BinaryOperationNode::class == node::class
 
-    override fun visit(interpreter: IInterpreter, node: INode): Any? {
+    override fun visit(interpreter: IInterpreter, node: INode): DataRuntimeResult {
         val binaryOperationNode = node as BinaryOperationNode
-        val left = interpreter.evalNode(binaryOperationNode.leftNode)
-        val right = interpreter.evalNode(binaryOperationNode.rightNode)
+        val left = interpreter.evalNode(binaryOperationNode.leftNode).data
+        val right = interpreter.evalNode(binaryOperationNode.rightNode).data
         val op = binaryOperationNode.op
 
         if (left is BigDecimal && right is BigDecimal) {
-            return interpretNumbers(left, right, op)
+            return dataResult(interpretNumbers(left, right, op))
         } else if (left is Boolean && right is Boolean) {
-            return interpretBools(left, right, op)
+            return dataResult(interpretBools(left, right, op))
         }
 
         throw VisitorException("Given value $left is not compatible with $right")

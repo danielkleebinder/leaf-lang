@@ -4,7 +4,6 @@ import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.token.BoolToken
 import org.nyxlang.lexer.token.IToken
 import org.nyxlang.lexer.token.NameToken
-import org.nyxlang.lexer.token.NativeToken
 import org.nyxlang.lexer.token.keyword.*
 
 /**
@@ -38,7 +37,6 @@ class NameTokenizer : ITokenizer {
             "number" -> return NumberKeywordToken()
             "bool" -> return BoolKeywordToken()
             "when" -> return WhenKeywordToken()
-            "native" -> return NativeToken("undefined")
         }
         return NameToken(name)
     }

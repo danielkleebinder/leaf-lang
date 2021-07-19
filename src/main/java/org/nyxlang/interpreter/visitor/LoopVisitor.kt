@@ -1,6 +1,10 @@
 package org.nyxlang.interpreter.visitor
 
 import org.nyxlang.interpreter.IInterpreter
+import org.nyxlang.interpreter.result.BreakRuntimeResult
+import org.nyxlang.interpreter.result.ContinueRuntimeResult
+import org.nyxlang.interpreter.result.ListRuntimeResult
+import org.nyxlang.interpreter.result.listResult
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.LoopNode
 
@@ -11,28 +15,23 @@ class LoopVisitor : IVisitor {
 
     override fun matches(node: INode) = LoopNode::class == node::class
 
-    override fun visit(interpreter: IInterpreter, node: INode): Any {
+    override fun visit(interpreter: IInterpreter, node: INode): ListRuntimeResult {
         val loopNode = node as LoopNode
-        val result = arrayListOf<Any>()
+        val result = listResult()
 
         // Do the initialization of the loop
         if (loopNode.init != null) interpreter.evalNode(loopNode.init)
 
-        println(loopNode)
-
-        while (loopNode.condition == null || interpreter.evalNode(loopNode.condition) == true) {
+        // Run the actual loop
+        while (loopNode.condition == null || interpreter.evalNode(loopNode.condition).data == true) {
             val bodyResult = interpreter.evalNode(loopNode.body)
 
-            // I want to prevent very deep lists from occurring. This check prevents that
-            // something like [true] becomes [[[true]]]
-            if (bodyResult is Collection<*>) {
-                result.addAll(bodyResult as Collection<Any>)
-            } else if (bodyResult != null) {
-                result.add(bodyResult)
-            }
+            // Program flow control statements
+            if (bodyResult is BreakRuntimeResult) break
+            if (bodyResult is ContinueRuntimeResult) continue
 
             // Do one step of the loops step expression
-            interpreter.evalNode(loopNode.step)
+            result.data.add(interpreter.evalNode(loopNode.step))
         }
         return result
     }
