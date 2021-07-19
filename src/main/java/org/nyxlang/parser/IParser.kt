@@ -16,14 +16,9 @@ interface IParser {
     fun parse(tokens: Array<IToken>): INode?
 
     /**
-     * Advances the cursor by one position.
-     */
-    fun advanceCursor() = advanceCursor(1)
-
-    /**
      * Advances the cursor position [by] the given amount.
      */
-    fun advanceCursor(by: Int): Int
+    fun advanceCursor(by: Int = 1): Int
 
     /**
      * The current token.

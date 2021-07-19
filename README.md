@@ -17,7 +17,7 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <program> ::= <statement-list>
 
 <statement-list> ::= <statement>
-                   | <statement> ';' <statement-list>
+                   | <statement> (';' | 'EOL') <statement-list>
 
 <statement> ::= ('var' | 'const') <var-declare>
               | 'return' (<expr>)?
@@ -35,7 +35,7 @@ The formal language definition in Backus-Naur form looks like the following. Fee
                    (':' '(' <expr> ')')?
                    (':' '(' <expr> ')')?
                    ('->' <type>)?
-                   (('{' <statement-list> '}') | ('=' <statement>)))
+                   (<block-stmt> | ('=' <statement>)))
 
 <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
 <var-assign>  ::= <name> '=' <expr>
@@ -44,7 +44,7 @@ The formal language definition in Backus-Naur form looks like the following. Fee
                        ('else' 'if' <expr> <block-stmt>)*
                        ('else'             <block-stmt>)?
 
-<block-stmt> ::= '{' <statement-list> '}'
+<block-stmt> ::= ('EOL')* '{' <statement-list> '}'
 <loop-stmt>  ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? <block-stmt>
 <when-stmt>  ::= 'when' (<expr>)? '{' ((<expr> | 'else') ':' <statement> ))* '}'
 

@@ -1,0 +1,13 @@
+var a = 5, res = false
+
+loop a > 0 {
+
+  --a
+
+  if a == 0
+
+  {
+res = true }
+
+
+  }

@@ -62,6 +62,25 @@ class InterpreterFunctionTest : TestSuit() {
     }
 
     @Test
+    fun shouldAllowSimpleRecursion() {
+        val program = """
+            var a = 5
+            fun rec = {
+              a = a - 1
+              if a > 0 { rec() }
+            }
+            rec()
+        """.trimIndent()
+        try {
+            execute(program)
+            assertEquals(BigDecimal.valueOf(0), globalActivationRecord["a"])
+        } catch (e: Exception) {
+            System.err.println(e)
+            fail()
+        }
+    }
+
+    @Test
     fun shouldAllowVariableRedeclaration() {
         val program = """
             fun test(a: number) {}
@@ -106,5 +125,19 @@ class InterpreterFunctionTest : TestSuit() {
         assertThrows(DynamicSemanticException::class.java) { execute("fun f :: _ > 1 -> number = 0; f()") }
         assertThrows(DynamicSemanticException::class.java) { execute("fun f(a: bool) :: _ == a -> bool = true; f(false)") }
         assertThrows(DynamicSemanticException::class.java) { execute("fun f(a: number) :: ((_ - 1) == (a * a)) -> number = a * a; f(5)") }
+    }
+
+    @Test
+    fun shouldErrorUnknownReturnType() {
+        assertThrows(StaticSemanticException::class.java) { execute("fun f -> unknownType = false; f()") }
+        assertThrows(StaticSemanticException::class.java) { execute("fun f -> Test = false; f()") }
+        assertThrows(StaticSemanticException::class.java) { execute("fun f -> OString = false; f()") }
+    }
+
+    @Test
+    fun shouldErrorWrongParamCount() {
+        assertThrows(StaticSemanticException::class.java) { execute("fun f -> bool = false; f(1)") }
+        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) -> bool = false; f()") }
+        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) -> bool = false; f(1, 2)") }
     }
 }

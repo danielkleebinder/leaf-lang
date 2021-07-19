@@ -47,6 +47,14 @@ class InterpreterVarTest : TestSuit() {
     }
 
     @Test
+    fun shouldErrorUnknownVariableAccess() {
+        assertThrows(StaticSemanticException::class.java) { execute("hello;") }
+        assertThrows(StaticSemanticException::class.java) { execute("x;") }
+        assertThrows(StaticSemanticException::class.java) { execute("Test;") }
+        assertThrows(StaticSemanticException::class.java) { execute("z = true;") }
+    }
+
+    @Test
     fun shouldErrorInvalidConstAssignment() {
 
         // Constants must be initialized on declaration
@@ -66,6 +74,9 @@ class InterpreterVarTest : TestSuit() {
     @Test
     fun shouldErrorUnknownTypeDeclaration() {
         assertThrows(StaticSemanticException::class.java) { execute("var a: customUnknownType") }
+        assertThrows(StaticSemanticException::class.java) { execute("var a: numberType") }
+        assertThrows(StaticSemanticException::class.java) { execute("var a: StringType") }
+        assertThrows(StaticSemanticException::class.java) { execute("var a: StringT") }
     }
 
     @Test

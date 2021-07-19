@@ -2,6 +2,7 @@ package org.nyxlang.lexer;
 
 import org.junit.jupiter.api.Test;
 import org.nyxlang.TestSuit;
+import org.nyxlang.lexer.token.NewLineToken;
 import org.nyxlang.lexer.token.StatementSeparatorToken;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,7 +23,7 @@ public class LexerStatementTest extends TestSuit {
     void shouldSeparateWithNewLine() {
         var tokens = lexer.tokenize("true\ntrue\nfalse");
         assertEquals(5, tokens.length);
-        assertSame(StatementSeparatorToken.class, tokens[1].getClass());
-        assertSame(StatementSeparatorToken.class, tokens[3].getClass());
+        assertSame(NewLineToken.class, tokens[1].getClass());
+        assertSame(NewLineToken.class, tokens[3].getClass());
     }
 }

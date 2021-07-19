@@ -38,7 +38,6 @@ class AtomEval(private val parser: IParser) : IEval {
             ConditionalKeywordToken::class -> return ConditionalEval(parser).eval()
             WhenKeywordToken::class -> return WhenEval(parser).eval()
             LoopKeywordToken::class -> return LoopEval(parser).eval()
-            NativeToken::class -> return NativeEval(parser).eval()
 
             PlusToken::class -> parser.advance { return UnaryOperationNode(eval(), UnaryOperation.POSITIVE) }
             MinusToken::class -> parser.advance { return UnaryOperationNode(eval(), UnaryOperation.NEGATE) }

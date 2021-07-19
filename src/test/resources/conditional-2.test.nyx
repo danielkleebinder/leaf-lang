@@ -1,0 +1,10 @@
+var a = 5, res = false
+
+if a != 5 {
+  res = false }
+
+else
+
+{
+
+  res = true }
