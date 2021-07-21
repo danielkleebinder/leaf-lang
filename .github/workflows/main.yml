@@ -9,8 +9,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Set up Kotlin environment
+      - name: Set up environment
         uses: actions/setup-java@v2
+        with:
+          java-version: '13'
+          distribution: 'adopt'
 
       - name: Cache Maven packages
         uses: actions/cache@v2
