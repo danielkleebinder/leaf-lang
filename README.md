@@ -1,3 +1,5 @@
+![build](https://github.com/danielkleebinder/nyxlang/actions/workflows/main/badge.svg)
+
 # Nyx Programming Language
 
 ![Nyx Icon](https://github.com/danielkleebinder/nyxlang/blob/main/nyxlang.png?raw=true)
