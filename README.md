@@ -1,4 +1,4 @@
-![build](https://github.com/danielkleebinder/nyxlang/actions/workflows/main/badge.svg)
+[![CI](https://github.com/danielkleebinder/nyxlang/actions/workflows/main.yml/badge.svg)](https://github.com/danielkleebinder/nyxlang/actions/workflows/main.yml)
 
 # Nyx Programming Language
 
