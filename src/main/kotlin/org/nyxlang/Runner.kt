@@ -2,7 +2,6 @@ package org.nyxlang
 
 import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.SemanticAnalyzer
-import org.nyxlang.analyzer.SemanticError
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.Interpreter
 import org.nyxlang.interpreter.result.unpack
