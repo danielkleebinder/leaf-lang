@@ -10,7 +10,7 @@ import org.nyxlang.lexer.token.StatementSeparatorToken
 class LexerStatementTest : TestSuit() {
     @Test
     fun shouldSeparateWithSemicolon() {
-        val tokens = lexer.tokenize("true;true;false")
+        val tokens = tokenize("true;true;false")
         assertEquals(5, tokens.size)
         assertSame(StatementSeparatorToken::class.java, tokens[1].javaClass)
         assertSame(StatementSeparatorToken::class.java, tokens[3].javaClass)
@@ -18,7 +18,7 @@ class LexerStatementTest : TestSuit() {
 
     @Test
     fun shouldSeparateWithNewLine() {
-        val tokens = lexer.tokenize("true\ntrue\nfalse")
+        val tokens = tokenize("true\ntrue\nfalse")
         assertEquals(5, tokens.size)
         assertSame(NewLineToken::class.java, tokens[1].javaClass)
         assertSame(NewLineToken::class.java, tokens[3].javaClass)

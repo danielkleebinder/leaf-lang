@@ -12,7 +12,7 @@ class LexerNumberTest : TestSuit() {
 
     @Test
     fun shouldTokenizeSingleInt() {
-        val tokens = lexer.tokenize("5")
+        val tokens = tokenize("5")
         assertEquals(1, tokens.size)
         assertSame(NumberToken::class.java, tokens[0].javaClass)
         assertEquals(BigDecimal.valueOf(5L), (tokens[0] as NumberToken).getValue())
@@ -20,7 +20,7 @@ class LexerNumberTest : TestSuit() {
 
     @Test
     fun shouldTokenizeMultipleInts() {
-        val tokens = lexer.tokenize("5 10 38194 0")
+        val tokens = tokenize("5 10 38194 0")
         assertEquals(4, tokens.size)
         assertSame(NumberToken::class.java, tokens[0].javaClass)
         assertEquals(BigDecimal.valueOf(5L), (tokens[0] as NumberToken).getValue())
@@ -34,7 +34,7 @@ class LexerNumberTest : TestSuit() {
 
     @Test
     fun shouldTokenizeNegativeInt() {
-        val tokens = lexer.tokenize("-5 10 -42")
+        val tokens = tokenize("-5 10 -42")
         assertEquals(5, tokens.size)
         assertSame(MinusToken::class.java, tokens[0].javaClass)
         assertEquals(BigDecimal.valueOf(5L), (tokens[1] as NumberToken).getValue())
@@ -45,7 +45,7 @@ class LexerNumberTest : TestSuit() {
 
     @Test
     fun shouldTokenizeFloat() {
-        val tokens = lexer.tokenize("-3.1415")
+        val tokens = tokenize("-3.1415")
         assertEquals(2, tokens.size)
         assertSame(MinusToken::class.java, tokens[0].javaClass)
         assertSame(NumberToken::class.java, tokens[1].javaClass)
@@ -54,8 +54,8 @@ class LexerNumberTest : TestSuit() {
 
     @Test
     fun shouldErrorForMultipleDecimalPoints() {
-        assertThrows(LexerException::class.java) { lexer.tokenize("3.14.15") }
-        assertThrows(LexerException::class.java) { lexer.tokenize("3.14.1.5") }
-        assertThrows(LexerException::class.java) { lexer.tokenize(".314.5") }
+        assertThrows(LexerException::class.java) { tokenize("3.14.15") }
+        assertThrows(LexerException::class.java) { tokenize("3.14.1.5") }
+        assertThrows(LexerException::class.java) { tokenize(".314.5") }
     }
 }

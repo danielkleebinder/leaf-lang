@@ -20,21 +20,6 @@ import java.io.File
  */
 open class TestSuit {
 
-    /**
-     * A list with one entry which is true.
-     */
-    val trueList = listOf(true)
-
-    /**
-     * A list with one entry which is false.
-     */
-    val falseList = listOf(false)
-
-    /**
-     * A list with zero entry.
-     */
-    val emptyList = emptyList<Any>()
-
     lateinit var lexer: ILexer
     lateinit var parser: IParser
     lateinit var analyzer: ISemanticAnalyzer

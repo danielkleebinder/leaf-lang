@@ -8,7 +8,6 @@ import org.nyxlang.parser.ast.WhenNode
  * Analyzes a when statement.
  */
 class WhenAnalyticalVisitor : IAnalyticalVisitor {
-    override fun matches(node: INode) = WhenNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val whenNode = node as WhenNode
 

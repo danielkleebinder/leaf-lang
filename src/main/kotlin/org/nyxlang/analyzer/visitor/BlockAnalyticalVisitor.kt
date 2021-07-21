@@ -9,7 +9,6 @@ import org.nyxlang.parser.ast.INode
  * Analyzes a block statement.
  */
 class BlockAnalyticalVisitor : IAnalyticalVisitor {
-    override fun matches(node: INode) = BlockNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val blockNode = node as BlockNode
         analyzer.withScope("block") {

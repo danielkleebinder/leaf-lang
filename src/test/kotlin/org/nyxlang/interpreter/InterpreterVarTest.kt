@@ -12,38 +12,38 @@ class InterpreterVarTest : TestSuit() {
     @Test
     fun shouldDeclareConst() {
         execute("const a = 3.1415")
-        assertEquals(BigDecimal.valueOf(3.1415), globalActivationRecord.get("a"))
+        assertEquals(BigDecimal.valueOf(3.1415), globalActivationRecord["a"])
 
         execute("const b = 42;")
-        assertEquals(BigDecimal.valueOf(42), globalActivationRecord.get("b"))
+        assertEquals(BigDecimal.valueOf(42), globalActivationRecord["b"])
 
         execute("const c = -993;")
-        assertEquals(BigDecimal.valueOf(-993), globalActivationRecord.get("c"))
+        assertEquals(BigDecimal.valueOf(-993), globalActivationRecord["c"])
     }
 
     @Test
     fun shouldDeclareVar() {
         execute("var a = -37")
-        assertEquals(BigDecimal.valueOf(-37), globalActivationRecord.get("a"))
+        assertEquals(BigDecimal.valueOf(-37), globalActivationRecord["a"])
 
         execute("var b = 42;")
-        assertEquals(BigDecimal.valueOf(42), globalActivationRecord.get("b"))
+        assertEquals(BigDecimal.valueOf(42), globalActivationRecord["b"])
 
         execute("var c: bool")
-        assertNull(globalActivationRecord.get("c"))
+        assertNull(globalActivationRecord["c"])
     }
 
     @Test
     fun shouldDeclareTypedConst() {
         execute("const a: number = -37")
-        assertEquals(BigDecimal.valueOf(-37), globalActivationRecord.get("a"))
+        assertEquals(BigDecimal.valueOf(-37), globalActivationRecord["a"])
 
         execute("const b: bool = true;")
-        assertNotNull(globalActivationRecord.get("b"))
-        assertTrue(globalActivationRecord.get("b") as Boolean)
+        assertNotNull(globalActivationRecord["b"])
+        assertTrue(globalActivationRecord["b"] as Boolean)
 
         execute("var c: bool")
-        assertNull(globalActivationRecord.get("c"))
+        assertNull(globalActivationRecord["c"])
     }
 
     @Test
@@ -85,5 +85,18 @@ class InterpreterVarTest : TestSuit() {
         assertThrows(StaticSemanticException::class.java) { execute("const a = 7; var a: number;") }
         assertThrows(StaticSemanticException::class.java) { execute("const a: number; const a = 7;") }
         assertThrows(StaticSemanticException::class.java) { execute("const a: number, a: number, b: number;") }
+    }
+
+    @Test
+    fun shouldAssignVariableOtherVariableValue() {
+        execute("const a: bool = true; const b = a")
+        assertNotNull(globalActivationRecord["a"])
+        assertNotNull(globalActivationRecord["b"])
+        assertTrue(globalActivationRecord["b"] as Boolean)
+
+        execute("const c = 10.77; const d = c")
+        assertNotNull(globalActivationRecord["c"])
+        assertNotNull(globalActivationRecord["d"])
+        assertEquals(BigDecimal.valueOf(10.77), globalActivationRecord["d"])
     }
 }

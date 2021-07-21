@@ -8,7 +8,6 @@ import org.nyxlang.parser.ast.LoopNode
  * Analyzes a loop ('loop') statement.
  */
 class LoopAnalyticalVisitor : IAnalyticalVisitor {
-    override fun matches(node: INode) = LoopNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val loopNode = node as LoopNode
         if (loopNode.init != null) analyzer.analyze(loopNode.init)

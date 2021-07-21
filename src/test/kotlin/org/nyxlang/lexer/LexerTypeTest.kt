@@ -16,7 +16,7 @@ class LexerTypeTest : TestSuit() {
 
     @Test
     fun shouldTokenizeTypeOnly() {
-        val tokens = lexer.tokenize("var a: number")
+        val tokens = tokenize("var a: number")
         assertEquals(4, tokens.size)
         assertSame(VarKeywordToken::class.java, tokens[0].javaClass)
         assertSame(NameToken::class.java, tokens[1].javaClass)
@@ -26,7 +26,7 @@ class LexerTypeTest : TestSuit() {
 
     @Test
     fun shouldTokenizeAssignmentOnly() {
-        val tokens = lexer.tokenize("var a = 3")
+        val tokens = tokenize("var a = 3")
         assertEquals(4, tokens.size)
         assertSame(VarKeywordToken::class.java, tokens[0].javaClass)
         assertSame(NameToken::class.java, tokens[1].javaClass)
@@ -36,7 +36,7 @@ class LexerTypeTest : TestSuit() {
 
     @Test
     fun shouldTokenizeTypedAssignment() {
-        val tokens = lexer.tokenize("var a: number = 3")
+        val tokens = tokenize("var a: number = 3")
         assertEquals(6, tokens.size)
         assertSame(VarKeywordToken::class.java, tokens[0].javaClass)
         assertSame(NameToken::class.java, tokens[1].javaClass)
@@ -48,7 +48,7 @@ class LexerTypeTest : TestSuit() {
 
     @Test
     fun shouldTokenizeTypedConstAssignment() {
-        val tokens = lexer.tokenize("const a: number = 3")
+        val tokens = tokenize("const a: number = 3")
         assertEquals(6, tokens.size)
         assertSame(ConstKeywordToken::class.java, tokens[0].javaClass)
         assertSame(NameToken::class.java, tokens[1].javaClass)

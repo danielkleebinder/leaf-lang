@@ -12,7 +12,6 @@ import org.nyxlang.lexer.token.IToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.Parser
 import org.nyxlang.parser.ast.INode
-import java.util.*
 import kotlin.system.measureNanoTime
 
 
@@ -29,7 +28,6 @@ fun execute(programCode: String, debug: Boolean = false) {
     try {
         var tokens: Array<IToken>
         var ast: INode?
-        var errors: Array<SemanticError>?
         var result: Any?
 
         val timeLexer = measureNanoTime { tokens = lexer.tokenize(programCode) }
@@ -38,8 +36,7 @@ fun execute(programCode: String, debug: Boolean = false) {
         val timeParser = measureNanoTime { ast = parser.parse(tokens) }
         if (debug) println("Abstract Syntax Tree: $ast")
 
-        val timeAnalyzer = measureNanoTime { errors = analyzer.analyze(ast!!) }
-        if (debug) println("Semantic Errors     : " + Arrays.toString(errors))
+        val timeAnalyzer = measureNanoTime { analyzer.analyze(ast!!) }
 
         val timeInterpreter = measureNanoTime { result = interpreter.interpret(ast).unpack() }
         if (debug) println("Global Memory       : " + interpreter.callStack)

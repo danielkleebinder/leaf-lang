@@ -10,11 +10,6 @@ import org.nyxlang.parser.ast.INode
 interface IAnalyticalVisitor {
 
     /**
-     * Tests if this analytical visitor is applicable for the given [node].
-     */
-    fun matches(node: INode): Boolean
-
-    /**
      * Analyses the given [node] using the given [analyzer]. Throws an
      * [org.nyxlang.analyzer.exception.AnalyticalVisitorException] if an error was found.
      */

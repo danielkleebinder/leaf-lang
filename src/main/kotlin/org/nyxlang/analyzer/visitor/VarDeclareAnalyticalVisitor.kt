@@ -11,7 +11,6 @@ import org.nyxlang.symbol.VarSymbol
  * Analyzes a variable declaration.
  */
 class VarDeclareAnalyticalVisitor : IAnalyticalVisitor {
-    override fun matches(node: INode) = VarDeclareNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val varDeclareNode = node as VarDeclareNode
 

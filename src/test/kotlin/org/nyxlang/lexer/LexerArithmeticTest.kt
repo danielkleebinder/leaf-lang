@@ -11,7 +11,7 @@ import org.nyxlang.lexer.token.arithmetic.PlusToken
 class LexerArithmeticTest : TestSuit() {
     @Test
     fun shouldTokenizePlusOperator() {
-        val tokens = lexer.tokenize("5+3")
+        val tokens = tokenize("5+3")
         assertEquals(3, tokens.size)
         assertSame(NumberToken::class.java, tokens[0].javaClass)
         assertSame(PlusToken::class.java, tokens[1].javaClass)
@@ -20,7 +20,7 @@ class LexerArithmeticTest : TestSuit() {
 
     @Test
     fun shouldTokenizeMultipleOperators() {
-        val tokens = lexer.tokenize("5+3**10")
+        val tokens = tokenize("5+3**10")
         assertEquals(6, tokens.size)
         assertSame(NumberToken::class.java, tokens[0].javaClass)
         assertSame(PlusToken::class.java, tokens[1].javaClass)

@@ -8,7 +8,6 @@ import org.nyxlang.parser.ast.INode
  * Analyzes a conditional ('if') statement.
  */
 class IfAnalyticalVisitor : IAnalyticalVisitor {
-    override fun matches(node: INode) = ConditionalNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val ifNode = node as ConditionalNode
 

@@ -12,7 +12,6 @@ import org.nyxlang.symbol.VarSymbol
  * Analyzes a function ('fun') declaration statement.
  */
 class FunDeclareAnalyticalVisitor : IAnalyticalVisitor {
-    override fun matches(node: INode) = FunDeclareNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val funDeclareNode = node as FunDeclareNode
 

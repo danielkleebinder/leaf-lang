@@ -11,7 +11,6 @@ import org.nyxlang.symbol.VarSymbol
  * Analyzes a variable assignment.
  */
 class VarAssignAnalyticalVisitor : IAnalyticalVisitor {
-    override fun matches(node: INode) = VarAssignNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val varAssignNode = node as VarAssignNode
         val symbol = analyzer.currentScope.get(varAssignNode.identifier)

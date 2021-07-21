@@ -10,7 +10,6 @@ import org.nyxlang.symbol.FunSymbol
  * Analyzes a function call statement.
  */
 class FunCallAnalyticalVisitor : IAnalyticalVisitor {
-    override fun matches(node: INode) = FunCallNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val funCallNode = node as FunCallNode
         val funName = funCallNode.name

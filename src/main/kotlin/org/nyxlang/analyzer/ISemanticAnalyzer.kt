@@ -14,7 +14,7 @@ interface ISemanticAnalyzer {
      * Analyses a given abstract syntax tree ([ast]) and returns a list of errors. The
      * list is empty if no errors are found.
      */
-    fun analyze(ast: INode): Array<SemanticError>?
+    fun analyze(ast: INode)
 
     /**
      * The current symbol table used by the semantic analyzer in the current scope.

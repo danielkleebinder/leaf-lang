@@ -156,7 +156,7 @@ trait CanTalk {
   fun talk(text: string)
 }
 
-type Dog : Feedable, CanTalk {
+type Dog is Feedable, CanTalk {
 
   fed: bool, happy: bool
   age: number
@@ -248,7 +248,7 @@ The next example shows how factorial can be implemented:
 ```kotlin
 fun fact(n: number) : n > 0 -> number {
   when n {
-    n > 1: return n * fact(n-1)
+    _ > 1: return n * fact(n-1)
     else : return 1
   }
 }
@@ -260,6 +260,7 @@ fact(6) // outputs 720
 
 - Unit Tests for 'when'
 - Built in Functions
+- Arrays (Listen)
 - Traits
 - Custom Types
 - Async

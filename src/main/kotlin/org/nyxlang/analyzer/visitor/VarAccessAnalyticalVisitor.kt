@@ -9,7 +9,6 @@ import org.nyxlang.parser.ast.VarAccessNode
  * Analyzes a variable access.
  */
 class VarAccessAnalyticalVisitor : IAnalyticalVisitor {
-    override fun matches(node: INode) = VarAccessNode::class == node::class
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
         val varAccessNode = node as VarAccessNode
         if (analyzer.currentScope.get(varAccessNode.identifier) == null) {
