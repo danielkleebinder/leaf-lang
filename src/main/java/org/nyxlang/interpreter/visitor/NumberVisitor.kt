@@ -9,6 +9,5 @@ import org.nyxlang.parser.ast.NumberNode
  * Interprets a number node.
  */
 class NumberVisitor : IVisitor {
-    override fun matches(node: INode) = NumberNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode) = dataResult((node as NumberNode).value)
 }

@@ -7,7 +7,7 @@ import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.Interpreter
 import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.memory.ICallStack
-import org.nyxlang.interpreter.result.unroll
+import org.nyxlang.interpreter.result.unpack
 import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
 import org.nyxlang.parser.IParser
@@ -75,7 +75,7 @@ open class TestSuit {
         val tokens = lexer.tokenize(programCode)
         val ast = parser.parse(tokens)
         analyzer.analyze(ast!!)
-        return interpreter.interpret(ast).unroll()
+        return interpreter.interpret(ast).unpack()
     }
 
     /**

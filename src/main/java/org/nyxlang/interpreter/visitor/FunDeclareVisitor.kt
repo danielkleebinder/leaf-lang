@@ -10,7 +10,6 @@ import org.nyxlang.parser.ast.INode
  * Interprets a function declaration node.
  */
 class FunDeclareVisitor : IVisitor {
-    override fun matches(node: INode) = FunDeclareNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): EmptyRuntimeResult {
         val funDeclareNode = node as FunDeclareNode
         val funSpec = funDeclareNode.spec!!

@@ -15,8 +15,6 @@ import kotlin.math.pow
  */
 class BinaryOperationVisitor : IVisitor {
 
-    override fun matches(node: INode) = BinaryOperationNode::class == node::class
-
     override fun visit(interpreter: IInterpreter, node: INode): DataRuntimeResult {
         val binaryOperationNode = node as BinaryOperationNode
         val left = interpreter.interpret(binaryOperationNode.leftNode).data

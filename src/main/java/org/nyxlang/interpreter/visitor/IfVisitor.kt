@@ -10,7 +10,6 @@ import org.nyxlang.parser.ast.INode
  * Interprets the conditional logic.
  */
 class IfVisitor : IVisitor {
-    override fun matches(node: INode) = ConditionalNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val ifNode = node as ConditionalNode
         for (ifCase in ifNode.cases) {

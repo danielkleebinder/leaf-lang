@@ -15,8 +15,6 @@ import java.math.BigDecimal
  */
 class UnaryOperationVisitor : IVisitor {
 
-    override fun matches(node: INode) = UnaryOperationNode::class == node::class
-
     override fun visit(interpreter: IInterpreter, node: INode): DataRuntimeResult {
         val unaryOperationNode = node as UnaryOperationNode
         val value = interpreter.interpret(unaryOperationNode.node).data

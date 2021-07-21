@@ -14,7 +14,6 @@ import org.nyxlang.parser.ast.INode
  * Interprets a function call node.
  */
 class FunCallVisitor : IVisitor {
-    override fun matches(node: INode) = FunCallNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val funCallNode = node as FunCallNode
         val funName = funCallNode.name

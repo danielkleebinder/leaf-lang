@@ -9,7 +9,6 @@ import org.nyxlang.parser.ast.StatementListNode
  * Interprets a list of statements.
  */
 class StatementListVisitor : IVisitor {
-    override fun matches(node: INode) = StatementListNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val statementListNode = node as StatementListNode
         val result = listResult()

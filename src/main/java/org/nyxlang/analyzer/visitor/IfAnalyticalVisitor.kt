@@ -1,8 +1,8 @@
 package org.nyxlang.analyzer.visitor
 
 import org.nyxlang.analyzer.ISemanticAnalyzer
-import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.ConditionalNode
+import org.nyxlang.parser.ast.INode
 
 /**
  * Analyzes a conditional ('if') statement.

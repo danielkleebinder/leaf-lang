@@ -9,7 +9,6 @@ import org.nyxlang.parser.ast.ProgramNode
  * Interprets the program logic.
  */
 class ProgramVisitor : IVisitor {
-    override fun matches(node: INode) = ProgramNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val programNode = node as ProgramNode
         return interpreter.interpret(programNode.statements)

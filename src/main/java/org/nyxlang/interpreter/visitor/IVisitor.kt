@@ -10,14 +10,6 @@ import org.nyxlang.parser.ast.INode
 interface IVisitor {
 
     /**
-     * Tests if this visitor is applicable for the given node.
-     *
-     * @param node Node to be run.
-     * @return True if applicable, otherwise false.
-     */
-    fun matches(node: INode): Boolean
-
-    /**
      * Interprets and runs a given [node]. The given [interpreter] instance can be
      * used to recursively traverse the syntax tree.
      */

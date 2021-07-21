@@ -11,7 +11,6 @@ import org.nyxlang.parser.ast.INode
  * Interprets a block statement.
  */
 class BlockVisitor : IVisitor {
-    override fun matches(node: INode) = BlockNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val blockNode = node as BlockNode
         var result: IRuntimeResult = emptyResult()

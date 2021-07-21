@@ -20,17 +20,14 @@ interface IRuntimeResult {
 /**
  * Unrolls the data result into a one dimensional result list.
  */
-fun IRuntimeResult.unroll(): List<Any> {
-    fun unrollRecursively(result: Any): List<Any> {
-        if (result is ListRuntimeResult) {
-            return result.data.flatMap { unrollRecursively(it) }
-        }
-        if (result is RuntimeResult && result.data != null) {
-            return listOf(result.data!!)
-        }
-        return listOf()
+private fun IRuntimeResult.unroll(result: Any): List<Any> {
+    if (result is ListRuntimeResult) {
+        return result.data.flatMap { unroll(it) }
     }
-    return unrollRecursively(this)
+    if (result is RuntimeResult && result.data != null) {
+        return listOf(result.data!!)
+    }
+    return listOf()
 }
 
 /**
@@ -39,7 +36,7 @@ fun IRuntimeResult.unroll(): List<Any> {
  * if the list only has one value or (3) null if the list was empty.
  */
 fun IRuntimeResult.unpack(): Any? {
-    val unrolled = unroll()
+    val unrolled = unroll(this)
     if (unrolled.isEmpty()) return null
     if (unrolled.size == 1) return unrolled[0]
     return unrolled

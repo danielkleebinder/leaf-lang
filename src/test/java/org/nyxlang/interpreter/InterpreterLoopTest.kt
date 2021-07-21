@@ -11,8 +11,7 @@ import java.time.Duration
 class InterpreterLoopTest : TestSuit() {
     @Test
     fun shouldSkipWithConditionFalse() {
-        val result = execute("loop false { true }")
-        assertEquals(emptyList, result)
+        assertNull(execute("loop false { true }"))
     }
 
     @Test

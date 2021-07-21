@@ -10,7 +10,6 @@ import org.nyxlang.parser.ast.WhenNode
  * Interprets the when logic.
  */
 class WhenVisitor : IVisitor {
-    override fun matches(node: INode) = WhenNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val whenNode = node as WhenNode
         val argument = interpreter.interpret(whenNode.arg).data

@@ -11,7 +11,6 @@ import org.nyxlang.parser.ast.VarAssignNode
  * Interprets the var assign node.
  */
 class VarAssignVisitor : IVisitor {
-    override fun matches(node: INode) = VarAssignNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val varAssignNode = node as VarAssignNode
         val varName = varAssignNode.identifier

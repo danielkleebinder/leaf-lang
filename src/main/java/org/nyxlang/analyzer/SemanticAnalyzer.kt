@@ -38,7 +38,6 @@ class SemanticAnalyzer : ISemanticAnalyzer {
     }
 
     override fun leaveScope() {
-        println(currentScope)
         currentScope = currentScope.parent!!
     }
 

@@ -10,8 +10,6 @@ import org.nyxlang.parser.ast.LoopNode
  */
 class LoopVisitor : IVisitor {
 
-    override fun matches(node: INode) = LoopNode::class == node::class
-
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val loopNode = node as LoopNode
         val result = listResult()

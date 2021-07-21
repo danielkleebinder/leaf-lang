@@ -11,7 +11,6 @@ import org.nyxlang.parser.ast.VarAccessNode
  * Interprets the var access node.
  */
 class VarAccessVisitor : IVisitor {
-    override fun matches(node: INode) = VarAccessNode::class == node::class
     override fun visit(interpreter: IInterpreter, node: INode): DataRuntimeResult {
         val varAccessNode = node as VarAccessNode
         val varName = varAccessNode.identifier
