@@ -2,14 +2,18 @@ package org.nyxlang
 
 import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.SemanticAnalyzer
+import org.nyxlang.analyzer.SemanticError
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.Interpreter
-import org.nyxlang.interpreter.result.unroll
+import org.nyxlang.interpreter.result.unpack
 import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
+import org.nyxlang.lexer.token.IToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.Parser
+import org.nyxlang.parser.ast.INode
 import java.util.*
+import kotlin.system.measureNanoTime
 
 
 val lexer: ILexer = Lexer()
@@ -23,24 +27,31 @@ val interpreter: IInterpreter = Interpreter()
  */
 fun execute(programCode: String, debug: Boolean = false) {
     try {
-        val tokens = lexer.tokenize(programCode)
-        if (debug) {
-            println("Lexical Analysis    : " + Arrays.toString(tokens))
-        }
+        var tokens: Array<IToken>
+        var ast: INode?
+        var errors: Array<SemanticError>?
+        var result: Any?
 
-        val ast = parser.parse(tokens)
-        if (debug) {
-            println("Abstract Syntax Tree: $ast")
-        }
+        val timeLexer = measureNanoTime { tokens = lexer.tokenize(programCode) }
+        if (debug) println("Lexical Analysis    : " + tokens.contentToString())
 
-        val errors = analyzer.analyze(ast!!)
-        if (debug) {
-            println("Semantic Errors     : " + Arrays.toString(errors))
-        }
+        val timeParser = measureNanoTime { ast = parser.parse(tokens) }
+        if (debug) println("Abstract Syntax Tree: $ast")
 
-        val result = interpreter.interpret(ast).unroll()
+        val timeAnalyzer = measureNanoTime { errors = analyzer.analyze(ast!!) }
+        if (debug) println("Semantic Errors     : " + Arrays.toString(errors))
+
+        val timeInterpreter = measureNanoTime { result = interpreter.interpret(ast).unpack() }
+        if (debug) println("Global Memory       : " + interpreter.callStack)
+
         if (debug) {
-            println("Global Memory       : " + interpreter.callStack)
+            println("""
+                Performance Statistics:
+                  Lexer      : ${timeLexer / 1_000_000.0} ms
+                  Parser     : ${timeParser / 1_000_000.0} ms
+                  Analyzer   : ${timeAnalyzer / 1_000_000.0} ms
+                  Interpreter: ${timeInterpreter / 1_000_000.0} ms
+            """.trimIndent())
         }
 
         println("Interpreter Result  : $result")
