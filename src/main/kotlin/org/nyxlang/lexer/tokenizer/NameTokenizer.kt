@@ -12,11 +12,11 @@ import org.nyxlang.lexer.token.keyword.*
  */
 class NameTokenizer : ITokenizer {
 
-    override fun matches(c: Char) = c.isLetter() || c == '_'
+    override fun matches(c: Char) = c.isJavaIdentifierStart()
 
     override fun tokenize(lexer: ILexer): IToken {
         val nameBuilder = StringBuilder()
-        while (!lexer.isEndOfProgram && matches(lexer.symbol)) {
+        while (!lexer.isEndOfProgram && lexer.symbol.isJavaIdentifierPart()) {
             nameBuilder.append(lexer.symbol)
             lexer.advanceCursor()
         }
@@ -36,6 +36,7 @@ class NameTokenizer : ITokenizer {
             "return" -> return ReturnKeywordToken()
             "number" -> return NumberKeywordToken()
             "bool" -> return BoolKeywordToken()
+            "string" -> return StringKeywordToken()
             "when" -> return WhenKeywordToken()
         }
         return NameToken(name)

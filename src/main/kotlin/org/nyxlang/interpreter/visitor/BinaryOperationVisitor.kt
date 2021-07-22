@@ -25,6 +25,8 @@ class BinaryOperationVisitor : IVisitor {
             return dataResult(interpretNumbers(left, right, op))
         } else if (left is Boolean && right is Boolean) {
             return dataResult(interpretBools(left, right, op))
+        } else if (left is String && right is String) {
+            return dataResult(interpretStrings(left, right, op))
         }
 
         throw VisitorException("Given value $left is not compatible with $right")
@@ -58,6 +60,20 @@ class BinaryOperationVisitor : IVisitor {
         BinaryOperation.NOT_EQUAL -> left != right
         BinaryOperation.LOGICAL_AND -> left && right
         BinaryOperation.LOGICAL_OR -> left || right
+        else -> throw VisitorException("The operation $op is not supported for data type bool")
+    }
+
+    /**
+     * Performs strings operations on the [left] and [right] operands using the given [op].
+     */
+    private fun interpretStrings(left: String, right: String, op: BinaryOperation) = when (op) {
+        BinaryOperation.PLUS -> left + right
+        BinaryOperation.EQUAL -> left == right
+        BinaryOperation.NOT_EQUAL -> left != right
+        BinaryOperation.LESS_THAN -> left < right
+        BinaryOperation.LESS_THAN_OR_EQUAL -> left <= right
+        BinaryOperation.GREATER_THAN -> left > right
+        BinaryOperation.GREATER_THAN_OR_EQUAL -> left >= right
         else -> throw VisitorException("The operation $op is not supported for data type bool")
     }
 }

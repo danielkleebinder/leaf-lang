@@ -11,16 +11,21 @@ import java.math.BigDecimal
  */
 class NumberTokenizer : ITokenizer {
 
-    override fun matches(c: Char) = Character.isDigit(c) || c == '.'
+    private val numberStart = Regex("[0-9.]")
+    private val numberPart = Regex("[0-9._]")
+
+    override fun matches(c: Char) = numberStart.matches(c.toString())
 
     override fun tokenize(lexer: ILexer): IToken {
         var decimalPointCount = 0
         val numberBuilder = StringBuilder()
-        while (!lexer.isEndOfProgram && matches(lexer.symbol)) {
+        while (!lexer.isEndOfProgram && numberPart.matches(lexer.symbol.toString())) {
             if (lexer.symbol == '.') {
                 decimalPointCount++
             }
-            numberBuilder.append(lexer.symbol)
+            if (lexer.symbol != '_') {
+                numberBuilder.append(lexer.symbol)
+            }
             lexer.advanceCursor()
         }
         lexer.advanceCursor(-1)

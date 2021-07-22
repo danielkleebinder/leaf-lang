@@ -48,7 +48,6 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 
 <block-stmt> ::= ('EOL')* '{' <statement-list> '}'
 <loop-stmt>  ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? <block-stmt>
-<when-stmt>  ::= 'when' (<expr>)? '{' ((<expr> | 'else') ':' <statement> ))* '}'
 
 <expr>       ::= <equal-expr> (( '&&' | '||' ) <equal-expr>)*
 <equal-expr> ::= <logic-expr> (( '==' | '!=' ) <logic-expr>)*
@@ -57,7 +56,7 @@ The formal language definition in Backus-Naur form looks like the following. Fee
                | <arith-expr> (( '<' | '<=' | '>' | '>=' ) <arith-expr>)*
 
 <term> ::= <atom> (( '*' | '/' | '%' ) <atom>)*
-<atom> ::= ('+' | '-' | '~' | '++' | '--')? (<number> | <var> | <fun-call>)
+<atom> ::= ('+' | '-' | '~')? (<number> | <string> | <var> | <fun-call>)
          | '(' <expr> ')'
          | <conditional-stmt>
          | <when-stmt>
@@ -65,7 +64,7 @@ The formal language definition in Backus-Naur form looks like the following. Fee
          | <native-stmt>
          | <empty>
 
-<type>  ::= <number> | <bool>
+<type>  ::= <number> | <bool> | <string>
 <var>   ::= <name>
 <name>  ::= IDENTIFIER
 <empty> ::= ()
@@ -89,10 +88,10 @@ In addition to the primitive functions, the µ-recursive operators must be suppo
 It is left to write those three µ-recursive functions and the three operators in this programming language to prove
 Turing completeness and therefore interchangeability with any other Turing machine.
 
-#### µ-recursive functions in nyxlang
+### µ-recursive functions in nyxlang
 This section shows that µ-recursive functions can be defined in nyxlang.
 
-##### Constant Function
+#### Constant Function
 A reduction of the constant function is the zero function which always returns `0` instead of `n`. This can be shown
 as follows:
 
@@ -100,7 +99,7 @@ as follows:
 fun c(arr: number[]) -> number = 0
 ```
 
-##### Successor Function
+#### Successor Function
 The successor function returns the successor value of the given parameter. Since numbers are sufficient for µ-recursive
 functions, simply increasing the value completes the task.
 
@@ -108,7 +107,7 @@ functions, simply increasing the value completes the task.
 fun s(x: number) -> number = (x + 1)
 ```
 
-##### Projection Function
+#### Projection Function
 The projection function requires that the value of `i` is in the range of the arrays size. This can be assured by using
 the `requires` function property of the programming language.
 
@@ -116,10 +115,10 @@ the `requires` function property of the programming language.
 fun p(i: number, arr: number[]) : (0 <= i && i < arr.size) -> number = arr[i]
 ```
 
-#### Operators in nyxlang
+### Operators in nyxlang
 This section shows that the previously defined operators can be implemented in nyxlang.
 
-##### Composition Operator
+#### Composition Operator
 One can prove the existence of the composition operator without loss of generality by showing that a function `g` can be
 defined that takes a specific number of arguments `K` and another function `h` that takes `M` arguments. Such a definition
 and implementation might look like the following.
@@ -134,9 +133,9 @@ fun f(x1: number, x2: number) = h(g(x1, y2, ...), g(x1, x2, ...))
 
 (the function implementation for `g` and `h` are irrelevant for this proof)
 
-##### Recursion Operator
+#### Recursion Operator
 
-##### Minimization Operator
+#### Minimization Operator
 
 Therefore, the proof is done and Turing completeness has been shown.
 
@@ -155,7 +154,7 @@ trait Feedable {
 }
 
 trait CanTalk {
-  fun talk(text: string)
+  fun CanTalk.talk(text: string)
 }
 
 type Dog is Feedable, CanTalk {
@@ -170,15 +169,17 @@ type Dog is Feedable, CanTalk {
 }
 
 
-// The programming language also supports pre- and postconditions
-// (also known as variant and covariant). The application will throw
-// an error if one of those is not fullfilled.
-//
-// The first statement after the parameter list and after the ':' symbol
-// is the precondition that the parameters have to fulfill. The statement
-// after that is the postcondition. The '_' is a reserved token and
-// represents the functions result.
-//
+
+///
+The programming language also supports pre- and postconditions
+(also known as variant and covariant). The application will throw
+an error if one of those is not fullfilled.
+
+The first statement after the parameter list and after the ':' symbol
+is the precondition that the parameters have to fulfill. The statement
+after that is the postcondition. The '_' is a reserved token and
+represents the functions result.
+\\\
 fun add(a: number, b: number) : (a > 0 && b > 0) : (_ >= (a + b)) -> number = a + b
 fun sub(a: number, b: number) :: (_ <= (a - b)) -> number = a - b
 
@@ -195,6 +196,7 @@ fun main {
   // be modified at a later stage.
   const pi: number = 3.141592654;
   const square = fun (x: number) -> number = x * x
+  const myGreeting = greeting
 
   // var dog = Dog;
   // var dog = Dog { fed: false };
@@ -211,16 +213,6 @@ fun main {
 
   loop !dog.fed {
     dog.feed()
-  }
-
-  // When is similar to switch-case in other languages
-  when dog.fed {
-    true {
-      dog.happy = true;
-      print('Yummy, I am full!');
-    }
-    false { print('I want some more food') }
-    else { print('This is not possible') }
   }
 
   // Use the print function from system.io

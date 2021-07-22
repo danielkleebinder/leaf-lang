@@ -47,7 +47,7 @@ fun main(args: Array<String>) {
             .filter { it == "-d" || it == "--debug" }
             .forEach { _ -> RuntimeOptions.debug = true }
 
-    RuntimeOptions.debug = true
+    RuntimeOptions.debug = false
     println("(debug options activated)")
 
     if (args.isEmpty()) {

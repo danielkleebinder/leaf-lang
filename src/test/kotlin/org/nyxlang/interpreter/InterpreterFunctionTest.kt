@@ -46,6 +46,16 @@ class InterpreterFunctionTest : TestSuit() {
     }
 
     @Test
+    fun shouldAllowVariableAssignment() {
+        try {
+            execute("fun a = true; const b = a; b()")
+        } catch (e: Exception) {
+            System.err.println(e)
+            fail()
+        }
+    }
+
+    @Test
     fun shouldAllowRecursion() {
         val program = """
             fun test(a: number) {

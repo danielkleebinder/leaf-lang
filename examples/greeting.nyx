@@ -1,0 +1,17 @@
+// Greets the person given a certain emphasis
+fun greeting(str: string, n: number, name: string) : n > 0 -> string {
+  var result = ""
+  loop n > 0 {
+    result = result + str
+    n = n - 1
+  }
+  return result + name
+}
+
+var res: string
+loop var i = 0 : i < 100_000 : i = i + 1 {
+  res = greeting("Hello ", 3, "Daniel")
+}
+
+// Print the result
+res

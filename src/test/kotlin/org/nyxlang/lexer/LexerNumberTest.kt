@@ -53,6 +53,14 @@ class LexerNumberTest : TestSuit() {
     }
 
     @Test
+    fun shouldTokenizeNumberSeparator() {
+        val tokens = tokenize("500_000_0")
+        assertEquals(1, tokens.size)
+        assertSame(NumberToken::class.java, tokens[0].javaClass)
+        assertEquals(BigDecimal.valueOf(5_000_000), (tokens[0] as NumberToken).getValue())
+    }
+
+    @Test
     fun shouldErrorForMultipleDecimalPoints() {
         assertThrows(LexerException::class.java) { tokenize("3.14.15") }
         assertThrows(LexerException::class.java) { tokenize("3.14.1.5") }
