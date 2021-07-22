@@ -5,7 +5,7 @@ import org.nyxlang.analyzer.exception.AnalyticalVisitorException
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.Modifier
 import org.nyxlang.parser.ast.VarAssignNode
-import org.nyxlang.symbol.VarSymbol
+import org.nyxlang.analyzer.symbol.VarSymbol
 
 /**
  * Analyzes a variable assignment.

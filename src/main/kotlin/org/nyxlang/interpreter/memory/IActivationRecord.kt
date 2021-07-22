@@ -21,6 +21,11 @@ interface IActivationRecord {
      */
     val name: String?
 
+    /**
+     * The static nesting level of the activation record.
+     */
+    var nestingLevel: Int
+
 
     /**
      * Sets the value of a variable in this activation record or any parent using

@@ -1,6 +1,5 @@
-package org.nyxlang.symbol
+package org.nyxlang.analyzer.symbol
 
-import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.parser.ast.INode
 
 /**
@@ -12,6 +11,6 @@ class FunSymbol(name: String,
                 var requires: INode?,
                 var ensures: INode?,
                 var body: INode?,
-                var staticScope: IActivationRecord? = null) : Symbol(name) {
+                nestingLevel: Int = 0) : Symbol(name, nestingLevel) {
     override fun toString() = "FunSymbol(name=$name, params=$params, returns=$returns)"
 }

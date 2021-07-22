@@ -4,7 +4,7 @@ import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.exception.AnalyticalVisitorException
 import org.nyxlang.parser.ast.FunCallNode
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.symbol.FunSymbol
+import org.nyxlang.analyzer.symbol.FunSymbol
 
 /**
  * Analyzes a function call statement.

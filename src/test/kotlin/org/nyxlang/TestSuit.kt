@@ -12,7 +12,7 @@ import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.Parser
-import org.nyxlang.symbol.ISymbolTable
+import org.nyxlang.analyzer.symbol.ISymbolTable
 import java.io.File
 
 /**

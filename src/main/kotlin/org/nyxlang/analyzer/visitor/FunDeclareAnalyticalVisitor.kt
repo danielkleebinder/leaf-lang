@@ -5,8 +5,8 @@ import org.nyxlang.analyzer.exception.AnalyticalVisitorException
 import org.nyxlang.analyzer.withScope
 import org.nyxlang.parser.ast.FunDeclareNode
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.symbol.FunSymbol
-import org.nyxlang.symbol.VarSymbol
+import org.nyxlang.analyzer.symbol.FunSymbol
+import org.nyxlang.analyzer.symbol.VarSymbol
 
 /**
  * Analyzes a function ('fun') declaration statement.
@@ -16,7 +16,6 @@ class FunDeclareAnalyticalVisitor : IAnalyticalVisitor {
         val funDeclareNode = node as FunDeclareNode
 
         val funName = funDeclareNode.name
-        var funParams = listOf<VarSymbol>()
         val funSymbol = FunSymbol(
                 name = funName!!,
                 requires = funDeclareNode.requires,
@@ -29,7 +28,7 @@ class FunDeclareAnalyticalVisitor : IAnalyticalVisitor {
         analyzer.withScope(funName) {
             if (funDeclareNode.params != null) {
                 analyzer.analyze(funDeclareNode.params)
-                funParams = funDeclareNode.params.declarations
+                val funParams = funDeclareNode.params.declarations
                         .map { VarSymbol(it.identifier, analyzer.currentScope.get(it.typeExpr!!.type)) }
                 funSymbol.params.addAll(funParams)
             }

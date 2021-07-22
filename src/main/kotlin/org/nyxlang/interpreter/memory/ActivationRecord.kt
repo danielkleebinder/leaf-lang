@@ -9,7 +9,8 @@ import org.nyxlang.interpreter.exception.MemoryException
  */
 class ActivationRecord(override var staticLink: IActivationRecord? = null,
                        override var dynamicLink: IActivationRecord? = null,
-                       override val name: String? = null) : IActivationRecord {
+                       override val name: String? = null,
+                       override var nestingLevel: Int = 0) : IActivationRecord {
 
     private val localVariables = hashMapOf<String, Any?>()
 
@@ -37,7 +38,8 @@ class ActivationRecord(override var staticLink: IActivationRecord? = null,
     override fun toString() = """
         |Activation Record
         |--------------------------------
-        |Record Name : $name
+        |Name        : $name
+        |Level       : $nestingLevel
         |Static Link : ${staticLink?.name}
         |Dynamic Link: ${dynamicLink?.name}
         |--------------------------------

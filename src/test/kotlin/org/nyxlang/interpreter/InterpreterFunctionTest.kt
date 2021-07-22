@@ -113,6 +113,18 @@ class InterpreterFunctionTest : TestSuit() {
     }
 
     @Test
+    fun shouldFollowStaticLink4() {
+        execute(readResourceFile("fun-static-link-4.test.nyx"))
+        assertTrue(globalActivationRecord["res"] as Boolean)
+    }
+
+    @Test
+    fun shouldFollowStaticLink5() {
+        assertThrows(StaticSemanticException::class.java) { execute(readResourceFile("fun-static-link-5.test.nyx")) }
+        assertNull(globalActivationRecord["res"])
+    }
+
+    @Test
     fun shouldErrorWhenRequiresNotFulfilled() {
         assertThrows(DynamicSemanticException::class.java) { execute("fun f(a: bool) : a { true }; f(false)") }
         assertThrows(DynamicSemanticException::class.java) { execute("fun f(a: number) : a > 0 { true }; f(0)") }

@@ -1,4 +1,4 @@
-package org.nyxlang.symbol
+package org.nyxlang.analyzer.symbol
 
 /**
  * Implementation of the symbol table specification. The [parent] symbol table
@@ -6,6 +6,7 @@ package org.nyxlang.symbol
  */
 class SymbolTable(override val name: String? = null,
                   override val parent: ISymbolTable? = null,
+                  override val nestingLevel: Int = 0,
                   val withBuiltIns: Boolean = false) : ISymbolTable {
 
     private val symbols = hashMapOf<String, Symbol>()
@@ -26,8 +27,12 @@ class SymbolTable(override val name: String? = null,
         return symbol
     }
 
+    override fun define(symbol: Symbol) {
+        symbol.nestingLevel = nestingLevel
+        symbols[symbol.name] = symbol
+    }
+
     override fun getLocal(name: String) = symbols[name]
-    override fun define(symbol: Symbol) = symbols.put(symbol.name, symbol)
     override fun remove(name: String) = symbols.remove(name)
     override fun toString() = """
             |SCOPE (SYMBOL TABLE)

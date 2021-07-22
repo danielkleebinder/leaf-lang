@@ -4,8 +4,8 @@ import org.nyxlang.analyzer.exception.AnalyticalVisitorException
 import org.nyxlang.analyzer.exception.StaticSemanticException
 import org.nyxlang.analyzer.visitor.*
 import org.nyxlang.parser.ast.*
-import org.nyxlang.symbol.ISymbolTable
-import org.nyxlang.symbol.SymbolTable
+import org.nyxlang.analyzer.symbol.ISymbolTable
+import org.nyxlang.analyzer.symbol.SymbolTable
 
 /**
  * Semantic analyzer implementation.
@@ -31,7 +31,10 @@ class SemanticAnalyzer : ISemanticAnalyzer {
     override var currentScope: ISymbolTable = SymbolTable(name = "global", withBuiltIns = true)
 
     override fun enterScope(name: String?) {
-        currentScope = SymbolTable(name = name, parent = currentScope)
+        currentScope = SymbolTable(
+                name = name,
+                parent = currentScope,
+                nestingLevel = currentScope.nestingLevel + 1)
     }
 
     override fun leaveScope() {

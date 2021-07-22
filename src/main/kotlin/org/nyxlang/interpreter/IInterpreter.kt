@@ -38,8 +38,12 @@ interface IInterpreter {
  */
 inline fun IInterpreter.withDynamicScope(name: String? = null,
                                          body: (activationRecord: IActivationRecord) -> Unit) {
-    callStack.push(ActivationRecord(name = name, dynamicLink = activationRecord))
+    callStack.push(ActivationRecord(
+            name = name,
+            dynamicLink = activationRecord,
+            nestingLevel = if (activationRecord == null) 0 else activationRecord!!.nestingLevel + 1))
     body(activationRecord!!)
+    println(callStack.peek())
     callStack.pop()
 }
 
@@ -50,7 +54,11 @@ inline fun IInterpreter.withDynamicScope(name: String? = null,
  */
 inline fun IInterpreter.withStaticScope(name: String? = null,
                                         body: (activationRecord: IActivationRecord) -> Unit) {
-    callStack.push(ActivationRecord(name = name, staticLink = activationRecord))
+    callStack.push(ActivationRecord(
+            name = name,
+            staticLink = activationRecord,
+            nestingLevel = if (activationRecord == null) 0 else activationRecord!!.nestingLevel + 1))
     body(activationRecord!!)
+    println(callStack.peek())
     callStack.pop()
 }

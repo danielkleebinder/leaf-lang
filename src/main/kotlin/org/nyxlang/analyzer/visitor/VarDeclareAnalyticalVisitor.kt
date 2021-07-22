@@ -4,8 +4,8 @@ import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.exception.AnalyticalVisitorException
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.VarDeclareNode
-import org.nyxlang.symbol.Symbol
-import org.nyxlang.symbol.VarSymbol
+import org.nyxlang.analyzer.symbol.Symbol
+import org.nyxlang.analyzer.symbol.VarSymbol
 
 /**
  * Analyzes a variable declaration.

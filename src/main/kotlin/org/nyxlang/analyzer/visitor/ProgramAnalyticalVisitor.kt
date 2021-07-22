@@ -8,9 +8,5 @@ import org.nyxlang.parser.ast.ProgramNode
  * Analyzes a program.
  */
 class ProgramAnalyticalVisitor : IAnalyticalVisitor {
-    override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
-        analyzer.enterScope("program")
-        analyzer.analyze((node as ProgramNode).statements)
-        analyzer.leaveScope()
-    }
+    override fun analyze(analyzer: ISemanticAnalyzer, node: INode) = analyzer.analyze((node as ProgramNode).statements)
 }

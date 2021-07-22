@@ -1,0 +1,23 @@
+// Static link example from (4) but with wrong static block scoping
+
+{
+  var res = false
+}
+
+fun bigSub() {
+  fun subA() {
+    res = true
+  }
+
+  fun subB() {
+    var res = false
+    fun subC() {
+      var res = false
+	  subA()
+	}
+	subC()
+  }
+  subB()
+}
+
+bigSub()

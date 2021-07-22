@@ -1,4 +1,4 @@
-package org.nyxlang.symbol
+package org.nyxlang.analyzer.symbol
 
 import org.nyxlang.parser.ast.Modifier
 

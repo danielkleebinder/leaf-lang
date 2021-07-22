@@ -1,6 +1,6 @@
 package org.nyxlang.parser.ast
 
-import org.nyxlang.symbol.FunSymbol
+import org.nyxlang.analyzer.symbol.FunSymbol
 
 /**
  * Indicates that the function with the given [name] is being called.

@@ -1,4 +1,4 @@
-package org.nyxlang.symbol
+package org.nyxlang.analyzer.symbol
 
 /**
  * A symbol table is an abstract data type that is used for tracking various
@@ -17,10 +17,16 @@ interface ISymbolTable {
     val name: String?
 
     /**
-     * Defines a new [symbol] in the symbol table which is associated
-     * with its name property. Returns the previous symbol with this name.
+     * The static nesting level of the symbol table.
      */
-    fun define(symbol: Symbol): Symbol?
+    val nestingLevel: Int
+
+
+    /**
+     * Defines a new [symbol] in the symbol table which is associated
+     * with its name property.
+     */
+    fun define(symbol: Symbol)
 
     /**
      * Returns the symbol associated with the given [name].

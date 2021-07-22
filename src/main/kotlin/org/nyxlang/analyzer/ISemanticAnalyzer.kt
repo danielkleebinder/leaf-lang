@@ -1,7 +1,7 @@
 package org.nyxlang.analyzer
 
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.symbol.ISymbolTable
+import org.nyxlang.analyzer.symbol.ISymbolTable
 
 /**
  * The semantic analyzer is used to traverse a given abstract syntax tree

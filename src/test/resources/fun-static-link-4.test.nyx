@@ -1,0 +1,23 @@
+// Static vs dynamic link example as depicted by the
+// new mexico state university:
+// https://www.cs.nmsu.edu/~rth/cs/cs471/f00/ARIs.html
+
+var res = false
+
+fun bigSub() {
+  fun subA() {
+    res = true
+  }
+
+  fun subB() {
+    var res = false
+    fun subC() {
+      var res = false
+	  subA()
+	}
+	subC()
+  }
+  subB()
+}
+
+bigSub()
