@@ -257,14 +257,3 @@ fun fact(n: number) : n > 0 -> number {
 
 fact(6) // outputs 720
 ```
-
-## TODOs
-
-- Unit Tests for 'when'
-- Built in Functions
-- Arrays (Listen)
-- Traits
-- Custom Types
-- Async
-- Use
-- Package

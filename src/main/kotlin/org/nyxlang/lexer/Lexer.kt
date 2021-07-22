@@ -76,7 +76,8 @@ class Lexer : ILexer {
                 ColonTokenizer(),
                 DotTokenizer(),
                 StatementTokenizer(),
-                NewLineTokenizer()
+                NewLineTokenizer(),
+                StringTokenizer()
         )
     }
 }
