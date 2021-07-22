@@ -8,8 +8,7 @@ import java.io.File
 fun runFile(fileName: String) {
     val file = File(fileName)
     if (!file.exists()) System.err.println("Given file does not exist: $fileName")
-    val code = file.readText()
-    execute(code, true)
+    execute(file.readText())
 }
 
 /**
@@ -35,7 +34,7 @@ fun runCli() {
                 break
             }
         }
-        execute(program.toString(), true)
+        execute(program.toString())
     }
 }
 
@@ -44,6 +43,13 @@ fun runCli() {
  * or add command line parameters that point to source files.
  */
 fun main(args: Array<String>) {
+    args
+            .filter { it == "-d" || it == "--debug" }
+            .forEach { _ -> RuntimeOptions.debug = true }
+
+    RuntimeOptions.debug = true
+    println("(debug options activated)")
+
     if (args.isEmpty()) {
         runCli()
     } else {

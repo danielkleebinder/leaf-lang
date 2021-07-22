@@ -23,24 +23,24 @@ val interpreter: IInterpreter = Interpreter()
 /**
  * Executes the given [programCode] and prints [debug] statements if set to true.
  */
-fun execute(programCode: String, debug: Boolean = false) {
+fun execute(programCode: String) {
     try {
         var tokens: Array<IToken>
         var ast: INode?
         var result: Any?
 
         val timeLexer = measureNanoTime { tokens = lexer.tokenize(programCode) }
-        if (debug) println("Lexical Analysis    : " + tokens.contentToString())
+        if (RuntimeOptions.debug) println("Lexical Analysis    : " + tokens.contentToString())
 
         val timeParser = measureNanoTime { ast = parser.parse(tokens) }
-        if (debug) println("Abstract Syntax Tree: $ast")
+        if (RuntimeOptions.debug) println("Abstract Syntax Tree: $ast")
 
         val timeAnalyzer = measureNanoTime { analyzer.analyze(ast!!) }
 
         val timeInterpreter = measureNanoTime { result = interpreter.interpret(ast).unpack() }
-        if (debug) println("Global Memory       : " + interpreter.callStack)
+        if (RuntimeOptions.debug) println("Global Memory       : " + interpreter.callStack)
 
-        if (debug) {
+        if (RuntimeOptions.debug) {
             println("""
                 Performance Statistics:
                   Lexer      : ${timeLexer / 1_000_000.0} ms
@@ -50,7 +50,7 @@ fun execute(programCode: String, debug: Boolean = false) {
             """.trimIndent())
         }
 
-        println("Interpreter Result  : $result")
+        println("Result: $result")
     } catch (e: Exception) {
         System.err.println(e)
         Thread.sleep(500)

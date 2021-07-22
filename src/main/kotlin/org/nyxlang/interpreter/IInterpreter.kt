@@ -1,5 +1,6 @@
 package org.nyxlang.interpreter
 
+import org.nyxlang.RuntimeOptions
 import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.memory.ICallStack
@@ -43,7 +44,7 @@ inline fun IInterpreter.withDynamicScope(name: String? = null,
             dynamicLink = activationRecord,
             nestingLevel = if (activationRecord == null) 0 else activationRecord!!.nestingLevel + 1))
     body(activationRecord!!)
-    println(callStack.peek())
+    if (RuntimeOptions.debug) println(callStack.peek())
     callStack.pop()
 }
 
@@ -59,6 +60,6 @@ inline fun IInterpreter.withStaticScope(name: String? = null,
             staticLink = activationRecord,
             nestingLevel = if (activationRecord == null) 0 else activationRecord!!.nestingLevel + 1))
     body(activationRecord!!)
-    println(callStack.peek())
+    if (RuntimeOptions.debug) println(callStack.peek())
     callStack.pop()
 }
