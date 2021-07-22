@@ -81,6 +81,12 @@ class InterpreterFunctionTest : TestSuit() {
     }
 
     @Test
+    fun shouldComputeFactorialRecursively() {
+        val result = execute(readResourceFile("fun-factorial.test.nyx"))
+        assertEquals(BigDecimal.valueOf(3628800), result)
+    }
+
+    @Test
     fun shouldAllowVariableRedeclaration() {
         val program = """
             fun test(a: number) {}
