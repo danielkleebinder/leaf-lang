@@ -37,7 +37,7 @@ class CallEval(private val parser: IParser) : IEval {
      * Evaluates the get access.
      */
     private fun evalGet(): BinaryOperationNode {
-        val accessNode = VarAccessNode((parser.tokenAndAdvance as NameToken).value)
+        val accessNode = AtomEval(parser).eval()
         return parser.advanceBeforeAfter {
             BinaryOperationNode(
                     accessNode,

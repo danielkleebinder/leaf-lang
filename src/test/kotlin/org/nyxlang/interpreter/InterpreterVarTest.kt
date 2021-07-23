@@ -99,4 +99,12 @@ class InterpreterVarTest : TestSuit() {
         assertNotNull(valueOf("d"))
         assertEquals(BigDecimal.valueOf(10.77), valueOf("d"))
     }
+
+    @Test
+    fun shouldApplyUnary() {
+        assertFalse(execute("const a = true; !a") as Boolean)
+        assertFalse(execute("const b = true; ~b") as Boolean)
+        assertEquals(BigDecimal.valueOf(3), execute("const c = [1,2,3]; ~c"))
+        assertEquals(BigDecimal.valueOf(-4), execute("const d = 3; ~d"))
+    }
 }

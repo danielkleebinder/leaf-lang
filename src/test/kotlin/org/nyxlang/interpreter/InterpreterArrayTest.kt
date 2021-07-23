@@ -45,6 +45,14 @@ class InterpreterArrayTest : TestSuit() {
     }
 
     @Test
+    fun shouldAccessLength() {
+        assertEquals(BigDecimal.valueOf(0), execute("~[]"))
+        assertEquals(BigDecimal.valueOf(3), execute("~[5,6,7]"))
+        assertEquals(BigDecimal.valueOf(6), execute("~[5,6,7,8,9,10]"))
+        assertEquals(BigDecimal.valueOf(3), execute("const a = [8,9,10];~a"))
+    }
+
+    @Test
     fun shouldErrorOnIndexOutOfBounds() {
         assertThrows(DynamicSemanticException::class.java) { execute("const a = []; a[0]") }
         assertThrows(DynamicSemanticException::class.java) { execute("const b = [1]; b[-1]") }

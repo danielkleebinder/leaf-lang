@@ -3,6 +3,7 @@ package org.nyxlang.interpreter.value
 import org.nyxlang.interpreter.exception.UnknownOperationException
 import org.nyxlang.parser.ast.BinaryOperation
 import org.nyxlang.parser.ast.UnaryOperation
+import java.math.BigDecimal
 
 /**
  * Array values are used to perform certain operations and
@@ -10,7 +11,10 @@ import org.nyxlang.parser.ast.UnaryOperation
  */
 class ArrayValue(override val value: Array<IValue?>) : IValue {
 
-    override fun unary(op: UnaryOperation) = throw UnknownOperationException("Unary operations are not supported for arrays")
+    override fun unary(op: UnaryOperation) = when (op) {
+        UnaryOperation.BIT_COMPLEMENT -> NumberValue(BigDecimal.valueOf(value.size.toLong()))
+        else -> throw UnknownOperationException("The operation $op is not supported for array data type")
+    }
 
     override fun binary(right: IValue, op: BinaryOperation) = when (op) {
         BinaryOperation.GET -> binaryGet(right)
