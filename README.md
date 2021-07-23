@@ -52,12 +52,14 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <expr>       ::= <equal-expr> (( '&&' | '||' ) <equal-expr>)*
 <equal-expr> ::= <logic-expr> (( '==' | '!=' ) <logic-expr>)*
 <arith-expr> ::= <term> (( '+' | '-' ) <term>)*
+<array-expr> ::= '[' (<expr> (',' <expr>)*)? ']'
 <logic-expr> ::= NOT <logic-expr>
                | <arith-expr> (( '<' | '<=' | '>' | '>=' ) <arith-expr>)*
 
 <term> ::= <atom> (( '*' | '/' | '%' ) <atom>)*
 <atom> ::= ('+' | '-' | '~')? (<number> | <string> | <var> | <fun-call>)
          | '(' <expr> ')'
+         | <array-expr>
          | <conditional-stmt>
          | <when-stmt>
          | <loop-stmt>
