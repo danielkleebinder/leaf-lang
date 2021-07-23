@@ -11,40 +11,60 @@ import org.nyxlang.parser.ast.UnaryOperation
  */
 class BoolValue(override val value: Boolean) : IValue {
 
-    override fun binary(right: IValue, op: BinaryOperation) = when (op) {
-        BinaryOperation.PLUS -> when (right) {
-            is StringValue -> stringValue(stringify() + right.value)
-            else -> throw UnknownOperationException("The plus operation in bool is not supported for $right")
-        }
-        BinaryOperation.EQUAL -> when (right) {
-            is BoolValue -> boolValue(value == right.value)
-            else -> throw UnknownOperationException("The == operation in bool is not supported for $right")
-        }
-        BinaryOperation.NOT_EQUAL -> when (right) {
-            is BoolValue -> boolValue(value != right.value)
-            else -> throw UnknownOperationException("The != operation in bool is not supported for $right")
-        }
-        BinaryOperation.LOGICAL_AND -> when (right) {
-            is BoolValue -> boolValue(value && right.value)
-            else -> throw UnknownOperationException("The && operation in bool is not supported for $right")
-        }
-        BinaryOperation.LOGICAL_OR -> when (right) {
-            is BoolValue -> boolValue(value || right.value)
-            else -> throw UnknownOperationException("The || operation in bool is not supported for $right")
-        }
-        else -> throw VisitorException("The operation $op is not supported for data type bool")
-    }
-
     override fun unary(op: UnaryOperation) = when (op) {
         UnaryOperation.LOGICAL_NEGATE -> boolValue(!value)
         else -> throw VisitorException("The operation $op is not supported for data type bool")
     }
 
+    override fun binary(right: IValue, op: BinaryOperation) = when (op) {
+        BinaryOperation.PLUS -> binaryPlus(right)
+        BinaryOperation.EQUAL -> binaryEqual(right)
+        BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
+        BinaryOperation.LOGICAL_AND -> binaryLogicalAnd(right)
+        BinaryOperation.LOGICAL_OR -> binaryLogicalOr(right)
+        else -> throw VisitorException("The operation $op is not supported for data type bool")
+    }
+
+    /**
+     * Performs the '+' operation.
+     */
+    private fun binaryPlus(right: IValue) = when (right) {
+        is StringValue -> stringValue(stringify() + right.value)
+        else -> throw UnknownOperationException("The plus operation in bool is not supported for $right")
+    }
+
+    /**
+     * Performs the '==' operation.
+     */
+    private fun binaryEqual(right: IValue) = when (right) {
+        is BoolValue -> boolValue(value == right.value)
+        else -> throw UnknownOperationException("The == operation in bool is not supported for $right")
+    }
+
+    /**
+     * Performs the '!=' operation.
+     */
+    private fun binaryNotEqual(right: IValue) = when (right) {
+        is BoolValue -> boolValue(value != right.value)
+        else -> throw UnknownOperationException("The != operation in bool is not supported for $right")
+    }
+
+    /**
+     * Performs the '&&' operation.
+     */
+    private fun binaryLogicalAnd(right: IValue) = when (right) {
+        is BoolValue -> boolValue(value && right.value)
+        else -> throw UnknownOperationException("The && operation in bool is not supported for $right")
+    }
+
+    /**
+     * Performs the '||' operation.
+     */
+    private fun binaryLogicalOr(right: IValue) = when (right) {
+        is BoolValue -> boolValue(value || right.value)
+        else -> throw UnknownOperationException("The || operation in bool is not supported for $right")
+    }
+
     override fun stringify() = value.toString()
     override fun toString() = "BoolValue(value=$value)"
 }
-
-/**
- * Creates a bool [value].
- */
-fun boolValue(value: Boolean) = BoolValue(value)

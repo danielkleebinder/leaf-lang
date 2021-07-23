@@ -12,38 +12,38 @@ class InterpreterVarTest : TestSuit() {
     @Test
     fun shouldDeclareConst() {
         execute("const a = 3.1415")
-        assertEquals(BigDecimal.valueOf(3.1415), globalActivationRecord["a"])
+        assertEquals(BigDecimal.valueOf(3.1415), valueOf("a"))
 
         execute("const b = 42;")
-        assertEquals(BigDecimal.valueOf(42), globalActivationRecord["b"])
+        assertEquals(BigDecimal.valueOf(42), valueOf("b"))
 
         execute("const c = -993;")
-        assertEquals(BigDecimal.valueOf(-993), globalActivationRecord["c"])
+        assertEquals(BigDecimal.valueOf(-993), valueOf("c"))
     }
 
     @Test
     fun shouldDeclareVar() {
         execute("var a = -37")
-        assertEquals(BigDecimal.valueOf(-37), globalActivationRecord["a"])
+        assertEquals(BigDecimal.valueOf(-37), valueOf("a"))
 
         execute("var b = 42;")
-        assertEquals(BigDecimal.valueOf(42), globalActivationRecord["b"])
+        assertEquals(BigDecimal.valueOf(42), valueOf("b"))
 
         execute("var c: bool")
-        assertNull(globalActivationRecord["c"])
+        assertNull(valueOf("c"))
     }
 
     @Test
     fun shouldDeclareTypedConst() {
         execute("const a: number = -37")
-        assertEquals(BigDecimal.valueOf(-37), globalActivationRecord["a"])
+        assertEquals(BigDecimal.valueOf(-37), valueOf("a"))
 
         execute("const b: bool = true;")
-        assertNotNull(globalActivationRecord["b"])
-        assertTrue(globalActivationRecord["b"] as Boolean)
+        assertNotNull(valueOf("b"))
+        assertTrue(valueOf("b") as Boolean)
 
         execute("var c: bool")
-        assertNull(globalActivationRecord["c"])
+        assertNull(valueOf("c"))
     }
 
     @Test
@@ -90,13 +90,13 @@ class InterpreterVarTest : TestSuit() {
     @Test
     fun shouldAssignVariableOtherVariableValue() {
         execute("const a: bool = true; const b = a")
-        assertNotNull(globalActivationRecord["a"])
-        assertNotNull(globalActivationRecord["b"])
-        assertTrue(globalActivationRecord["b"] as Boolean)
+        assertNotNull(valueOf("a"))
+        assertNotNull(valueOf("b"))
+        assertTrue(valueOf("b") as Boolean)
 
         execute("const c = 10.77; const d = c")
-        assertNotNull(globalActivationRecord["c"])
-        assertNotNull(globalActivationRecord["d"])
-        assertEquals(BigDecimal.valueOf(10.77), globalActivationRecord["d"])
+        assertNotNull(valueOf("c"))
+        assertNotNull(valueOf("d"))
+        assertEquals(BigDecimal.valueOf(10.77), valueOf("d"))
     }
 }

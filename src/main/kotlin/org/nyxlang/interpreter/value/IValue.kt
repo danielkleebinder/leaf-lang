@@ -14,14 +14,14 @@ interface IValue {
     val value: Any
 
     /**
-     * Binary operation function.
-     */
-    fun binary(right: IValue, op: BinaryOperation): IValue
-
-    /**
-     * Unary operation function.
+     * Performs a unary [op] on this value.
      */
     fun unary(op: UnaryOperation): IValue
+
+    /**
+     * Performs a binary [op] on this value given the [right] other value.
+     */
+    fun binary(right: IValue, op: BinaryOperation): IValue
 
     /**
      * Stringifies the value. This is not to confuse with the [toString] function

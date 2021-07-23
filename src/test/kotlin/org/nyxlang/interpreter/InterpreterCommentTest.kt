@@ -20,12 +20,12 @@ class InterpreterCommentTest : TestSuit() {
         execute("const a = 101; // var b = 1")
         assertTrue(globalActivationRecord.has("a"))
         assertFalse(globalActivationRecord.has("b"))
-        assertEquals(BigDecimal.valueOf(101), globalActivationRecord["a"])
+        assertEquals(BigDecimal.valueOf(101), valueOf("a"))
 
         execute("const x = 101 //, y = 1")
         assertTrue(globalActivationRecord.has("x"))
         assertFalse(globalActivationRecord.has("y"))
-        assertEquals(BigDecimal.valueOf(101), globalActivationRecord["x"])
+        assertEquals(BigDecimal.valueOf(101), valueOf("x"))
     }
 
     @Test
@@ -41,10 +41,10 @@ class InterpreterCommentTest : TestSuit() {
 
         assertFalse(globalActivationRecord.has("a"))
         assertTrue(globalActivationRecord.has("b"))
-        assertEquals(BigDecimal.valueOf(2), globalActivationRecord["b"])
+        assertEquals(BigDecimal.valueOf(2), valueOf("b"))
 
         assertFalse(globalActivationRecord.has("c"))
         assertTrue(globalActivationRecord.has("d"))
-        assertEquals(BigDecimal.valueOf(4), globalActivationRecord["d"])
+        assertEquals(BigDecimal.valueOf(4), valueOf("d"))
     }
 }

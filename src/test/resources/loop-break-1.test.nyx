@@ -1,6 +1,6 @@
 var a = 5
 
 loop a > 0 {
-  --a
+  a = a - 1
   if a == 3 { break }
 }

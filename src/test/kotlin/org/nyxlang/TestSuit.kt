@@ -3,6 +3,7 @@ package org.nyxlang
 import org.junit.jupiter.api.BeforeEach
 import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.SemanticAnalyzer
+import org.nyxlang.analyzer.symbol.ISymbolTable
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.Interpreter
 import org.nyxlang.interpreter.memory.IActivationRecord
@@ -12,7 +13,6 @@ import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.Parser
-import org.nyxlang.analyzer.symbol.ISymbolTable
 import java.io.File
 
 /**
@@ -29,7 +29,7 @@ open class TestSuit {
     lateinit var callStack: ICallStack
 
     @BeforeEach
-    open fun beforeEach() {
+    fun beforeEach() {
         lexer = Lexer()
         parser = Parser()
         analyzer = SemanticAnalyzer()
@@ -38,6 +38,11 @@ open class TestSuit {
         globalActivationRecord = interpreter.activationRecord!!
         callStack = interpreter.callStack
     }
+
+    /**
+     * Returns the value of the variable with the given name.
+     */
+    fun valueOf(name: String) = globalActivationRecord[name]?.value
 
     /**
      * Tokenizes the given [programCode].

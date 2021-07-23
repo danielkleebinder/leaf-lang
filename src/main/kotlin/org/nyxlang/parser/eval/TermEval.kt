@@ -22,16 +22,9 @@ class TermEval(private val parser: IParser) : IEval {
         var node = atom.eval()
         while (true) {
             node = when (parser.token::class) {
-                DivideToken::class -> parser.advance { BinaryOperationNode(node, atom.eval(), BinaryOperation.DIVIDE) }
+                DivideToken::class -> parser.advance { BinaryOperationNode(node, atom.eval(), BinaryOperation.DIV) }
                 ModToken::class -> parser.advance { BinaryOperationNode(node, atom.eval(), BinaryOperation.REM) }
-                MultiplyToken::class -> parser.advance {
-                    if (MultiplyToken::class == parser.token::class) {
-                        parser.advanceCursor()
-                        BinaryOperationNode(node, atom.eval(), BinaryOperation.POWER)
-                    } else {
-                        BinaryOperationNode(node, atom.eval(), BinaryOperation.MULTIPLY)
-                    }
-                }
+                MultiplyToken::class -> parser.advance { BinaryOperationNode(node, atom.eval(), BinaryOperation.TIMES) }
                 else -> break
             }
         }

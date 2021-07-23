@@ -8,6 +8,6 @@ loop i < n && isPrime {
   if n % i == 0 {
     isPrime = false
   } else {
-    ++i
+    i = i + 1
   }
 }

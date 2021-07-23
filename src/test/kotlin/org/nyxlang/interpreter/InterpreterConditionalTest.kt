@@ -60,19 +60,19 @@ class InterpreterConditionalTest : TestSuit() {
         var result = execute("if 1 == 0 { 0 } else if 1 == 1 { 1 } else { 2 }")
         assertEquals(BigDecimal.valueOf(1), result)
 
-        result = execute("if 1 == 0 { 0 } else if 1 == 10**10 { 1 } else { 2 }")
+        result = execute("if 1 == 0 { 0 } else if 1 == 10*10 { 1 } else { 2 }")
         assertEquals(BigDecimal.valueOf(2), result)
     }
 
     @Test
     fun shouldIgnoreNewLines1() {
 //        execute(readResourceFile("conditional-1.test.nyx"))
-//        assertTrue(globalActivationRecord["res"] as Boolean)
+//        assertTrue(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldIgnoreNewLines2() {
 //        execute(readResourceFile("conditional-2.test.nyx"))
-//        assertTrue(globalActivationRecord["res"] as Boolean)
+//        assertTrue(valueOf("res") as Boolean)
     }
 }

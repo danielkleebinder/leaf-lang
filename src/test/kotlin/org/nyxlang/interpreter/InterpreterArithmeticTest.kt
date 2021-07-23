@@ -59,18 +59,6 @@ class InterpreterArithmeticTest : TestSuit() {
     }
 
     @Test
-    fun shouldPower() {
-        var result = execute("3**3")
-        assertEquals(BigDecimal.valueOf(27.0), result)
-
-        result = execute("27**0")
-        assertEquals(BigDecimal.valueOf(1.0), result)
-
-        result = execute("27**2")
-        assertEquals(BigDecimal.valueOf(729.0), result)
-    }
-
-    @Test
     fun shouldUseCorrectPrecedence1() {
         val result = execute("7 + 3 * (10 / (12 / (3 + 1) - 1))")
         assertEquals(BigDecimal.valueOf(22), result)

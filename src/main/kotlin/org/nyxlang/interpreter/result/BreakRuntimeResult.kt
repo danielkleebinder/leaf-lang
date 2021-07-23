@@ -7,8 +7,3 @@ package org.nyxlang.interpreter.result
 class BreakRuntimeResult : RuntimeResult() {
     override fun toString() = "BreakRuntimeResult"
 }
-
-/**
- * Creates a break runtime result.
- */
-fun breakResult() = BreakRuntimeResult()

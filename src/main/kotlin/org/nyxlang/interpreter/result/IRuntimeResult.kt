@@ -20,23 +20,9 @@ interface IRuntimeResult {
 }
 
 /**
- * Unrolls the data result into a one dimensional result list.
- */
-private fun IRuntimeResult.unroll(result: Any): List<Any> {
-    if (result is IRuntimeResult && result.data?.value != null) {
-        return listOf(result.data!!.value)
-    }
-    return listOf()
-}
-
-/**
- * Unrolls the [IRuntimeResult.data] (same behaviour as [unroll]) and returns (1)
- * the list itself if it has multiple entries, (2) only one single data value
- * if the list only has one value or (3) null if the list was empty.
+ * Unpacks the internal data value representation and returns
+ * a plain value type.
  */
 fun IRuntimeResult.unpack(): Any? {
-    val unrolled = unroll(this)
-    if (unrolled.isEmpty()) return null
-    if (unrolled.size == 1) return unrolled[0]
-    return unrolled
+    return data?.value
 }

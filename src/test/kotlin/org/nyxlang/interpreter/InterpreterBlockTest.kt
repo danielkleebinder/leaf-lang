@@ -10,13 +10,13 @@ class InterpreterBlockTest : TestSuit() {
     @Test
     fun shouldShadowVariables() {
         execute("var a = 1; { var a = 2; a = 10; }")
-        assertEquals(BigDecimal.ONE, globalActivationRecord["a"])
+        assertEquals(BigDecimal.ONE, valueOf("a"))
     }
 
     @Test
     fun shouldReassignNonBlockVariables() {
         execute("var a = 1; { a = 17; }")
-        assertEquals(BigDecimal.valueOf(17), globalActivationRecord["a"])
+        assertEquals(BigDecimal.valueOf(17), valueOf("a"))
     }
 
     @Test

@@ -27,42 +27,42 @@ class InterpreterLoopTest : TestSuit() {
 
     @Test
     fun shouldLoopConditionOnly() {
-        execute("var i = 5; loop i > 1 { --i }")
-        assertEquals(BigDecimal.ONE, globalActivationRecord["i"])
+        execute("var i = 5; loop i > 1 { i = i - 1 }")
+        assertEquals(BigDecimal.ONE, valueOf("i"))
     }
 
     @Test
     fun shouldLoopInitConditionStep() {
-        execute("loop var i = 0 : i < 5 : ++i {}")
-        assertEquals(BigDecimal.valueOf(5), globalActivationRecord["i"])
+        execute("loop var i = 0 : i < 5 : i = i + 1 {}")
+        assertEquals(BigDecimal.valueOf(5), valueOf("i"))
     }
 
     @Test
     fun shouldEvaluateConditionNotJustOnce() {
         execute("var i = 5; loop i > 0 { i = i - 1 }")
-        assertEquals(BigDecimal.ZERO, globalActivationRecord["i"])
+        assertEquals(BigDecimal.ZERO, valueOf("i"))
     }
 
     @Test
     fun shouldRunPrimeChecker1() {
         execute(readResourceFile("prime-4.test.nyx"))
-        assertEquals(BigDecimal.valueOf(4), globalActivationRecord["n"])
-        assertEquals(BigDecimal.valueOf(2), globalActivationRecord["i"])
-        assertEquals(false, globalActivationRecord["isPrime"])
+        assertEquals(BigDecimal.valueOf(4), valueOf("n"))
+        assertEquals(BigDecimal.valueOf(2), valueOf("i"))
+        assertEquals(false, valueOf("isPrime"))
     }
 
     @Test
     fun shouldRunPrimeChecker2() {
         execute(readResourceFile("prime-47.test.nyx"))
-        assertEquals(BigDecimal.valueOf(47), globalActivationRecord["n"])
-        assertEquals(BigDecimal.valueOf(47), globalActivationRecord["i"])
-        assertEquals(true, globalActivationRecord["isPrime"])
+        assertEquals(BigDecimal.valueOf(47), valueOf("n"))
+        assertEquals(BigDecimal.valueOf(47), valueOf("i"))
+        assertEquals(true, valueOf("isPrime"))
     }
 
     @Test
     fun shouldRunFactorial() {
         execute(readResourceFile("factorial.test.nyx"))
-        assertEquals(BigDecimal.valueOf(120), globalActivationRecord["res"])
+        assertEquals(BigDecimal.valueOf(120), valueOf("res"))
     }
 
     @Test
@@ -74,38 +74,38 @@ class InterpreterLoopTest : TestSuit() {
     @Test
     fun shouldBreakLoop1() {
         execute(readResourceFile("loop-break-1.test.nyx"))
-        assertEquals(BigDecimal.valueOf(3), globalActivationRecord["a"])
+        assertEquals(BigDecimal.valueOf(3), valueOf("a"))
     }
 
     @Test
     fun shouldBreakLoop2() {
         execute(readResourceFile("loop-break-2.test.nyx"))
-        assertEquals(BigDecimal.valueOf(-1), globalActivationRecord["a"])
-        assertTrue(globalActivationRecord["res"] as Boolean)
+        assertEquals(BigDecimal.valueOf(-1), valueOf("a"))
+        assertTrue(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldContinueLoop1() {
         execute(readResourceFile("loop-continue-1.test.nyx"))
-        assertFalse(globalActivationRecord["res"] as Boolean)
+        assertFalse(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldContinueLoop2() {
         execute(readResourceFile("loop-continue-2.test.nyx"))
-        assertFalse(globalActivationRecord["res"] as Boolean)
+        assertFalse(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldIgnoreNewLines1() {
 //        execute(readResourceFile("loop-structure-1.test.nyx"))
-//        assertEquals(0, globalActivationRecord["a"])
+//        assertEquals(0, valueOf("a"))
     }
 
     @Test
     fun shouldIgnoreNewLines2() {
 //        execute(readResourceFile("loop-structure-2.test.nyx"))
-//        assertEquals(0, globalActivationRecord["a"])
-//        assertEquals(true, globalActivationRecord["res"])
+//        assertEquals(0, valueOf("a"))
+//        assertEquals(true, valueOf("res"))
     }
 }

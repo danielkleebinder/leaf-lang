@@ -6,9 +6,8 @@ package org.nyxlang.parser.ast
 enum class BinaryOperation {
     PLUS,
     MINUS,
-    DIVIDE,
-    MULTIPLY,
-    POWER,
+    DIV,
+    TIMES,
     REM,
     EQUAL,
     NOT_EQUAL,

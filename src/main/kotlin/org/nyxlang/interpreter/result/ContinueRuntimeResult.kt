@@ -1,5 +1,7 @@
 package org.nyxlang.interpreter.result
 
+import org.nyxlang.interpreter.value.IValue
+
 /**
  * A simple continue statement visitor result that is propagated until
  * someone can handle it.
@@ -7,8 +9,3 @@ package org.nyxlang.interpreter.result
 class ContinueRuntimeResult : RuntimeResult() {
     override fun toString() = "ContinueRuntimeResult"
 }
-
-/**
- * Creates a continue runtime result.
- */
-fun continueResult() = ContinueRuntimeResult()

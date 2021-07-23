@@ -7,8 +7,3 @@ package org.nyxlang.interpreter.result
 class EmptyRuntimeResult : RuntimeResult() {
     override fun toString() = "EmptyRuntimeResult"
 }
-
-/**
- * Creates an empty runtime result.
- */
-fun emptyResult() = EmptyRuntimeResult()
