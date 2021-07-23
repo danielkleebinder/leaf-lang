@@ -13,7 +13,7 @@ class LexerStringTest : TestSuit() {
         val tokens = tokenize("\"Hi\"")
         assertEquals(1, tokens.size)
         assertSame(StringToken::class.java, tokens[0].javaClass)
-        assertEquals("Hi", (tokens[0] as StringToken).getValue())
+        assertEquals("Hi", (tokens[0] as StringToken).value)
     }
 
     @Test
@@ -22,7 +22,7 @@ class LexerStringTest : TestSuit() {
         val tokens = tokenize("\"$string\"")
         assertEquals(1, tokens.size)
         assertSame(StringToken::class.java, tokens[0].javaClass)
-        assertEquals(string, (tokens[0] as StringToken).getValue())
+        assertEquals(string, (tokens[0] as StringToken).value)
     }
 
     @Test
@@ -31,7 +31,7 @@ class LexerStringTest : TestSuit() {
         val tokens = tokenize("\"$string\"")
         assertEquals(1, tokens.size)
         assertSame(StringToken::class.java, tokens[0].javaClass)
-        assertEquals(string, (tokens[0] as StringToken).getValue())
+        assertEquals(string, (tokens[0] as StringToken).value)
     }
 
     @Test
@@ -45,7 +45,7 @@ class LexerStringTest : TestSuit() {
         val tokens = tokenize("\"$string\"")
         assertEquals(1, tokens.size)
         assertSame(StringToken::class.java, tokens[0].javaClass)
-        assertEquals(string, (tokens[0] as StringToken).getValue())
+        assertEquals(string, (tokens[0] as StringToken).value)
     }
 
     @Test
@@ -54,6 +54,6 @@ class LexerStringTest : TestSuit() {
         val tokens = tokenize("\"$string\"")
         assertEquals(1, tokens.size)
         assertSame(StringToken::class.java, tokens[0].javaClass)
-        assertEquals("Hello \"User\", my name is \\uke.\nHere we see a new line!", (tokens[0] as StringToken).getValue())
+        assertEquals("Hello \"User\", my name is \\uke.\nHere we see a new line!", (tokens[0] as StringToken).value)
     }
 }

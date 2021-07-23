@@ -30,7 +30,7 @@ class VarDeclareEval(private val parser: IParser) : IEval {
                 throw EvalException("Expected identifier, but got ${parser.token}")
             }
 
-            val id = (parser.tokenAndAdvance as NameToken).getValue()
+            val id = (parser.tokenAndAdvance as NameToken).value
             var typeExpr: TypeNode? = null
             var assignExpr: INode? = null
 

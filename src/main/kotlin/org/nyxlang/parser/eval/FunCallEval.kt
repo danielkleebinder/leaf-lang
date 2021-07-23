@@ -21,7 +21,7 @@ class FunCallEval(private val parser: IParser) : IEval {
         if (NameToken::class != parser.token::class) {
             throw EvalException("Name required for function call")
         }
-        val funName = (parser.tokenAndAdvance as NameToken).getValue()
+        val funName = (parser.tokenAndAdvance as NameToken).value
         val funArgs = arrayListOf<INode>()
 
         funCallArgs {

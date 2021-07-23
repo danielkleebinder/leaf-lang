@@ -49,7 +49,6 @@ class BinaryOperationVisitor : IVisitor {
         BinaryOperation.GREATER_THAN -> left > right
         BinaryOperation.GREATER_THAN_OR_EQUAL -> left >= right
         else -> throw VisitorException("The operation $op is not supported for data type number")
-
     }
 
     /**

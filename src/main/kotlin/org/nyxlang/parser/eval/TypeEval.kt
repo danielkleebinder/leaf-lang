@@ -20,7 +20,7 @@ class TypeEval(private val parser: IParser) : IEval {
         NumberKeywordToken::class -> parser.advance { TypeNode("number") }
         BoolKeywordToken::class -> parser.advance { TypeNode("bool") }
         StringKeywordToken::class -> parser.advance { TypeNode("string") }
-        NameToken::class -> TypeNode((parser.tokenAndAdvance as NameToken).getValue())
+        NameToken::class -> TypeNode((parser.tokenAndAdvance as NameToken).value)
         else -> throw EvalException("Unknown type \"${parser.token}\"")
     }
 }

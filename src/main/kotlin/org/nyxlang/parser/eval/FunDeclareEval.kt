@@ -41,7 +41,7 @@ class FunDeclareEval(private val parser: IParser) : IEval {
         var returns: TypeNode? = null
         var body: INode? = null
 
-        funName { name = (parser.tokenAndAdvance as NameToken).getValue() }
+        funName { name = (parser.tokenAndAdvance as NameToken).value }
         funParams { params = VarDeclareEval(parser).eval() }
         funRequires { requires = ExprEval(parser).eval() }
         funEnsures { ensures = ExprEval(parser).eval() }

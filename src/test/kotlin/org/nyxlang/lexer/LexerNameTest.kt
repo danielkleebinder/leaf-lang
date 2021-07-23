@@ -12,7 +12,7 @@ class LexerNameTest : TestSuit() {
         val tokens = tokenize("myvar")
         assertEquals(1, tokens.size)
         assertSame(NameToken::class.java, tokens[0].javaClass)
-        assertEquals("myvar", (tokens[0] as NameToken).getValue())
+        assertEquals("myvar", (tokens[0] as NameToken).value)
     }
 
     @Test
@@ -20,7 +20,7 @@ class LexerNameTest : TestSuit() {
         val tokens = tokenize("MYVAR")
         assertEquals(1, tokens.size)
         assertSame(NameToken::class.java, tokens[0].javaClass)
-        assertEquals("MYVAR", (tokens[0] as NameToken).getValue())
+        assertEquals("MYVAR", (tokens[0] as NameToken).value)
     }
 
     @Test
@@ -28,12 +28,12 @@ class LexerNameTest : TestSuit() {
         var tokens = tokenize("MyVar")
         assertEquals(1, tokens.size)
         assertSame(NameToken::class.java, tokens[0].javaClass)
-        assertEquals("MyVar", (tokens[0] as NameToken).getValue())
+        assertEquals("MyVar", (tokens[0] as NameToken).value)
 
         tokens = tokenize("myVar")
         assertEquals(1, tokens.size)
         assertSame(NameToken::class.java, tokens[0].javaClass)
-        assertEquals("myVar", (tokens[0] as NameToken).getValue())
+        assertEquals("myVar", (tokens[0] as NameToken).value)
     }
 
     @Test
@@ -41,12 +41,12 @@ class LexerNameTest : TestSuit() {
         var tokens = tokenize("myVar1")
         assertEquals(1, tokens.size)
         assertSame(NameToken::class.java, tokens[0].javaClass)
-        assertEquals("myVar1", (tokens[0] as NameToken).getValue())
+        assertEquals("myVar1", (tokens[0] as NameToken).value)
 
         tokens = tokenize("my3var2")
         assertEquals(1, tokens.size)
         assertSame(NameToken::class.java, tokens[0].javaClass)
-        assertEquals("my3var2", (tokens[0] as NameToken).getValue())
+        assertEquals("my3var2", (tokens[0] as NameToken).value)
     }
 
     @Test
@@ -54,12 +54,12 @@ class LexerNameTest : TestSuit() {
         var tokens = tokenize("my_var_1")
         assertEquals(1, tokens.size)
         assertSame(NameToken::class.java, tokens[0].javaClass)
-        assertEquals("my_var_1", (tokens[0] as NameToken).getValue())
+        assertEquals("my_var_1", (tokens[0] as NameToken).value)
 
         tokens = tokenize("my_2var_1")
         assertEquals(1, tokens.size)
         assertSame(NameToken::class.java, tokens[0].javaClass)
-        assertEquals("my_2var_1", (tokens[0] as NameToken).getValue())
+        assertEquals("my_2var_1", (tokens[0] as NameToken).value)
     }
 
     @Test

@@ -5,7 +5,6 @@ import java.math.BigDecimal
 /**
  * Float tokens represent floating point numbers.
  */
-class NumberToken(private val number: BigDecimal) : IValueToken<BigDecimal> {
-    override fun getValue() = number;
-    override fun toString() = "NumberToken{val=$number}"
+class NumberToken(override val value: BigDecimal) : IValueToken<BigDecimal> {
+    override fun toString() = "NumberToken(val=$value)"
 }

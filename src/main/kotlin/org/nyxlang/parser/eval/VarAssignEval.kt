@@ -19,7 +19,7 @@ class VarAssignEval(private val parser: IParser) : IEval {
         if (NameToken::class != parser.token::class) {
             throw EvalException("Variable identifier expected, but got ${parser.token}")
         }
-        val id = (parser.tokenAndAdvance as NameToken).getValue()
+        val id = (parser.tokenAndAdvance as NameToken).value
 
         if (AssignToken::class != parser.token::class) {
             throw EvalException("Variable requires '=' to assign a new value")

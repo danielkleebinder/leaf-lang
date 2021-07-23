@@ -31,14 +31,14 @@ class AtomEval(private val parser: IParser) : IEval {
     override fun eval(): INode {
         return when (parser.token::class) {
 
-            NumberToken::class -> NumberNode((parser.tokenAndAdvance as NumberToken).getValue())
-            BoolToken::class -> BoolNode((parser.tokenAndAdvance as BoolToken).getValue())
-            StringToken::class -> StringNode((parser.tokenAndAdvance as StringToken).getValue())
+            NumberToken::class -> NumberNode((parser.tokenAndAdvance as NumberToken).value)
+            BoolToken::class -> BoolNode((parser.tokenAndAdvance as BoolToken).value)
+            StringToken::class -> StringNode((parser.tokenAndAdvance as StringToken).value)
             NameToken::class -> {
                 if (LeftParenthesisToken::class == parser.peekNextToken::class) {
                     FunCallEval(parser).eval()
                 } else {
-                    VarAccessNode((parser.tokenAndAdvance as NameToken).getValue())
+                    VarAccessNode((parser.tokenAndAdvance as NameToken).value)
                 }
             }
 

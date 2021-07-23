@@ -8,9 +8,7 @@ package org.nyxlang.lexer.token
 interface IValueToken<T> : IToken {
 
     /**
-     * Returns the value of the token.
-     *
-     * @return Value.
+     * The immutable value of the token.
      */
-    fun getValue(): T
+    val value: T
 }

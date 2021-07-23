@@ -15,7 +15,7 @@ class LexerNumberTest : TestSuit() {
         val tokens = tokenize("5")
         assertEquals(1, tokens.size)
         assertSame(NumberToken::class.java, tokens[0].javaClass)
-        assertEquals(BigDecimal.valueOf(5L), (tokens[0] as NumberToken).getValue())
+        assertEquals(BigDecimal.valueOf(5L), (tokens[0] as NumberToken).value)
     }
 
     @Test
@@ -23,13 +23,13 @@ class LexerNumberTest : TestSuit() {
         val tokens = tokenize("5 10 38194 0")
         assertEquals(4, tokens.size)
         assertSame(NumberToken::class.java, tokens[0].javaClass)
-        assertEquals(BigDecimal.valueOf(5L), (tokens[0] as NumberToken).getValue())
+        assertEquals(BigDecimal.valueOf(5L), (tokens[0] as NumberToken).value)
         assertSame(NumberToken::class.java, tokens[1].javaClass)
-        assertEquals(BigDecimal.valueOf(10L), (tokens[1] as NumberToken).getValue())
+        assertEquals(BigDecimal.valueOf(10L), (tokens[1] as NumberToken).value)
         assertSame(NumberToken::class.java, tokens[2].javaClass)
-        assertEquals(BigDecimal.valueOf(38194L), (tokens[2] as NumberToken).getValue())
+        assertEquals(BigDecimal.valueOf(38194L), (tokens[2] as NumberToken).value)
         assertSame(NumberToken::class.java, tokens[3].javaClass)
-        assertEquals(BigDecimal.valueOf(0L), (tokens[3] as NumberToken).getValue())
+        assertEquals(BigDecimal.valueOf(0L), (tokens[3] as NumberToken).value)
     }
 
     @Test
@@ -37,10 +37,10 @@ class LexerNumberTest : TestSuit() {
         val tokens = tokenize("-5 10 -42")
         assertEquals(5, tokens.size)
         assertSame(MinusToken::class.java, tokens[0].javaClass)
-        assertEquals(BigDecimal.valueOf(5L), (tokens[1] as NumberToken).getValue())
-        assertEquals(BigDecimal.valueOf(10L), (tokens[2] as NumberToken).getValue())
+        assertEquals(BigDecimal.valueOf(5L), (tokens[1] as NumberToken).value)
+        assertEquals(BigDecimal.valueOf(10L), (tokens[2] as NumberToken).value)
         assertSame(MinusToken::class.java, tokens[3].javaClass)
-        assertEquals(BigDecimal.valueOf(42L), (tokens[4] as NumberToken).getValue())
+        assertEquals(BigDecimal.valueOf(42L), (tokens[4] as NumberToken).value)
     }
 
     @Test
@@ -49,7 +49,7 @@ class LexerNumberTest : TestSuit() {
         assertEquals(2, tokens.size)
         assertSame(MinusToken::class.java, tokens[0].javaClass)
         assertSame(NumberToken::class.java, tokens[1].javaClass)
-        assertEquals(BigDecimal.valueOf(3.1415), (tokens[1] as NumberToken).getValue())
+        assertEquals(BigDecimal.valueOf(3.1415), (tokens[1] as NumberToken).value)
     }
 
     @Test
@@ -57,7 +57,7 @@ class LexerNumberTest : TestSuit() {
         val tokens = tokenize("500_000_0")
         assertEquals(1, tokens.size)
         assertSame(NumberToken::class.java, tokens[0].javaClass)
-        assertEquals(BigDecimal.valueOf(5_000_000), (tokens[0] as NumberToken).getValue())
+        assertEquals(BigDecimal.valueOf(5_000_000), (tokens[0] as NumberToken).value)
     }
 
     @Test
