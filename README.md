@@ -128,7 +128,7 @@ Let `K = 2` and let `M = 2`, then we can construct three functions that allow fo
 ```
 fun h(a1: number, a2: number, ...) = ...
 fun g(b1: number, b2: number, ...) = ...
-fun f(x1: number, x2: number) = h(g(x1, y2, ...), g(x1, x2, ...))
+fun f(x1: number, x2: number) = h(g(x1, x2, ...), g(x1, x2, ...))
 ```
 
 (the function implementation for `g` and `h` are irrelevant for this proof)
