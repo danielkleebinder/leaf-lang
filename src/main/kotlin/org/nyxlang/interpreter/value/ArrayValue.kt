@@ -17,8 +17,8 @@ class ArrayValue(override val value: Array<IValue?>) : IValue {
     }
 
     override fun binary(right: IValue, op: BinaryOperation) = when (op) {
-        BinaryOperation.GET -> binaryGet(right)
         BinaryOperation.PLUS -> binaryPlus(right)
+        BinaryOperation.GET -> binaryGet(right)
         BinaryOperation.EQUAL -> binaryEqual(right)
         BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
         else -> throw UnknownOperationException("The operation $op is not supported for array data type")
@@ -34,8 +34,7 @@ class ArrayValue(override val value: Array<IValue?>) : IValue {
      */
     private fun binaryGet(right: IValue) = when (right) {
         is NumberValue -> {
-            if (right.value.intValueExact() < 0 ||
-                    right.value.intValueExact() >= value.size) {
+            if (right.value.intValueExact() < 0 || right.value.intValueExact() >= value.size) {
                 throw UnknownOperationException("Array index ${right.value} out of bounds")
             }
             value[right.value.intValueExact()]!!

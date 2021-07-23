@@ -1,0 +1,34 @@
+// STRING UTILS
+// Shows how typical string utils can be implemented
+
+
+// Splits a given string using the given delimiter
+fun split(str: string, delimiter: string) : ~delimiter == 1 -> string {
+  var res = [], buffer = ""
+  loop var i = 0 : i < ~str : i = i + 1 {
+    if str[i] == delimiter {
+	  res = res + buffer
+	  buffer = ""
+	  continue
+	}
+    buffer = buffer + str[i]
+  }
+  return res + buffer
+}
+
+
+// Joins a given array into one single string
+fun join(arr: array, delimiter: string) -> string {
+  var res = ""
+  loop var i = 0 : i < ~arr : i = i + 1 {
+    res = res + arr[i]
+	if i < (~arr - 1) { res = res + delimiter }
+  }
+  return res
+}
+
+const joined = join(["Daniel", "Peter", "John"], ",")
+const splitted = split(joined, ",")
+
+// Print the results in a single array
+[joined, splitted]

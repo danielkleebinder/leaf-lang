@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
 import org.nyxlang.interpreter.exception.DynamicSemanticException
+import java.math.BigDecimal
 
 class InterpreterStringTest : TestSuit() {
 
@@ -47,6 +48,21 @@ class InterpreterStringTest : TestSuit() {
 
         result = execute("\"Value:\" + false + \"-\" + true")
         assertEquals("Value:false-true", result)
+    }
+
+    @Test
+    fun shouldAccessLength() {
+        assertEquals(BigDecimal.valueOf(0), execute("~\"\""))
+        assertEquals(BigDecimal.valueOf(1), execute("~\"C\""))
+        assertEquals(BigDecimal.valueOf(12), execute("~\"Hello World!\""))
+        assertEquals(BigDecimal.valueOf(13), execute("const a = \"Hello World!!\"; ~a"))
+    }
+
+    @Test
+    fun shouldAccessCharacters() {
+        assertEquals("H", execute("const a = \"Hello World\"; a[0]"))
+        assertEquals(" ", execute("const b = \"Hello World\"; b[5]"))
+        assertEquals("!", execute("const c = \"Hello World!\"; c[11]"))
     }
 
     @Test

@@ -49,7 +49,7 @@ class InterpreterArrayTest : TestSuit() {
         assertEquals(BigDecimal.valueOf(0), execute("~[]"))
         assertEquals(BigDecimal.valueOf(3), execute("~[5,6,7]"))
         assertEquals(BigDecimal.valueOf(6), execute("~[5,6,7,8,9,10]"))
-        assertEquals(BigDecimal.valueOf(3), execute("const a = [8,9,10];~a"))
+        assertEquals(BigDecimal.valueOf(3), execute("const a = [8,9,10]; ~a"))
     }
 
     @Test

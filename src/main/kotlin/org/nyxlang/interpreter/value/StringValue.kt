@@ -3,6 +3,7 @@ package org.nyxlang.interpreter.value
 import org.nyxlang.interpreter.exception.UnknownOperationException
 import org.nyxlang.parser.ast.BinaryOperation
 import org.nyxlang.parser.ast.UnaryOperation
+import java.math.BigDecimal
 
 /**
  * String values are used to perform certain operations and
@@ -10,10 +11,14 @@ import org.nyxlang.parser.ast.UnaryOperation
  */
 class StringValue(override val value: String) : IValue {
 
-    override fun unary(op: UnaryOperation) = throw UnknownOperationException("Unary operations are not supported for strings")
+    override fun unary(op: UnaryOperation) = when (op) {
+        UnaryOperation.BIT_COMPLEMENT -> NumberValue(BigDecimal.valueOf(value.length.toLong()))
+        else -> throw UnknownOperationException("The operation $op is not supported for string data type")
+    }
 
     override fun binary(right: IValue, op: BinaryOperation) = when (op) {
         BinaryOperation.PLUS -> binaryPlus(right)
+        BinaryOperation.GET -> binaryGet(right)
         BinaryOperation.EQUAL -> binaryEqual(right)
         BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
         BinaryOperation.LESS_THAN -> binaryLessThan(right)
@@ -27,6 +32,19 @@ class StringValue(override val value: String) : IValue {
      * Performs the '+' operation.
      */
     private fun binaryPlus(right: IValue) = stringValue(stringify() + right.stringify())
+
+    /**
+     * Performs the '[..]' operations.
+     */
+    private fun binaryGet(right: IValue) = when (right) {
+        is NumberValue -> {
+            if (right.value.intValueExact() < 0 || right.value.intValueExact() >= value.length) {
+                throw UnknownOperationException("String index ${right.value} out of bounds")
+            }
+            StringValue(value[right.value.intValueExact()].toString())
+        }
+        else -> throw UnknownOperationException("The [..] operation in array is not supported for $right")
+    }
 
     /**
      * Performs the '==' operation.
