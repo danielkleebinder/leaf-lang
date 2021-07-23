@@ -13,6 +13,7 @@ class ArrayValue(override val value: Array<IValue?>) : IValue {
     override fun unary(op: UnaryOperation) = throw UnknownOperationException("Unary operations are not supported for arrays")
 
     override fun binary(right: IValue, op: BinaryOperation) = when (op) {
+        BinaryOperation.GET -> binaryGet(right)
         BinaryOperation.PLUS -> binaryPlus(right)
         BinaryOperation.EQUAL -> binaryEqual(right)
         BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
@@ -23,6 +24,20 @@ class ArrayValue(override val value: Array<IValue?>) : IValue {
      * Performs the '+' operations.
      */
     private fun binaryPlus(right: IValue) = arrayValue(value + right)
+
+    /**
+     * Performs the '[..]' operations.
+     */
+    private fun binaryGet(right: IValue) = when (right) {
+        is NumberValue -> {
+            if (right.value.intValueExact() < 0 ||
+                    right.value.intValueExact() >= value.size) {
+                throw UnknownOperationException("Array index ${right.value} out of bounds")
+            }
+            value[right.value.intValueExact()]!!
+        }
+        else -> throw UnknownOperationException("The [..] operation in array is not supported for $right")
+    }
 
     /**
      * Performs the '==' operation.

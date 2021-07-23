@@ -27,12 +27,10 @@ The formal language definition in Backus-Naur form looks like the following. Fee
               | 'continue'
               | <block-stmt>
               | <fun-declare>
-              | <fun-call>
               | <var-assign>
+              | <call>
               | <expr>
 
-
-<fun-call>    ::= <name> '(' (<expr> (',' <expr>)*)? ')'
 <fun-declare> ::= 'fun' <name> ('(' <var-declare> ')')?
                    (':' '(' <expr> ')')?
                    (':' '(' <expr> ')')?
@@ -52,12 +50,22 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <expr>       ::= <equal-expr> (( '&&' | '||' ) <equal-expr>)*
 <equal-expr> ::= <logic-expr> (( '==' | '!=' ) <logic-expr>)*
 <arith-expr> ::= <term> (( '+' | '-' ) <term>)*
-<array-expr> ::= '[' (<expr> (',' <expr>)*)? ']'
 <logic-expr> ::= NOT <logic-expr>
                | <arith-expr> (( '<' | '<=' | '>' | '>=' ) <arith-expr>)*
 
-<term> ::= <atom> (( '*' | '/' | '%' ) <atom>)*
-<atom> ::= ('+' | '-' | '~')? (<number> | <string> | <var> | <fun-call>)
+<array-expr>   ::= '[' (<expr> (',' <expr>)*)? ']'
+<array-access> ::=  '[' <number> ']')?
+
+<term> ::= <call> (( '*' | '/' | '%' ) <call>)*
+
+<call> ::= <atom>
+         | <name>
+         | <name> '[' <expr> ']'
+         | <name> '(' (<expr> (',' <expr>)*)? ')'
+
+<atom> ::= ('+' | '-' | '~')? <number>
+         | ('!' | '~')?       <bool>
+         | ('+')?             <string>
          | '(' <expr> ')'
          | <array-expr>
          | <conditional-stmt>
@@ -67,7 +75,6 @@ The formal language definition in Backus-Naur form looks like the following. Fee
          | <empty>
 
 <type>  ::= <number> | <bool> | <string>
-<var>   ::= <name>
 <name>  ::= IDENTIFIER
 <empty> ::= ()
 ```

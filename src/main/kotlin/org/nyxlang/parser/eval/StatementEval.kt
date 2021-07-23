@@ -42,7 +42,7 @@ class StatementEval(private val parser: IParser) : IEval {
         if (NameToken::class == parser.token::class) {
             when (parser.peekNextToken::class) {
                 AssignToken::class -> return VarAssignEval(parser).eval()
-                LeftParenthesisToken::class -> return FunCallEval(parser).eval()
+                LeftParenthesisToken::class -> return CallEval(parser).eval()
             }
         }
         return ExprEval(parser).eval()

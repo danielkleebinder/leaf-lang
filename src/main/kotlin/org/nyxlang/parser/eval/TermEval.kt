@@ -12,19 +12,19 @@ import org.nyxlang.parser.ast.INode
 /**
  * Evaluates the term semantics:
  *
- * <term> ::= <atom> (( MULT | DIVIDE | MOD ) <atom>)*
+ * <term> ::= <call> (( '*' | '/' | '%' ) <call>)*
  *
  */
 class TermEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
-        val atom = AtomEval(parser)
-        var node = atom.eval()
+        val call = CallEval(parser)
+        var node = call.eval()
         while (true) {
             node = when (parser.token::class) {
-                DivideToken::class -> parser.advance { BinaryOperationNode(node, atom.eval(), BinaryOperation.DIV) }
-                ModToken::class -> parser.advance { BinaryOperationNode(node, atom.eval(), BinaryOperation.REM) }
-                MultiplyToken::class -> parser.advance { BinaryOperationNode(node, atom.eval(), BinaryOperation.TIMES) }
+                DivideToken::class -> parser.advance { BinaryOperationNode(node, call.eval(), BinaryOperation.DIV) }
+                ModToken::class -> parser.advance { BinaryOperationNode(node, call.eval(), BinaryOperation.REM) }
+                MultiplyToken::class -> parser.advance { BinaryOperationNode(node, call.eval(), BinaryOperation.TIMES) }
                 else -> break
             }
         }

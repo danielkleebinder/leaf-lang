@@ -16,6 +16,7 @@ class SymbolTable(override val name: String? = null,
             define(BuiltInSymbol("number"))
             define(BuiltInSymbol("bool"))
             define(BuiltInSymbol("string"))
+            define(BuiltInSymbol("array"))
         }
     }
 

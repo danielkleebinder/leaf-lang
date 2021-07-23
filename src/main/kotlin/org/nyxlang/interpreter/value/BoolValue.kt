@@ -13,6 +13,7 @@ class BoolValue(override val value: Boolean) : IValue {
 
     override fun unary(op: UnaryOperation) = when (op) {
         UnaryOperation.LOGICAL_NEGATE -> boolValue(!value)
+        UnaryOperation.BIT_COMPLEMENT -> boolValue(!value)
         else -> throw VisitorException("The operation $op is not supported for data type bool")
     }
 

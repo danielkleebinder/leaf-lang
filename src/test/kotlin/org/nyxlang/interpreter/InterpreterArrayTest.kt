@@ -3,7 +3,9 @@ package org.nyxlang.interpreter
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
+import org.nyxlang.interpreter.exception.DynamicSemanticException
 import org.nyxlang.parser.exception.ParserException
+import java.math.BigDecimal
 
 class InterpreterArrayTest : TestSuit() {
 
@@ -24,20 +26,33 @@ class InterpreterArrayTest : TestSuit() {
     }
 
     @Test
-    fun shouldDeclareArrayWithExpressions() {
+    fun shouldDeclareWithExpressions() {
         assertArrayEquals(arrayOfBigDecimal(2), (execute("[1+1]") as List<*>).toTypedArray())
         assertArrayEquals(arrayOfBigDecimal(50, 75), (execute("[(3+7)*5, (5 * 6 * 5) / 2]") as List<*>).toTypedArray())
     }
 
     @Test
-    fun shouldAddElementToArray() {
+    fun shouldAddElement() {
         assertArrayEquals(arrayOfBigDecimal(7), (execute("[] + 7") as List<*>).toTypedArray())
         assertArrayEquals(arrayOfBigDecimal(1, 2, 7), (execute("[1,2] + 7") as List<*>).toTypedArray())
         assertArrayEquals(arrayOfBigDecimal(7, 1, 2), (execute("7 + [1,2]") as List<*>).toTypedArray())
     }
 
     @Test
-    fun shouldErrorOnInvalidArrayDeclaration() {
+    fun shouldAccessElements() {
+        assertEquals(BigDecimal.valueOf(10), execute("const a = [10,20,30]; a[0]"))
+        assertEquals(BigDecimal.valueOf(30), execute("const b = [10,20,30]; b[2]"))
+    }
+
+    @Test
+    fun shouldErrorOnIndexOutOfBounds() {
+        assertThrows(DynamicSemanticException::class.java) { execute("const a = []; a[0]") }
+        assertThrows(DynamicSemanticException::class.java) { execute("const b = [1]; b[-1]") }
+        assertThrows(DynamicSemanticException::class.java) { execute("const c = [1,2]; c[3]") }
+    }
+
+    @Test
+    fun shouldErrorOnInvalidDeclaration() {
         assertThrows(ParserException::class.java) { execute("[") }
         assertThrows(ParserException::class.java) { execute("[1,2,") }
         assertThrows(ParserException::class.java) { execute("[[2") }

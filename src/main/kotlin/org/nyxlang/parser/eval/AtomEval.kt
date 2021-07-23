@@ -18,8 +18,11 @@ import org.nyxlang.parser.ast.*
 /**
  * Evaluates atoms with the following semantic:
  *
- * <atom> ::= ('+' | '-' | '~' | '++' | '--')? (<number> | <var>)
+ * <atom> ::= ('+' | '-' | '~')? <number>
+ *          | ('!' | '~')?       <bool>
+ *          | ('+')?             <string>
  *          | '(' <expr> ')'
+ *          | <array-expr>
  *          | <conditional-stmt>
  *          | <when-stmt>
  *          | <loop-stmt>
@@ -35,13 +38,6 @@ class AtomEval(private val parser: IParser) : IEval {
             NumberToken::class -> NumberNode((parser.tokenAndAdvance as NumberToken).value)
             BoolToken::class -> BoolNode((parser.tokenAndAdvance as BoolToken).value)
             StringToken::class -> StringNode((parser.tokenAndAdvance as StringToken).value)
-            NameToken::class -> {
-                if (LeftParenthesisToken::class == parser.peekNextToken::class) {
-                    FunCallEval(parser).eval()
-                } else {
-                    VarAccessNode((parser.tokenAndAdvance as NameToken).value)
-                }
-            }
 
             ConditionalKeywordToken::class -> ConditionalEval(parser).eval()
             WhenKeywordToken::class -> WhenEval(parser).eval()
