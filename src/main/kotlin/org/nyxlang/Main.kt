@@ -47,13 +47,15 @@ fun main(args: Array<String>) {
             .filter { it == "-d" || it == "--debug" }
             .forEach { _ -> RuntimeOptions.debug = true }
 
-    RuntimeOptions.debug = false
-    println("(debug options activated)")
+    val filteredArgs = args
+            .filter { it != "-d" && it != "--debug" }
 
-    if (args.isEmpty()) {
+    if (RuntimeOptions.debug) println("(debug options activated)")
+
+    if (filteredArgs.isEmpty()) {
         runCli()
     } else {
-        args.forEach {
+        filteredArgs.forEach {
             println()
             println("Run source file: \"$it\"")
             println()

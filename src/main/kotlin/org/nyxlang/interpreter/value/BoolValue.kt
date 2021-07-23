@@ -30,6 +30,7 @@ class BoolValue(override val value: Boolean) : IValue {
      */
     private fun binaryPlus(right: IValue) = when (right) {
         is StringValue -> stringValue(stringify() + right.value)
+        is ArrayValue -> arrayValue(arrayOf(this, *right.value))
         else -> throw UnknownOperationException("The plus operation in bool is not supported for $right")
     }
 

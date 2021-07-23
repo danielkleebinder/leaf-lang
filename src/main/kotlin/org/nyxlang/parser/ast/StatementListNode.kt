@@ -5,5 +5,5 @@ package org.nyxlang.parser.ast
  * interpreted independently.
  */
 class StatementListNode(val statements: List<INode>) : INode {
-    override fun toString() = "StatementListNode{statements=$statements}"
+    override fun toString() = "StatementListNode(statements=$statements)"
 }

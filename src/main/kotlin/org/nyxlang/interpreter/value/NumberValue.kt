@@ -41,6 +41,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
     private fun binaryPlus(right: IValue) = when (right) {
         is NumberValue -> numberValue(value + right.value)
         is StringValue -> stringValue(stringify() + right.value)
+        is ArrayValue -> arrayValue(arrayOf(this, *right.value))
         else -> throw UnknownOperationException("The plus operation in number is not supported for $right")
     }
 

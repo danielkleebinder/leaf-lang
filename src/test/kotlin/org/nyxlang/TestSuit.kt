@@ -14,6 +14,7 @@ import org.nyxlang.lexer.Lexer
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.Parser
 import java.io.File
+import java.math.BigDecimal
 
 /**
  * Base class for all nyxlang test classes.
@@ -48,6 +49,12 @@ open class TestSuit {
      * Tokenizes the given [programCode].
      */
     fun tokenize(programCode: String) = lexer.tokenize(programCode)
+
+    /**
+     * Creates an array of big decimal given the [values] of longs. This is
+     * just a small helper function to keep code clean and readable.
+     */
+    fun arrayOfBigDecimal(vararg values: Long) = values.map { BigDecimal.valueOf(it) }.toTypedArray()
 
     /**
      * Statically analyzes the given [programCode].

@@ -1,5 +1,6 @@
 package org.nyxlang.interpreter.result
 
+import org.nyxlang.interpreter.value.ArrayValue
 import org.nyxlang.interpreter.value.IValue
 
 /**
@@ -24,5 +25,13 @@ interface IRuntimeResult {
  * a plain value type.
  */
 fun IRuntimeResult.unpack(): Any? {
-    return data?.value
+    fun unroll(data: Any?): List<Any>? {
+        if (data is ArrayValue) return listOf(data.value.flatMap { unroll(it)!! })
+        if (data is IValue) return listOf(data.value)
+        return null
+    }
+
+    val unrolled = unroll(data)
+    if (unrolled?.size == 1) return unrolled[0]
+    return unrolled
 }

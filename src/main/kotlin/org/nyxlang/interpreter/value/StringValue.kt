@@ -13,7 +13,7 @@ class StringValue(override val value: String) : IValue {
     override fun unary(op: UnaryOperation) = throw UnknownOperationException("Unary operations are not supported for strings")
 
     override fun binary(right: IValue, op: BinaryOperation) = when (op) {
-        BinaryOperation.PLUS -> stringValue(stringify() + right.stringify())
+        BinaryOperation.PLUS -> binaryPlus(right)
         BinaryOperation.EQUAL -> binaryEqual(right)
         BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
         BinaryOperation.LESS_THAN -> binaryLessThan(right)
@@ -22,6 +22,11 @@ class StringValue(override val value: String) : IValue {
         BinaryOperation.GREATER_THAN_OR_EQUAL -> binaryGreaterThanOrEqual(right)
         else -> throw UnknownOperationException("The operation $op is not supported for data type bool")
     }
+
+    /**
+     * Performs the '+' operation.
+     */
+    private fun binaryPlus(right: IValue) = stringValue(stringify() + right.stringify())
 
     /**
      * Performs the '==' operation.

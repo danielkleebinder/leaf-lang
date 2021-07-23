@@ -11,36 +11,35 @@ class InterpreterArrayTest : TestSuit() {
     fun shouldDeclareEmptyArray() {
         val result = execute("[]")
         assertNotNull(result)
-        assertArrayEquals(arrayOf(), result as Array<*>)
+        assertArrayEquals(arrayOfBigDecimal(), (result as List<*>).toTypedArray())
     }
 
     @Test
     fun shouldDeclareSimpleArray() {
-        assertArrayEquals(arrayOf(1), execute("[1]") as Array<*>)
-        assertArrayEquals(arrayOf(1, 2), execute("[1,2]") as Array<*>)
-        assertArrayEquals(arrayOf(1, 2, 3), execute("[1,2,3]") as Array<*>)
-        assertArrayEquals(arrayOf(3, 1, 2), execute("[3,1,2]") as Array<*>)
-        assertArrayEquals(arrayOf(7, 8, 9, 2938), execute("[7, 8 , 9, 2938]") as Array<*>)
+        assertArrayEquals(arrayOfBigDecimal(1), (execute("[1]") as List<*>).toTypedArray())
+        assertArrayEquals(arrayOfBigDecimal(1, 2), (execute("[1,2]") as List<*>).toTypedArray())
+        assertArrayEquals(arrayOfBigDecimal(1, 2, 3), (execute("[1,2,3]") as List<*>).toTypedArray())
+        assertArrayEquals(arrayOfBigDecimal(3, 1, 2), (execute("[3,1,2]") as List<*>).toTypedArray())
+        assertArrayEquals(arrayOfBigDecimal(7, 8, 9, 2938), (execute("[7, 8 , 9, 2938]") as List<*>).toTypedArray())
     }
 
     @Test
     fun shouldDeclareArrayWithExpressions() {
-        assertArrayEquals(arrayOf(1), execute("[1+1]") as Array<*>)
-        assertArrayEquals(arrayOf(50, 75), execute("[(3+7)*5, (5 * 6 * 5) / 2]") as Array<*>)
+        assertArrayEquals(arrayOfBigDecimal(2), (execute("[1+1]") as List<*>).toTypedArray())
+        assertArrayEquals(arrayOfBigDecimal(50, 75), (execute("[(3+7)*5, (5 * 6 * 5) / 2]") as List<*>).toTypedArray())
     }
 
     @Test
     fun shouldAddElementToArray() {
-        assertArrayEquals(arrayOf(7), execute("[] + 7") as Array<*>)
-        assertArrayEquals(arrayOf(1, 2, 7), execute("[1,2] + 7") as Array<*>)
-        assertArrayEquals(arrayOf(7, 1, 2), execute("7 + [1,2]") as Array<*>)
+        assertArrayEquals(arrayOfBigDecimal(7), (execute("[] + 7") as List<*>).toTypedArray())
+        assertArrayEquals(arrayOfBigDecimal(1, 2, 7), (execute("[1,2] + 7") as List<*>).toTypedArray())
+        assertArrayEquals(arrayOfBigDecimal(7, 1, 2), (execute("7 + [1,2]") as List<*>).toTypedArray())
     }
 
     @Test
     fun shouldErrorOnInvalidArrayDeclaration() {
         assertThrows(ParserException::class.java) { execute("[") }
         assertThrows(ParserException::class.java) { execute("[1,2,") }
-        assertThrows(ParserException::class.java) { execute("1,2,]]") }
         assertThrows(ParserException::class.java) { execute("[[2") }
         assertThrows(ParserException::class.java) { execute("[3[") }
     }

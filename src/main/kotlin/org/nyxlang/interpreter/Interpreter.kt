@@ -21,6 +21,7 @@ class Interpreter : IInterpreter {
             Pair(NumberNode::class, NumberVisitor()),
             Pair(BoolNode::class, BoolVisitor()),
             Pair(StringNode::class, StringVisitor()),
+            Pair(ArrayNode::class, ArrayVisitor()),
             Pair(ConditionalNode::class, IfVisitor()),
             Pair(WhenNode::class, WhenVisitor()),
             Pair(LoopNode::class, LoopVisitor()),

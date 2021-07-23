@@ -17,3 +17,8 @@ fun numberValue(value: BigDecimal) = NumberValue(value)
  * Creates a string [value].
  */
 fun stringValue(value: String) = StringValue(value)
+
+/**
+ * Creates an array [value].
+ */
+fun arrayValue(value: Array<IValue?>) = ArrayValue(value)
