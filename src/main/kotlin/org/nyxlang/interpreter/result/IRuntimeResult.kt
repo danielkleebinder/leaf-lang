@@ -1,5 +1,7 @@
 package org.nyxlang.interpreter.result
 
+import org.nyxlang.interpreter.value.IValue
+
 /**
  * Visitors always return a result which can hold different information
  * besides the data itself.
@@ -9,7 +11,7 @@ interface IRuntimeResult {
     /**
      * Some data that is the result of a runtime analysis.
      */
-    val data: Any?
+    val data: IValue?
 
     /**
      * Checks if data is available.
@@ -21,11 +23,8 @@ interface IRuntimeResult {
  * Unrolls the data result into a one dimensional result list.
  */
 private fun IRuntimeResult.unroll(result: Any): List<Any> {
-    if (result is ListRuntimeResult) {
-        return result.data.flatMap { unroll(it) }
-    }
-    if (result is RuntimeResult && result.data != null) {
-        return listOf(result.data!!)
+    if (result is IRuntimeResult && result.data?.value != null) {
+        return listOf(result.data!!.value)
     }
     return listOf()
 }

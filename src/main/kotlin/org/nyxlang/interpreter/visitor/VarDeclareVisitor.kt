@@ -16,7 +16,7 @@ class VarDeclareVisitor : IVisitor {
         for (declaration in varDeclarationNode.declarations) {
             val name = declaration.identifier
             val type = interpreter.interpret(declaration.typeExpr).data
-            val value = interpreter.interpret(declaration.assignmentExpr).unpack()
+            val value = interpreter.interpret(declaration.assignmentExpr).data
             interpreter.activationRecord!!.define(name, value)
         }
         return emptyResult()

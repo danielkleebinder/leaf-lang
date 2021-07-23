@@ -1,7 +1,6 @@
 package org.nyxlang.interpreter
 
 import org.nyxlang.interpreter.exception.DynamicSemanticException
-import org.nyxlang.interpreter.exception.VisitorException
 import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.CallStack
 import org.nyxlang.interpreter.result.IRuntimeResult
@@ -47,8 +46,8 @@ class Interpreter : IInterpreter {
         try {
             val visitor = visitors[ast::class] ?: return emptyResult()
             return visitor.visit(this, ast)
-        } catch (e: VisitorException) {
-            throw DynamicSemanticException("The interpreter detected an error during runtime", listOf(InterpreterError(e.message!!)))
+        } catch (e: Exception) {
+            throw DynamicSemanticException(e.message!!)
         }
     }
 }

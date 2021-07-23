@@ -1,6 +1,7 @@
 package org.nyxlang.interpreter.memory
 
 import org.nyxlang.interpreter.exception.MemoryException
+import org.nyxlang.interpreter.value.IValue
 
 /**
  * Implementation of the activation record specification. The given parameter [staticLink]
@@ -12,9 +13,9 @@ class ActivationRecord(override var staticLink: IActivationRecord? = null,
                        override val name: String? = null,
                        override var nestingLevel: Int = 0) : IActivationRecord {
 
-    private val localVariables = hashMapOf<String, Any?>()
+    private val localVariables = hashMapOf<String, IValue?>()
 
-    override operator fun set(identifier: String, value: Any?) {
+    override operator fun set(identifier: String, value: IValue?) {
         when {
             localVariables.containsKey(identifier) -> localVariables[identifier] = value
             staticLink != null -> staticLink!![identifier] = value
@@ -22,11 +23,11 @@ class ActivationRecord(override var staticLink: IActivationRecord? = null,
         }
     }
 
-    override fun define(identifier: String, value: Any?) {
+    override fun define(identifier: String, value: IValue?) {
         localVariables[identifier] = value
     }
 
-    override operator fun get(identifier: String): Any? {
+    override operator fun get(identifier: String): IValue? {
         val variable = localVariables[identifier]
         if (staticLink != null && variable == null) {
             return staticLink!![identifier]

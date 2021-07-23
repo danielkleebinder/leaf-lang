@@ -14,7 +14,7 @@ class IfVisitor : IVisitor {
         val ifNode = node as ConditionalNode
         for (ifCase in ifNode.cases) {
             val conditionResult = interpreter.interpret(ifCase.condition).data
-            if (conditionResult == true) {
+            if (conditionResult?.value == true) {
                 return interpreter.interpret(ifCase.body)
             }
         }

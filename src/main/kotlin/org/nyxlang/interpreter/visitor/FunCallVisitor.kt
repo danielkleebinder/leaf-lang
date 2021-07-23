@@ -49,7 +49,7 @@ class FunCallVisitor : IVisitor {
             activationRecord.staticLink = staticLink
             activationRecord.nestingLevel = staticLink!!.nestingLevel + 1
 
-            if (false == interpreter.interpret(spec.requires).data) {
+            if (false == interpreter.interpret(spec.requires).data?.value) {
                 throw VisitorException("Requires expression of function \"$funName\" failed")
             }
 
@@ -60,8 +60,8 @@ class FunCallVisitor : IVisitor {
             }
 
             if (result.hasData()) {
-                activationRecord.define("_", result.unpack())
-                if (false == interpreter.interpret(spec.ensures).data) {
+                activationRecord.define("_", result.data)
+                if (false == interpreter.interpret(spec.ensures).data?.value) {
                     throw VisitorException("Ensures expression of function \"$funName\" failed")
                 }
             }

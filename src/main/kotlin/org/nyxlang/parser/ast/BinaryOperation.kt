@@ -9,7 +9,7 @@ enum class BinaryOperation {
     DIVIDE,
     MULTIPLY,
     POWER,
-    MOD,
+    REM,
     EQUAL,
     NOT_EQUAL,
     LESS_THAN,

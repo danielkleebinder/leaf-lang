@@ -23,7 +23,7 @@ class TermEval(private val parser: IParser) : IEval {
         while (true) {
             node = when (parser.token::class) {
                 DivideToken::class -> parser.advance { BinaryOperationNode(node, atom.eval(), BinaryOperation.DIVIDE) }
-                ModToken::class -> parser.advance { BinaryOperationNode(node, atom.eval(), BinaryOperation.MOD) }
+                ModToken::class -> parser.advance { BinaryOperationNode(node, atom.eval(), BinaryOperation.REM) }
                 MultiplyToken::class -> parser.advance {
                     if (MultiplyToken::class == parser.token::class) {
                         parser.advanceCursor()
