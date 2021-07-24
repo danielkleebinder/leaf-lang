@@ -3,7 +3,7 @@ package org.nyxlang.interpreter.visitor
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.result.emptyResult
-import org.nyxlang.parser.ast.ConditionalNode
+import org.nyxlang.parser.ast.IfNode
 import org.nyxlang.parser.ast.INode
 
 /**
@@ -11,7 +11,7 @@ import org.nyxlang.parser.ast.INode
  */
 class IfVisitor : IVisitor {
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
-        val ifNode = node as ConditionalNode
+        val ifNode = node as IfNode
         for (ifCase in ifNode.cases) {
             val conditionResult = interpreter.interpret(ifCase.condition).data
             if (conditionResult?.value == true) {

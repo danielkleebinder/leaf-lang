@@ -1,7 +1,7 @@
 package org.nyxlang.analyzer.visitor
 
 import org.nyxlang.analyzer.ISemanticAnalyzer
-import org.nyxlang.parser.ast.ConditionalNode
+import org.nyxlang.parser.ast.IfNode
 import org.nyxlang.parser.ast.INode
 
 /**
@@ -9,7 +9,7 @@ import org.nyxlang.parser.ast.INode
  */
 class IfAnalyticalVisitor : IAnalyticalVisitor {
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
-        val ifNode = node as ConditionalNode
+        val ifNode = node as IfNode
 
         for (ifCase in ifNode.cases) {
             if (ifCase.condition != null) analyzer.analyze(ifCase.condition)

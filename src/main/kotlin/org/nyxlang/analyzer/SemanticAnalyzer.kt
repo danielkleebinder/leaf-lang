@@ -22,7 +22,7 @@ class SemanticAnalyzer : ISemanticAnalyzer {
             Pair(FunCallNode::class, FunCallAnalyticalVisitor()),
             Pair(FunDeclareNode::class, FunDeclareAnalyticalVisitor()),
             Pair(ReturnNode::class, ReturnAnalyticalVisitor()),
-            Pair(ConditionalNode::class, IfAnalyticalVisitor()),
+            Pair(IfNode::class, IfAnalyticalVisitor()),
             Pair(WhenNode::class, WhenAnalyticalVisitor()),
             Pair(LoopNode::class, LoopAnalyticalVisitor()),
             Pair(BlockNode::class, BlockAnalyticalVisitor()))

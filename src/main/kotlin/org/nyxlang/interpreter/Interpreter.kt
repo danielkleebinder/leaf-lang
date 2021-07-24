@@ -22,7 +22,7 @@ class Interpreter : IInterpreter {
             Pair(BoolNode::class, BoolVisitor()),
             Pair(StringNode::class, StringVisitor()),
             Pair(ArrayNode::class, ArrayVisitor()),
-            Pair(ConditionalNode::class, IfVisitor()),
+            Pair(IfNode::class, IfVisitor()),
             Pair(WhenNode::class, WhenVisitor()),
             Pair(LoopNode::class, LoopVisitor()),
             Pair(BreakNode::class, BreakVisitor()),

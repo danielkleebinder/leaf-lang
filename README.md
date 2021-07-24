@@ -132,7 +132,7 @@ In addition to the primitive functions, the µ-recursive operators must be suppo
 - **Recursion operator**. Given a function 
 - **Minimization operator**.
 
-It is left to write those three µ-recursive functions and the three operators in this programming language to prove
+It is left to define a mapping from three µ-recursive functions and the three operators to nyxlang to prove
 Turing completeness and therefore interchangeability with any other Turing machine.
 
 ### µ-recursive functions in nyxlang

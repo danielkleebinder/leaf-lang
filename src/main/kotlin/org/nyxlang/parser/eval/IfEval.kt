@@ -4,7 +4,7 @@ import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
 import org.nyxlang.lexer.token.keyword.ElseKeywordToken
 import org.nyxlang.lexer.token.keyword.IfKeywordToken
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.ast.ConditionalNode
+import org.nyxlang.parser.ast.IfNode
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.IfCase
 import org.nyxlang.parser.eval.expression.ExprEval
@@ -23,7 +23,7 @@ import org.nyxlang.parser.exception.EvalException
  */
 class IfEval(private val parser: IParser) : IEval {
 
-    override fun eval(): ConditionalNode {
+    override fun eval(): IfNode {
         val expr = ExprEval(parser)
         val block = BlockEval(parser)
 
@@ -52,7 +52,7 @@ class IfEval(private val parser: IParser) : IEval {
             parser.skipNewLines()
         }
 
-        return ConditionalNode(cases, elseCase)
+        return IfNode(cases, elseCase)
     }
 
     /**

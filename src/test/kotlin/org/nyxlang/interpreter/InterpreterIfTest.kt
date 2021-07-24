@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
 import java.math.BigDecimal
 
-class InterpreterConditionalTest : TestSuit() {
+class InterpreterIfTest : TestSuit() {
 
     @Test
     fun shouldInterpretSimpleConditional() {
