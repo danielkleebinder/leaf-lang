@@ -1,48 +1,54 @@
 package org.nyxlang.parser.eval
 
 import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
-import org.nyxlang.lexer.token.keyword.ConditionalKeywordToken
 import org.nyxlang.lexer.token.keyword.ElseKeywordToken
+import org.nyxlang.lexer.token.keyword.IfKeywordToken
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.ast.ConditionalCase
 import org.nyxlang.parser.ast.ConditionalNode
 import org.nyxlang.parser.ast.INode
+import org.nyxlang.parser.ast.IfCase
 import org.nyxlang.parser.exception.EvalException
 
 /**
- * Evaluates the conditional semantics:
+ * Evaluates the if semantics:
  *
- * <conditional-expr> ::= 'if' <expr>         <block-stmt>
- *                        ('else' 'if' <expr> <block-stmt>)*
- *                        ('else'             <block-stmt>)?
+ * <if-expr> ::= 'if' ((NL)* <expr> (NL)* <block>)
+ *                    ((NL)* <else-if>)*
+ *                    ((NL)* <else>)?
+ *
+ * <else-if> ::= 'else' (NL)* 'if' (NL)* <expr> (NL)* <block>
+ * <else>    ::= 'else' (NL)*                         <block>
  *
  */
-class ConditionalEval(private val parser: IParser) : IEval {
+class IfEval(private val parser: IParser) : IEval {
 
     override fun eval(): ConditionalNode {
         val expr = ExprEval(parser)
         val block = BlockEval(parser)
 
-        val cases = arrayListOf<ConditionalCase>()
+        val cases = arrayListOf<IfCase>()
         var condition: INode? = null
         var elseCase: INode? = null
 
-        // Evaluate first if <expr> <block-stmt> block
-        conditionalHead { condition = expr.eval() }
-        cases.add(ConditionalCase(condition, block.eval()))
+        // Evaluate first 'if' ((NL)* <expr> (NL)* <block>) block
+        ifHead { condition = expr.eval() }
+        cases.add(IfCase(condition, block.eval()))
 
         // Evaluate further case blocks
         while (ElseKeywordToken::class == parser.token::class) {
             parser.advanceCursor()
+            parser.skipNewLines()
 
-            if (ConditionalKeywordToken::class == parser.token::class) {
+            if (IfKeywordToken::class == parser.token::class) {
                 parser.advanceCursor()
+                parser.skipNewLines()
 
                 condition = expr.eval()
-                cases.add(ConditionalCase(condition, block.eval()))
+                cases.add(IfCase(condition, block.eval()))
             } else {
                 elseCase = block.eval()
             }
+            parser.skipNewLines()
         }
 
         return ConditionalNode(cases, elseCase)
@@ -52,14 +58,16 @@ class ConditionalEval(private val parser: IParser) : IEval {
      * Evaluates the conditional head semantics and throws exceptions if semantics are incorrect or
      * executes the body if everything is fine.
      */
-    private inline fun conditionalHead(head: () -> Unit) {
-        if (ConditionalKeywordToken::class != parser.token::class) {
+    private inline fun ifHead(head: () -> Unit) {
+        if (IfKeywordToken::class != parser.token::class) {
             throw EvalException("Conditional keyword 'if' expected")
         }
         parser.advanceCursor()
 
         if (LeftCurlyBraceToken::class != parser.token::class) {
+            parser.skipNewLines()
             head()
         }
+        parser.skipNewLines()
     }
 }

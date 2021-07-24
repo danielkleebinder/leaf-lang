@@ -11,38 +11,47 @@ import org.nyxlang.parser.exception.EvalException
 /**
  * Evaluates the loop semantics:
  *
- * <loop-stmt>  ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? <block-stmt>
+ * <loop-stmt> ::= 'loop' ((NL)* <loop-init>)?
+ *                        ((NL)* <loop-cond>)?
+ *                        ((NL)* <loop-step>)?
+ *                        ((NL)* <loop-body>)
+ *
+ * <loop-init> ::= <statement>
+ * <loop-cond> ::= ':' (NL)* <expr>
+ * <loop-step> ::= ':' (NL)* <statement>
+ * <loop-body> ::= <block>
  *
  */
 class LoopEval(private val parser: IParser) : IEval {
 
     override fun eval(): LoopNode {
         var init: INode? = null
-        var condition: INode? = null
+        var cond: INode? = null
         var step: INode? = null
-        var body: INode
+        var body: INode? = null
 
-        loopHeadInit { init = StatementEval(parser).eval() }
-        loopHeadCondition { condition = ExprEval(parser).eval() }
-        loopHeadStep { step = StatementEval(parser).eval() }
-        body = StatementEval(parser).eval()
+        loopInit { init = StatementEval(parser).eval() }
+        loopCond { cond = ExprEval(parser).eval() }
+        loopStep { step = StatementEval(parser).eval() }
+        loopBody { body = BlockEval(parser).eval() }
 
-        if (init != null && condition == null && step == null) {
-            condition = init
+        if (init != null && cond == null && step == null) {
+            cond = init
             init = null
         }
 
-        return LoopNode(init, condition, step, body)
+        return LoopNode(init, cond, step, body!!)
     }
 
     /**
      * Evaluates the loop init expression or throws an exception if semantically incorrect.
      */
-    private inline fun loopHeadInit(head: () -> Unit) {
+    private inline fun loopInit(head: () -> Unit) {
         if (LoopKeywordToken::class != parser.token::class) {
             throw EvalException("Loop keyword 'loop' expected")
         }
         parser.advanceCursor()
+        parser.skipNewLines()
 
         if (LeftCurlyBraceToken::class != parser.token::class) {
             head()
@@ -52,18 +61,28 @@ class LoopEval(private val parser: IParser) : IEval {
     /**
      * Evaluates the loop condition expression or throws an exception if semantically incorrect.
      */
-    private inline fun loopHeadCondition(head: () -> Unit) {
+    private inline fun loopCond(head: () -> Unit) {
         if (ColonToken::class == parser.token::class) parser.advanceCursor()
         if (LeftCurlyBraceToken::class == parser.token::class) return
+        parser.skipNewLines()
         head()
     }
 
     /**
      * Evaluates the loop step expression or throws an exception if semantically incorrect.
      */
-    private inline fun loopHeadStep(head: () -> Unit) {
+    private inline fun loopStep(head: () -> Unit) {
         if (ColonToken::class == parser.token::class) parser.advanceCursor()
         if (LeftCurlyBraceToken::class == parser.token::class) return
+        parser.skipNewLines()
         head()
+    }
+
+    /**
+     * Evaluates the loop body.
+     */
+    private inline fun loopBody(body: () -> Unit) {
+        parser.skipNewLines()
+        body()
     }
 }

@@ -5,6 +5,6 @@ import org.nyxlang.lexer.token.IToken
 /**
  * Identifies the conditional keyword "if".
  */
-class ConditionalKeywordToken : IToken {
+class IfKeywordToken : IToken {
     override fun toString() = "ConditionalKeywordToken{if}"
 }

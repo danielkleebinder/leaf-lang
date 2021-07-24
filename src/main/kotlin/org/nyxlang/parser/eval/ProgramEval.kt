@@ -6,7 +6,7 @@ import org.nyxlang.parser.ast.ProgramNode
 /**
  * Evaluates the program semantics:
  *
- * <program> ::= <statement-list>
+ * <program> ::= <statements>
  *
  */
 class ProgramEval(private val parser: IParser) : IEval {

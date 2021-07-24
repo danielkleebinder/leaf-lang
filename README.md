@@ -22,7 +22,7 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <block>      ::= '{' (NL)* <statements> (NL)* '}'
 
 <statements> ::= <statement> ((';' | (NL)*) <statement>)*
-<statement>  ::= ('var' | 'const') (NL)* <declaration>
+<statement>  ::= ('const' | 'var') (NL)* <declaration>
                | 'return' ((NL)* <expr>)?
                | 'break'
                | 'continue'
@@ -33,7 +33,8 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 
 ### Functions
 ```
-<fun-declaration> ::= 'fun' (NL)* <name> (NL)* (<fun-params> (NL)*)?
+<fun-declaration> ::= 'fun' (NL)* (<name> (NL)*)?
+                       (<fun-params> (NL)*)?
                        (<fun-requires> (NL)*)?
                        (<fun-ensures> (NL)*)?
                        (<fun-returns> (NL)*)?
@@ -48,9 +49,9 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 
 ### Conditionals
 ```
-<if-expr>    ::= 'if' ((NL)* <expr> (NL)* <block>)
-                      ((NL)* <else-if>)*
-                      ((NL)* <else>)?
+<if-expr> ::= 'if' ((NL)* <expr> (NL)* <block>)
+                   ((NL)* <else-if>)*
+                   ((NL)* <else>)?
 
 <else-if> ::= 'else' (NL)* 'if' (NL)* <expr> (NL)* <block>
 <else>    ::= 'else' (NL)*                         <block>
@@ -61,7 +62,7 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 <loop-stmt> ::= 'loop' ((NL)* <loop-init>)?
                        ((NL)* <loop-cond>)?
                        ((NL)* <loop-step>)?
-                       ((NL)* <loop-body>)?
+                       ((NL)* <loop-body>)
 
 <loop-init> ::= <statement>
 <loop-cond> ::= ':' (NL)* <expr>

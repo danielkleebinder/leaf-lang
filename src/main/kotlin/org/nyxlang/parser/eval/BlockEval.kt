@@ -9,7 +9,7 @@ import org.nyxlang.parser.exception.EvalException
 /**
  * Evaluates the block semantics:
  *
- * <block> ::= '{' <statement-list> '}'
+ * <block> ::= '{' (NL)* <statements> (NL)* '}'
  *
  */
 class BlockEval(private val parser: IParser) : IEval {
@@ -17,7 +17,9 @@ class BlockEval(private val parser: IParser) : IEval {
         if (LeftCurlyBraceToken::class != parser.token::class) throw EvalException("Block statement requires opening curly braces")
         parser.advanceCursor()
 
+        parser.skipNewLines()
         val result = BlockNode(StatementListEval(parser).eval())
+        parser.skipNewLines()
 
         if (RightCurlyBraceToken::class != parser.token::class) throw EvalException("Block statement requires closing curly braces")
         parser.advanceCursor()

@@ -25,7 +25,7 @@ class NameTokenizer : ITokenizer {
         when (name) {
             "var" -> return VarKeywordToken()
             "const" -> return ConstKeywordToken()
-            "if" -> return ConditionalKeywordToken()
+            "if" -> return IfKeywordToken()
             "else" -> return ElseKeywordToken()
             "true" -> return BoolToken(true)
             "false" -> return BoolToken(false)

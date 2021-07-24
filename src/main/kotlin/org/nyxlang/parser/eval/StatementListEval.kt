@@ -9,8 +9,7 @@ import org.nyxlang.parser.ast.StatementListNode
 /**
  * Evaluates the statement list semantics:
  *
- * <statement-list> ::= <statement>
- *                    | <statement> (';' | 'EOL') <statement-list>
+ * <statements> ::= <statement> ((';' | (NL)*) <statement>)*
  *
  */
 class StatementListEval(private val parser: IParser) : IEval {
@@ -23,6 +22,7 @@ class StatementListEval(private val parser: IParser) : IEval {
         while (StatementSeparatorToken::class == parser.token::class ||
                 NewLineToken::class == parser.token::class) {
             parser.advanceCursor()
+            parser.skipNewLines()
             result.add(statement.eval())
         }
         return StatementListNode(result)
