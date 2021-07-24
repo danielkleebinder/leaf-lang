@@ -23,10 +23,10 @@ class PrefixExprEval(private val parser: IParser) : IEval {
         val postfixExpr = PostfixExprEval(parser)
         println(parser.token)
         return when (parser.token::class) {
-            PlusToken::class -> parser.advance { UnaryOperationNode(postfixExpr.eval(), UnaryOperation.POSITIVE) }
-            MinusToken::class -> parser.advance { UnaryOperationNode(postfixExpr.eval(), UnaryOperation.NEGATE) }
-            LogicalNotToken::class -> parser.advance { UnaryOperationNode(postfixExpr.eval(), UnaryOperation.LOGICAL_NEGATE) }
-            ComplementToken::class -> parser.advance { UnaryOperationNode(postfixExpr.eval(), UnaryOperation.BIT_COMPLEMENT) }
+            PlusToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.POSITIVE) }
+            MinusToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.NEGATE) }
+            LogicalNotToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.LOGICAL_NEGATE) }
+            ComplementToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.BIT_COMPLEMENT) }
             else -> postfixExpr.eval()
         }
     }
