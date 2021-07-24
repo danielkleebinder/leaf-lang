@@ -7,6 +7,7 @@ import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.ConditionalNode
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.IfCase
+import org.nyxlang.parser.eval.expression.ExprEval
 import org.nyxlang.parser.exception.EvalException
 
 /**

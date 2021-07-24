@@ -5,6 +5,7 @@ import org.nyxlang.lexer.token.keyword.*
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advance
 import org.nyxlang.parser.ast.*
+import org.nyxlang.parser.eval.expression.ExprEval
 
 /**
  * Evaluates the statement semantics:

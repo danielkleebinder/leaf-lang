@@ -78,8 +78,9 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 
 ### Expressions & Precedence
 ```
-<expr>     ::= <rel-expr> ((NL)* ( '&&' | '||' ) (NL)* <rel-expr>)*
-<rel-expr> ::= <ran-expr> ((NL)* ( '==' | '!=' | '<' | '<=' | '>' | '>=' ) (NL)* <ran-expr>)*
+<expr>     ::= <equ-expr> ((NL)* ( '&&' | '||' ) (NL)* <equ-expr>)*
+<equ-expr> ::= <rel-expr> ((NL)* ( '==' | '!=' ) (NL)* <rel-expr>)*
+<rel-expr> ::= <ran-expr> ((NL)* ( '<' | '<=' | '>' | '>=' ) (NL)* <ran-expr>)*
 <ran-expr> ::= <add-expr> ((NL)* ( '..' ) (NL)* <add-expr>)*
 <add-expr> ::= <mul-expr> ((NL)* ( '+' | '-' ) (NL)* <mul-expr>)*
 <mul-expr> ::= <prefix-expr> ((NL)* ( '*' | '/' | '%' ) (NL)* <prefix-expr>)*

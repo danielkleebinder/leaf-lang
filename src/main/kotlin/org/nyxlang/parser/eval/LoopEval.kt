@@ -6,6 +6,7 @@ import org.nyxlang.lexer.token.keyword.LoopKeywordToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.LoopNode
+import org.nyxlang.parser.eval.expression.ExprEval
 import org.nyxlang.parser.exception.EvalException
 
 /**

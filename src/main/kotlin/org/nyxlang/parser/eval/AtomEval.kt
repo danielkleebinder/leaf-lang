@@ -1,32 +1,27 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.*
-import org.nyxlang.lexer.token.arithmetic.DecrementToken
-import org.nyxlang.lexer.token.arithmetic.IncrementToken
-import org.nyxlang.lexer.token.arithmetic.MinusToken
-import org.nyxlang.lexer.token.arithmetic.PlusToken
+import org.nyxlang.lexer.token.BoolToken
+import org.nyxlang.lexer.token.NameToken
+import org.nyxlang.lexer.token.NumberToken
+import org.nyxlang.lexer.token.StringToken
 import org.nyxlang.lexer.token.bracket.LeftBracketToken
 import org.nyxlang.lexer.token.bracket.LeftParenthesisToken
 import org.nyxlang.lexer.token.keyword.IfKeywordToken
 import org.nyxlang.lexer.token.keyword.LoopKeywordToken
-import org.nyxlang.lexer.token.keyword.WhenKeywordToken
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.advance
 import org.nyxlang.parser.advanceBeforeAfter
 import org.nyxlang.parser.ast.*
+import org.nyxlang.parser.eval.expression.ArrayExprEval
+import org.nyxlang.parser.eval.expression.ExprEval
 
 /**
  * Evaluates atoms with the following semantic:
  *
- * <atom> ::= ('+' | '-' | '~')? <number>
- *          | ('!' | '~')?       <bool>
- *          | ('+')?             <string>
+ * <atom> ::= <bool> | <number> | <string> | <name>
  *          | '(' <expr> ')'
- *          | <array-expr>
- *          | <conditional-stmt>
- *          | <when-stmt>
+ *          | <if-expr>
  *          | <loop-stmt>
- *          | <native-stmt>
+ *          | <arr-expr>
  *          | <empty>
  *
  */
@@ -35,20 +30,14 @@ class AtomEval(private val parser: IParser) : IEval {
     override fun eval(): INode {
         return when (parser.token::class) {
 
-            NumberToken::class -> NumberNode((parser.tokenAndAdvance as NumberToken).value)
             BoolToken::class -> BoolNode((parser.tokenAndAdvance as BoolToken).value)
+            NumberToken::class -> NumberNode((parser.tokenAndAdvance as NumberToken).value)
             StringToken::class -> StringNode((parser.tokenAndAdvance as StringToken).value)
             NameToken::class -> VarAccessNode((parser.tokenAndAdvance as NameToken).value)
 
             IfKeywordToken::class -> IfEval(parser).eval()
             LoopKeywordToken::class -> LoopEval(parser).eval()
-            LeftBracketToken::class -> ArrayEval(parser).eval()
-
-            PlusToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.POSITIVE) }
-            MinusToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.NEGATE) }
-            IncrementToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.INCREMENT) }
-            DecrementToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.DECREMENT) }
-            ComplementToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.BIT_COMPLEMENT) }
+            LeftBracketToken::class -> ArrayExprEval(parser).eval()
 
             LeftParenthesisToken::class -> parser.advanceBeforeAfter { ExprEval(parser).eval() }
 

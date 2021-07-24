@@ -1,4 +1,4 @@
-package org.nyxlang.parser.eval
+package org.nyxlang.parser.eval.expression
 
 import org.nyxlang.lexer.token.logical.LogicalAndToken
 import org.nyxlang.lexer.token.logical.LogicalOrToken
@@ -7,23 +7,25 @@ import org.nyxlang.parser.advance
 import org.nyxlang.parser.ast.BinaryOperation
 import org.nyxlang.parser.ast.BinaryOperationNode
 import org.nyxlang.parser.ast.INode
+import org.nyxlang.parser.eval.IEval
 
 /**
  * Evaluates the expression semantics:
  *
- * <expr> ::= <logical-expr> (( AND | OR ) <logical-expr>)*
+ * <expr> ::= <rel-expr> ((NL)* ( '&&' | '||' ) (NL)* <rel-expr>)*
  *
  */
 class ExprEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
-        val equalExpr = EqualExprEval(parser)
+        val equalityExpr = EqualityExprEval(parser)
 
-        var node = equalExpr.eval()
+        var node = equalityExpr.eval()
         while (true) {
+            parser.skipNewLines()
             node = when (parser.token::class) {
-                LogicalAndToken::class -> parser.advance { BinaryOperationNode(node, equalExpr.eval(), BinaryOperation.LOGICAL_AND) }
-                LogicalOrToken::class -> parser.advance { BinaryOperationNode(node, equalExpr.eval(), BinaryOperation.LOGICAL_OR) }
+                LogicalAndToken::class -> parser.advance { BinaryOperationNode(node, equalityExpr.eval(), BinaryOperation.LOGICAL_AND) }
+                LogicalOrToken::class -> parser.advance { BinaryOperationNode(node, equalityExpr.eval(), BinaryOperation.LOGICAL_OR) }
                 else -> break
             }
         }

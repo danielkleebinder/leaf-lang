@@ -10,6 +10,7 @@ import org.nyxlang.parser.ast.Declaration
 import org.nyxlang.parser.ast.DeclarationsNode
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.TypeNode
+import org.nyxlang.parser.eval.expression.ExprEval
 import org.nyxlang.parser.exception.EvalException
 
 /**
