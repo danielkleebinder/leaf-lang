@@ -15,69 +15,105 @@ maintainability issues.
 
 The formal language definition in Backus-Naur form looks like the following. Feel free to implement it yourself.
 
+### Statements
+
 ```
-<program> ::= <statement-list>
+<program>    ::= <statements>
+<block>      ::= '{' (NL)* <statements> (NL)* '}'
 
-<statement-list> ::= <statement>
-                   | <statement> (';' | 'EOL') <statement-list>
+<statements> ::= <statement> ((';' | (NL)*) <statement>)*
+<statement>  ::= ('var' | 'const') (NL)* <declaration>
+               | 'return' ((NL)* <expr>)?
+               | 'break'
+               | 'continue'
+               | <block>
+               | <fun-declaration>
+               | <expr>
+```
 
-<statement> ::= ('var' | 'const') <var-declare>
-              | 'return' (<expr>)?
-              | 'break'
-              | 'continue'
-              | <block-stmt>
-              | <fun-declare>
-              | <var-assign>
-              | <call>
-              | <expr>
+### Functions
+```
+<fun-declaration> ::= 'fun' (NL)* <name> (NL)* (<fun-params> (NL)*)?
+                       (<fun-requires> (NL)*)?
+                       (<fun-ensures> (NL)*)?
+                       (<fun-returns> (NL)*)?
+                       (<fun-body>)
 
-<fun-declare> ::= 'fun' <name> ('(' <var-declare> ')')?
-                   (':' '(' <expr> ')')?
-                   (':' '(' <expr> ')')?
-                   ('->' <type>)?
-                   (<block-stmt> | ('=' <statement>)))
+<fun-params>   ::= '(' (NL)* <declarations> (NL)* ')'
+<fun-requires> ::= ':' (NL)* <expr>
+<fun-ensures>  ::= ':' (NL)* <expr>
+<fun-return>   ::= '->' (NL)* <type>
+<fun-body>     ::= <block> | ('=' (NL)* <expr>)
+```
 
-<var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
-<var-assign>  ::= <name> '=' <expr>
+### Conditionals
+```
+<if-expr>    ::= 'if' ((NL)* <expr> (NL)* <block>)
+                      ((NL)* <else-if>)*
+                      ((NL)* <else>)?
 
-<conditional-stmt> ::= 'if' <expr>         <block-stmt>
-                       ('else' 'if' <expr> <block-stmt>)*
-                       ('else'             <block-stmt>)?
+<else-if> ::= 'else' (NL)* 'if' (NL)* <expr> (NL)* <block>
+<else>    ::= 'else' (NL)*                         <block>
+```
 
-<block-stmt> ::= ('EOL')* '{' <statement-list> '}'
-<loop-stmt>  ::= 'loop' (<statement>)? (':' <expr>)? (':' <statement>)? <block-stmt>
+### Loops
+```
+<loop-stmt> ::= 'loop' ((NL)* <loop-init>)?
+                       ((NL)* <loop-cond>)?
+                       ((NL)* <loop-step>)?
+                       ((NL)* <loop-body>)?
 
-<expr>       ::= <equal-expr> (( '&&' | '||' ) <equal-expr>)*
-<equal-expr> ::= <logic-expr> (( '==' | '!=' ) <logic-expr>)*
-<arith-expr> ::= <term> (( '+' | '-' ) <term>)*
-<logic-expr> ::= NOT <logic-expr>
-               | <arith-expr> (( '<' | '<=' | '>' | '>=' ) <arith-expr>)*
+<loop-init> ::= <statement>
+<loop-cond> ::= ':' (NL)* <expr>
+<loop-step> ::= ':' (NL)* <statement>
+<loop-body> ::= <block>
+```
 
-<array-expr>   ::= '[' (<expr> (',' <expr>)*)? ']'
-<array-access> ::=  '[' <number> ']')?
+### Declarations
+```
+<declarations> ::= <declaration> (NL)* (',' (NL)* <declaration>)*
+<declaration>  ::= <name> (NL)* (':' (NL)* <type>)? ('=' (NL)* <expr>)?
+```
 
-<term> ::= <call> (( '*' | '/' | '%' ) <call>)*
+### Expressions & Precedence
+```
+<expr>     ::= <rel-expr> ((NL)* ( '&&' | '||' ) (NL)* <rel-expr>)*
+<rel-expr> ::= <ran-expr> ((NL)* ( '==' | '!=' | '<' | '<=' | '>' | '>=' ) (NL)* <ran-expr>)*
+<ran-expr> ::= <add-expr> ((NL)* ( '..' ) (NL)* <add-expr>)*
+<add-expr> ::= <mul-expr> ((NL)* ( '+' | '-' ) (NL)* <mul-expr>)*
+<mul-expr> ::= <prefix-expr> ((NL)* ( '*' | '/' | '%' ) (NL)* <prefix-expr>)*
+<arr-expr> ::= '[' (NL)* (<expr> ((NL)* ',' (NL)* <expr>)*)? (NL)* ']'
 
-<call> ::= <atom>
-         | <name>
-         | <name> '[' <expr> ']'
-         | <name> '(' (<expr> (',' <expr>)*)? ')'
+<prefix-expr> ::= ('!' | '+' | '-' | '~')? <postfix-expr>
+<postfix-expr> ::= <atom> (<suffix>)?
+```
 
-<atom> ::= ('+' | '-' | '~')? <number>
-         | ('!' | '~')?       <bool>
-         | ('+')?             <string>
+### Suffix
+```
+<suffix> ::= ('++' | '--' | '?')
+           | <assign-suffix>
+           | <index-suffix>
+           | <call-suffix>
+
+<assign-suffix> ::= '=' (NL)* <expr>
+<index-suffix>  ::= '[' (NL)* <expr> (NL)* ']'
+<call-suffix>   ::= '(' (NL)* (<expr> ((NL)* ',' (NL)* <expr>))? (NL)* ')'
+```
+
+### Atom & Delegation
+```
+<atom> ::= <bool> | <number> | <string> | <name>
          | '(' <expr> ')'
-         | <array-expr>
-         | <conditional-stmt>
-         | <when-stmt>
+         | <arr-expr>
+         | <if-expr>
          | <loop-stmt>
-         | <native-stmt>
          | <empty>
 
 <type>  ::= <number> | <bool> | <string>
 <name>  ::= IDENTIFIER
 <empty> ::= ()
 ```
+
 
 ## Turing Completeness
 Turing completeness can be proven by showing that a programming language is capable of defining and running µ-recursive
@@ -245,16 +281,4 @@ not return any value and is invoked 5 times:
 ```kotlin
 fun recursion(a: number) = if a > 0 { recursion(a - 1) }
 recursion(5)
-```
-
-The next example shows how factorial can be implemented:
-```kotlin
-fun fact(n: number) : n > 0 -> number {
-  when n {
-    _ > 1: return n * fact(n-1)
-    else : return 1
-  }
-}
-
-fact(6) // outputs 720
 ```

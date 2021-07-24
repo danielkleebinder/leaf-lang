@@ -28,10 +28,10 @@ class StatementEval(private val parser: IParser) : IEval {
     override fun eval(): INode {
         when (parser.token::class) {
             ConstKeywordToken::class -> parser.advance {
-                return VarDeclareEval(parser).eval()
+                return DeclarationEval(parser).eval()
                         .also { it.modifiers.add(Modifier.CONSTANT) }
             }
-            VarKeywordToken::class -> parser.advance { return VarDeclareEval(parser).eval() }
+            VarKeywordToken::class -> parser.advance { return DeclarationEval(parser).eval() }
             FunKeywordToken::class -> return FunDeclareEval(parser).eval()
             ReturnKeywordToken::class -> parser.advance { return ReturnNode(ExprEval(parser).eval()) }
             BreakKeywordToken::class -> parser.advance { return BreakNode() }

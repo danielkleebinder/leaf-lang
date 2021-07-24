@@ -10,10 +10,10 @@ import org.nyxlang.lexer.token.bracket.RightCurlyBraceToken
 import org.nyxlang.lexer.token.bracket.RightParenthesisToken
 import org.nyxlang.lexer.token.keyword.FunKeywordToken
 import org.nyxlang.parser.IParser
+import org.nyxlang.parser.ast.DeclareNode
 import org.nyxlang.parser.ast.FunDeclareNode
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.TypeNode
-import org.nyxlang.parser.ast.VarDeclareNode
 import org.nyxlang.parser.exception.EvalException
 
 /**
@@ -35,18 +35,18 @@ class FunDeclareEval(private val parser: IParser) : IEval {
 
     override fun eval(): FunDeclareNode {
         var name: String? = null
-        var params: VarDeclareNode? = null
+        var params: DeclareNode? = null
         var requires: INode? = null
         var ensures: INode? = null
         var returns: TypeNode? = null
         var body: INode? = null
 
         funName { name = (parser.tokenAndAdvance as NameToken).value }
-        funParams { params = VarDeclareEval(parser).eval() }
+        funParams { params = DeclarationEval(parser).eval() }
         funRequires { requires = ExprEval(parser).eval() }
         funEnsures { ensures = ExprEval(parser).eval() }
         funReturns { returns = TypeEval(parser).eval() }
-        funBody { body = if (it) StatementEval(parser).eval() else StatementListEval(parser).eval() }
+        funBody { body = if (it) ExprEval(parser).eval() else StatementListEval(parser).eval() }
 
         return FunDeclareNode(
                 name = name,

@@ -6,7 +6,7 @@ import org.nyxlang.analyzer.symbol.FunSymbol
  * Node that allows function declaration and definition.
  */
 class FunDeclareNode(val name: String?,
-                     val params: VarDeclareNode?,
+                     val params: DeclareNode?,
                      val requires: INode?,
                      val ensures: INode?,
                      val returns: TypeNode?,

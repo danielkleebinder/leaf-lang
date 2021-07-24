@@ -6,23 +6,22 @@ import org.nyxlang.lexer.token.CommaToken
 import org.nyxlang.lexer.token.NameToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advanceIf
+import org.nyxlang.parser.ast.Declaration
+import org.nyxlang.parser.ast.DeclareNode
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.TypeNode
-import org.nyxlang.parser.ast.VarDeclaration
-import org.nyxlang.parser.ast.VarDeclareNode
 import org.nyxlang.parser.exception.EvalException
-import java.util.*
 
 /**
- * Evaluates the var declare semantics:
+ * Evaluates the declaration semantics:
  *
- * <var-declare> ::= (',' <name> (':' <type>)? ('=' <expr>)? )*
+ * <declaration-list> ::= <declaration> (NL)* (',' (NL)* <declaration>)*
  *
  */
-class VarDeclareEval(private val parser: IParser) : IEval {
+class DeclarationListEval(private val parser: IParser) : IEval {
 
-    override fun eval(): VarDeclareNode {
-        val declarations = ArrayList<VarDeclaration>(4)
+    override fun eval(): DeclareNode {
+        val declarations = arrayListOf<Declaration>()
         while (true) {
 
             // Name identifier is required
@@ -34,14 +33,22 @@ class VarDeclareEval(private val parser: IParser) : IEval {
             var typeExpr: TypeNode? = null
             var assignExpr: INode? = null
 
-            parser.advanceIf(ColonToken::class == parser.token::class) { typeExpr = TypeEval(parser).eval() }
-            parser.advanceIf(AssignToken::class == parser.token::class) { assignExpr = ExprEval(parser).eval() }
+            parser.skipNewLines()
+
+            parser.advanceIf(ColonToken::class == parser.token::class) {
+                parser.skipNewLines()
+                typeExpr = TypeEval(parser).eval()
+            }
+            parser.advanceIf(AssignToken::class == parser.token::class) {
+                parser.skipNewLines()
+                assignExpr = ExprEval(parser).eval()
+            }
 
             if (assignExpr == null && typeExpr == null) {
                 throw EvalException("Variable declaration requires either type or immediate assignment")
             }
 
-            declarations.add(VarDeclaration(id, assignExpr, typeExpr))
+            declarations.add(Declaration(id, assignExpr, typeExpr))
 
             // There are no more variable declarations, break the loop and return the declaration node
             if (CommaToken::class != parser.token::class) {
@@ -49,6 +56,6 @@ class VarDeclareEval(private val parser: IParser) : IEval {
             }
             parser.advanceCursor()
         }
-        return VarDeclareNode(declarations)
+        return DeclareNode(declarations)
     }
 }

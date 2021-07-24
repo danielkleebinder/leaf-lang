@@ -3,6 +3,7 @@ package org.nyxlang.parser
 import org.nyxlang.lexer.token.CommentToken
 import org.nyxlang.lexer.token.EndOfProgramToken
 import org.nyxlang.lexer.token.IToken
+import org.nyxlang.lexer.token.NewLineToken
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.eval.ProgramEval
 import org.nyxlang.parser.exception.EvalException
@@ -34,6 +35,12 @@ class Parser : IParser {
     override fun advanceCursor(by: Int): Int {
         cursorPosition += by
         return cursorPosition
+    }
+
+    override fun skipNewLines() {
+        while (NewLineToken::class == token::class) {
+            advanceCursor()
+        }
     }
 
     override val token: IToken

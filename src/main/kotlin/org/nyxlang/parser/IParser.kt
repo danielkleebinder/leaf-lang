@@ -21,6 +21,11 @@ interface IParser {
     fun advanceCursor(by: Int = 1): Int
 
     /**
+     * Skips the next sequence of new lines.
+     */
+    fun skipNewLines()
+
+    /**
      * The current token.
      */
     val token: IToken

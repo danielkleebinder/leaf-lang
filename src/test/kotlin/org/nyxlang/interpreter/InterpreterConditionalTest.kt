@@ -66,13 +66,13 @@ class InterpreterConditionalTest : TestSuit() {
 
     @Test
     fun shouldIgnoreNewLines1() {
-//        execute(readResourceFile("conditional-1.test.nyx"))
-//        assertTrue(valueOf("res") as Boolean)
+        execute(readResourceFile("conditional-1.test.nyx"))
+        assertTrue(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldIgnoreNewLines2() {
-//        execute(readResourceFile("conditional-2.test.nyx"))
-//        assertTrue(valueOf("res") as Boolean)
+        execute(readResourceFile("conditional-2.test.nyx"))
+        assertTrue(valueOf("res") as Boolean)
     }
 }

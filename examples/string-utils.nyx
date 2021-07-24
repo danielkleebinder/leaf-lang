@@ -7,10 +7,10 @@ fun split(str: string, delimiter: string) : ~delimiter == 1 -> string {
   var res = [], buffer = ""
   loop var i = 0 : i < ~str : i = i + 1 {
     if str[i] == delimiter {
-	  res = res + buffer
+      res = res + buffer
 	  buffer = ""
 	  continue
-	}
+    }
     buffer = buffer + str[i]
   }
   return res + buffer

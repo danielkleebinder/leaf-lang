@@ -31,7 +31,7 @@ class Interpreter : IInterpreter {
             Pair(StatementListNode::class, StatementListVisitor()),
             Pair(VarAccessNode::class, VarAccessVisitor()),
             Pair(VarAssignNode::class, VarAssignVisitor()),
-            Pair(VarDeclareNode::class, VarDeclareVisitor()),
+            Pair(DeclareNode::class, VarDeclareVisitor()),
             Pair(FunDeclareNode::class, FunDeclareVisitor()),
             Pair(FunCallNode::class, FunCallVisitor()),
             Pair(TypeNode::class, TypeVisitor()))

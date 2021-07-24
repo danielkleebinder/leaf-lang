@@ -3,7 +3,7 @@ package org.nyxlang.analyzer.visitor
 import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.exception.AnalyticalVisitorException
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.parser.ast.VarDeclareNode
+import org.nyxlang.parser.ast.DeclareNode
 import org.nyxlang.analyzer.symbol.Symbol
 import org.nyxlang.analyzer.symbol.VarSymbol
 
@@ -12,7 +12,7 @@ import org.nyxlang.analyzer.symbol.VarSymbol
  */
 class VarDeclareAnalyticalVisitor : IAnalyticalVisitor {
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
-        val varDeclareNode = node as VarDeclareNode
+        val varDeclareNode = node as DeclareNode
 
         varDeclareNode.declarations
                 .forEach {
