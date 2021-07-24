@@ -8,5 +8,5 @@ package org.nyxlang.parser.ast
  */
 class DeclarationsNode(val declarations: List<Declaration>, vararg modifiers: Modifier) : INode {
     val modifiers = arrayListOf(*modifiers)
-    override fun toString() = "VarDeclareNode{declarations=$declarations, modifiers=$modifiers}"
+    override fun toString() = "DeclarationsNode{declarations=$declarations, modifiers=$modifiers}"
 }

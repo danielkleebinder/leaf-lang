@@ -6,6 +6,7 @@ import org.nyxlang.lexer.token.NumberToken
 import org.nyxlang.lexer.token.StringToken
 import org.nyxlang.lexer.token.bracket.LeftBracketToken
 import org.nyxlang.lexer.token.bracket.LeftParenthesisToken
+import org.nyxlang.lexer.token.keyword.FunKeywordToken
 import org.nyxlang.lexer.token.keyword.IfKeywordToken
 import org.nyxlang.lexer.token.keyword.LoopKeywordToken
 import org.nyxlang.parser.IParser
@@ -38,6 +39,7 @@ class AtomEval(private val parser: IParser) : IEval {
             IfKeywordToken::class -> IfEval(parser).eval()
             LoopKeywordToken::class -> LoopEval(parser).eval()
             LeftBracketToken::class -> ArrayExprEval(parser).eval()
+            FunKeywordToken::class -> FunDeclarationEval(parser).eval()
 
             LeftParenthesisToken::class -> parser.advanceBeforeAfter { ExprEval(parser).eval() }
 

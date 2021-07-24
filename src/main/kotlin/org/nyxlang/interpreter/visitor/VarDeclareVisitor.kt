@@ -3,8 +3,8 @@ package org.nyxlang.interpreter.visitor
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.result.emptyResult
-import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.DeclarationsNode
+import org.nyxlang.parser.ast.INode
 
 /**
  * Interprets the var declaration node.

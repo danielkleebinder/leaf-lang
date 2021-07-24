@@ -3,7 +3,11 @@ package org.nyxlang.interpreter.visitor
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.exception.VisitorException
 import org.nyxlang.interpreter.memory.IActivationRecord
-import org.nyxlang.interpreter.result.*
+import org.nyxlang.interpreter.result.IRuntimeResult
+import org.nyxlang.interpreter.result.ReturnRuntimeResult
+import org.nyxlang.interpreter.result.dataResult
+import org.nyxlang.interpreter.result.emptyResult
+import org.nyxlang.interpreter.value.FunValue
 import org.nyxlang.interpreter.withDynamicScope
 import org.nyxlang.parser.ast.FunCallNode
 import org.nyxlang.parser.ast.INode
@@ -13,11 +17,11 @@ import org.nyxlang.parser.ast.INode
  */
 class FunCallVisitor : IVisitor {
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
+        val activationRecord = interpreter.activationRecord!!
         val funCallNode = node as FunCallNode
         val funName = funCallNode.name
-        val spec = funCallNode.spec
+        val spec = funCallNode.spec ?: (activationRecord[funName] as? FunValue)?.value
         val args = funCallNode.args
-        val activationRecord = interpreter.activationRecord!!
 
         // Do we even have access to this function in this scope?
         if (spec == null) throw VisitorException("Function with name \"$funName\" not defined in this scope")
@@ -31,7 +35,7 @@ class FunCallVisitor : IVisitor {
         // Static vs dynamic link algorithm as described by the new mexico
         // state university: https://www.cs.nmsu.edu/~rth/cs/cs471/f00/ARIs.html
         val callerDepth = activationRecord.nestingLevel
-        val declarerDepth = funCallNode.spec!!.nestingLevel
+        val declarerDepth = spec.nestingLevel
         val depthDifference = callerDepth - declarerDepth
 
         // The algorithm even works for negative depth difference (call up the

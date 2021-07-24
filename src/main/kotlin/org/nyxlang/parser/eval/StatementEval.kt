@@ -15,7 +15,6 @@ import org.nyxlang.parser.eval.expression.ExprEval
  *                | 'break'
  *                | 'continue'
  *                | <block>
- *                | <fun-declaration>
  *                | <expr>
  *
  */
@@ -31,7 +30,6 @@ class StatementEval(private val parser: IParser) : IEval {
             BreakKeywordToken::class -> parser.advance { return BreakNode() }
             ContinueKeywordToken::class -> parser.advance { return ContinueNode() }
             LeftCurlyBraceToken::class -> return BlockEval(parser).eval()
-            FunKeywordToken::class -> return FunDeclarationEval(parser).eval()
         }
         return ExprEval(parser).eval()
     }

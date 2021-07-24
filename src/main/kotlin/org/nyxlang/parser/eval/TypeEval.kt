@@ -1,9 +1,7 @@
 package org.nyxlang.parser.eval
 
 import org.nyxlang.lexer.token.NameToken
-import org.nyxlang.lexer.token.keyword.BoolKeywordToken
-import org.nyxlang.lexer.token.keyword.NumberKeywordToken
-import org.nyxlang.lexer.token.keyword.StringKeywordToken
+import org.nyxlang.lexer.token.keyword.*
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advance
 import org.nyxlang.parser.ast.TypeNode
@@ -20,6 +18,8 @@ class TypeEval(private val parser: IParser) : IEval {
         NumberKeywordToken::class -> parser.advance { TypeNode("number") }
         BoolKeywordToken::class -> parser.advance { TypeNode("bool") }
         StringKeywordToken::class -> parser.advance { TypeNode("string") }
+        ArrayKeywordToken::class -> parser.advance { TypeNode("array") }
+        FunKeywordToken::class -> parser.advance { TypeNode("function") }
         NameToken::class -> TypeNode((parser.tokenAndAdvance as NameToken).value)
         else -> throw EvalException("Unknown type \"${parser.token}\"")
     }

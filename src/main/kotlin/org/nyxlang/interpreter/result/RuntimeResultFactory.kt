@@ -1,5 +1,6 @@
 package org.nyxlang.interpreter.result
 
+import org.nyxlang.analyzer.symbol.FunSymbol
 import org.nyxlang.interpreter.value.*
 import java.math.BigDecimal
 
@@ -28,6 +29,11 @@ fun arrayResult(array: Array<IValue?>) = dataResult(arrayValue(array))
  * Creates a data runtime result with the given bool [value].
  */
 fun boolResult(value: Boolean) = dataResult(boolValue(value))
+
+/**
+ * Creates a data runtime result with the given function [value].
+ */
+fun funResult(value: FunSymbol) = dataResult(funValue(value))
 
 /**
  * Creates a data runtime result with the given number [value].

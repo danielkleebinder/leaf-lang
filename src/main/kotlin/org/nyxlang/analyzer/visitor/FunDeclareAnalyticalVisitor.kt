@@ -2,11 +2,11 @@ package org.nyxlang.analyzer.visitor
 
 import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.exception.AnalyticalVisitorException
+import org.nyxlang.analyzer.symbol.FunSymbol
+import org.nyxlang.analyzer.symbol.VarSymbol
 import org.nyxlang.analyzer.withScope
 import org.nyxlang.parser.ast.FunDeclareNode
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.analyzer.symbol.FunSymbol
-import org.nyxlang.analyzer.symbol.VarSymbol
 
 /**
  * Analyzes a function ('fun') declaration statement.
@@ -17,7 +17,7 @@ class FunDeclareAnalyticalVisitor : IAnalyticalVisitor {
 
         val funName = funDeclareNode.name
         val funSymbol = FunSymbol(
-                name = funName!!,
+                name = funName,
                 requires = funDeclareNode.requires,
                 ensures = funDeclareNode.ensures,
                 body = funDeclareNode.body)
@@ -43,14 +43,14 @@ class FunDeclareAnalyticalVisitor : IAnalyticalVisitor {
                 throw AnalyticalVisitorException("Function \"$funName\" specifies ensures, but does not have a return value")
             }
 
+            // Check if all our checks are syntactically correct
+            if (funDeclareNode.requires != null) analyzer.analyze(funDeclareNode.requires)
+            if (funDeclareNode.body != null) analyzer.analyze(funDeclareNode.body)
+
             // The function returns something, this means the return value placeholder
             // has to be available in the ensures expression
             if (funDeclareNode.returns != null) analyzer.currentScope.define(VarSymbol("_"))
-
-            // Check if all our checks are syntactically correct
-            if (funDeclareNode.requires != null) analyzer.analyze(funDeclareNode.requires)
             if (funDeclareNode.ensures != null) analyzer.analyze(funDeclareNode.ensures)
-            if (funDeclareNode.body != null) analyzer.analyze(funDeclareNode.body)
 
             // Check if the return type is a valid type
             if (funDeclareNode.returns != null) {

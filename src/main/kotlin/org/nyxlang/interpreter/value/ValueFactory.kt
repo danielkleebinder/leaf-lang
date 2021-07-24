@@ -1,5 +1,6 @@
 package org.nyxlang.interpreter.value
 
+import org.nyxlang.analyzer.symbol.FunSymbol
 import java.math.BigDecimal
 
 
@@ -22,3 +23,8 @@ fun stringValue(value: String) = StringValue(value)
  * Creates an array [value].
  */
 fun arrayValue(value: Array<IValue?>) = ArrayValue(value)
+
+/**
+ * Creates a function [value].
+ */
+fun funValue(value: FunSymbol) = FunValue(value)

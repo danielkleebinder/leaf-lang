@@ -107,4 +107,13 @@ class InterpreterVarTest : TestSuit() {
         assertEquals(BigDecimal.valueOf(3), execute("const c = [1,2,3]; ~c"))
         assertEquals(BigDecimal.valueOf(-4), execute("const d = 3; ~d"))
     }
+
+    @Test
+    fun shouldDeclareTypes() {
+        assertDoesNotThrow { execute("const x1: array; var y1: array") }
+        assertDoesNotThrow { execute("const x2: bool; var y2: bool") }
+        assertDoesNotThrow { execute("const x3: fun; var y3: fun") }
+        assertDoesNotThrow { execute("const x4: number; var y4: number") }
+        assertDoesNotThrow { execute("const x5: string; var y5: string") }
+    }
 }

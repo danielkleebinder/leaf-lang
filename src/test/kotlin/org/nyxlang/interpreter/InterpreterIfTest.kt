@@ -9,11 +9,8 @@ class InterpreterIfTest : TestSuit() {
 
     @Test
     fun shouldInterpretSimpleConditional() {
-        var result = execute("if true { true }")
-        assertTrue(result as Boolean)
-
-        result = execute("if false { true }")
-        assertNull(result)
+        assertTrue(execute("if true { true }") as Boolean)
+        assertNull(execute("if false { true }"))
     }
 
     @Test

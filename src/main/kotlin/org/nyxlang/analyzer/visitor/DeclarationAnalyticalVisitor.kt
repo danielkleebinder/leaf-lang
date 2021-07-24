@@ -8,16 +8,16 @@ import org.nyxlang.analyzer.symbol.Symbol
 import org.nyxlang.analyzer.symbol.VarSymbol
 
 /**
- * Analyzes a variable declaration.
+ * Analyzes declarations.
  */
-class VarDeclareAnalyticalVisitor : IAnalyticalVisitor {
+class DeclarationAnalyticalVisitor : IAnalyticalVisitor {
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
-        val varDeclareNode = node as DeclarationsNode
-
-        varDeclareNode.declarations
+        val declarationsNode = node as DeclarationsNode
+        declarationsNode.declarations
                 .forEach {
                     val name = it.identifier
 
+                    println("HERE: $name, ${it.assignmentExpr}, ${analyzer.currentScope.getLocal("_")}")
                     // Check if a variable with the same name is already declared
                     if (analyzer.currentScope.hasLocal(name)) {
                         throw AnalyticalVisitorException("Symbol \"${name}\" is already declared")
@@ -36,7 +36,7 @@ class VarDeclareAnalyticalVisitor : IAnalyticalVisitor {
                     }
 
                     // Register in symbol table
-                    analyzer.currentScope.define(VarSymbol(name, type, *varDeclareNode.modifiers.toTypedArray()))
+                    analyzer.currentScope.define(VarSymbol(name, type, *declarationsNode.modifiers.toTypedArray()))
                 }
     }
 }

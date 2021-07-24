@@ -47,12 +47,20 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldAllowVariableAssignment() {
-//        try {
-//            execute("fun a = true; const b = a; b()")
-//        } catch (e: Exception) {
-//            System.err.println(e)
-//            fail()
-//        }
+        try {
+            assertEquals(BigDecimal.valueOf(42), execute("const a = fun { return 42 }; a()"))
+            assertEquals(BigDecimal.valueOf(33), execute("const b = fun(n: number) = n; b(33)"))
+            assertEquals(BigDecimal.valueOf(75), execute("const c = fun(n: number) : n > 0 = n; c(75)"))
+            assertEquals(BigDecimal.valueOf(91), execute("const d = fun(n: number) : n > 0 : _ == n -> number = n; d(91)"))
+
+            assertEquals(BigDecimal.valueOf(77), execute("fun func1 = 77; const u = func1; u()"))
+            assertEquals(BigDecimal.valueOf(11), execute("fun func2(n: number) = n; const v = func2; v(11)"))
+            assertEquals(BigDecimal.valueOf(20), execute("fun func3(n: number) : n > 0 = n; const w = func3; w(20)"))
+            assertEquals(BigDecimal.valueOf(84), execute("fun func4(n: number) : n > 0 : _ == n -> number = n; const x = func4; x(84)"))
+        } catch (e: Exception) {
+            System.err.println(e)
+            fail()
+        }
     }
 
     @Test
@@ -206,5 +214,13 @@ class InterpreterFunctionTest : TestSuit() {
         assertEquals(BigDecimal.valueOf(205), valueOf("x"))
         assertEquals(BigDecimal.valueOf(305), valueOf("y"))
         assertEquals(BigDecimal.valueOf(0), valueOf("z"))
+    }
+
+    @Test
+    fun shouldOverrideReturnVariable() {
+        assertDoesNotThrow {
+            execute("fun test(a: number) :: _ == 10 -> number { const _ = 20; return 10 }")
+            execute("fun test(a: number) :: _ == true -> bool { var _ = 20; return true }")
+        }
     }
 }
