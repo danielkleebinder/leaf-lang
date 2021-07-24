@@ -75,7 +75,7 @@ class InterpreterFunctionTest : TestSuit() {
     fun shouldAllowSimpleRecursion() {
         val program = """
             var a = 5
-            fun rec = {
+            fun rec {
               a = a - 1
               if a > 0 { rec() }
             }

@@ -1,0 +1,11 @@
+// FACTORIAL
+// An example that shows function usage and recursion
+
+fun factorial(n: number) : n > 0 -> number {
+  if n == 1 {
+    return 1
+  }
+  return n * factorial(n - 1)
+}
+
+const res = factorial(10)

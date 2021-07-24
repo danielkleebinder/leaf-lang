@@ -18,13 +18,19 @@ import org.nyxlang.parser.eval.IEval
 class AdditiveExprEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
-        val multExpr = MultiplicativeExprEval(parser)
-        var node = multExpr.eval()
+        val multiplicativeExpr = MultiplicativeExprEval(parser)
+        var node = multiplicativeExpr.eval()
         while (true) {
-            parser.skipNewLines()
+
             node = when (parser.token::class) {
-                PlusToken::class -> parser.advance { BinaryOperationNode(node, multExpr.eval(), BinaryOperation.PLUS) }
-                MinusToken::class -> parser.advance { BinaryOperationNode(node, multExpr.eval(), BinaryOperation.MINUS) }
+                PlusToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, multiplicativeExpr.eval(), BinaryOperation.PLUS)
+                }
+                MinusToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, multiplicativeExpr.eval(), BinaryOperation.MINUS)
+                }
                 else -> break
             }
         }

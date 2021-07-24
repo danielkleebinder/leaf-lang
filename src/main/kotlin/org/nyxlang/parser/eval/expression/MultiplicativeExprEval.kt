@@ -22,11 +22,19 @@ class MultiplicativeExprEval(private val parser: IParser) : IEval {
         val prefixExpr = PrefixExprEval(parser)
         var node = prefixExpr.eval()
         while (true) {
-            parser.skipNewLines()
             node = when (parser.token::class) {
-                MultiplyToken::class -> parser.advance { BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.TIMES) }
-                DivideToken::class -> parser.advance { BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.DIV) }
-                ModToken::class -> parser.advance { BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.REM) }
+                MultiplyToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.TIMES)
+                }
+                DivideToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.DIV)
+                }
+                ModToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.REM)
+                }
                 else -> break
             }
         }

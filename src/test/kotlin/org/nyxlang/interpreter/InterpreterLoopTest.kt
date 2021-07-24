@@ -99,13 +99,13 @@ class InterpreterLoopTest : TestSuit() {
     @Test
     fun shouldIgnoreNewLines1() {
         execute(readResourceFile("loop-structure-1.test.nyx"))
-        assertEquals(0, valueOf("a"))
+        assertEquals(BigDecimal.valueOf(0), valueOf("a"))
     }
 
     @Test
     fun shouldIgnoreNewLines2() {
         execute(readResourceFile("loop-structure-2.test.nyx"))
-        assertEquals(0, valueOf("a"))
+        assertEquals(BigDecimal.valueOf(0), valueOf("a"))
         assertEquals(true, valueOf("res"))
     }
 }

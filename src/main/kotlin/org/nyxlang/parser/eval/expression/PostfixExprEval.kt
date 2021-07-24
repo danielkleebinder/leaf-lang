@@ -34,7 +34,7 @@ import org.nyxlang.parser.exception.EvalException
 class PostfixExprEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
-        var id = "<undefined>"
+        var id: String? = null
         if (NameToken::class == parser.token::class) {
             id = (parser.token as NameToken).value
         }
@@ -48,19 +48,23 @@ class PostfixExprEval(private val parser: IParser) : IEval {
             IncrementToken::class -> parser.advance { UnaryOperationNode(node, UnaryOperation.INCREMENT) }
             DecrementToken::class -> parser.advance { UnaryOperationNode(node, UnaryOperation.DECREMENT) }
 
-            AssignToken::class -> parser.advance {
-                parser.skipNewLines()
-                VarAssignNode(id, expr.eval())
+            AssignToken::class -> {
+                if (id == null) return node
+
+                parser.advance {
+                    parser.skipNewLines()
+                    VarAssignNode(id, expr.eval())
+                }
             }
 
             LeftBracketToken::class -> parser.advanceBeforeAfter {
                 parser.skipNewLines()
                 val result = expr.eval()
                 parser.skipNewLines()
-                result
+                BinaryOperationNode(node, result, BinaryOperation.GET)
             }
 
-            LeftParenthesisToken::class -> parser.advanceBeforeAfter {
+            LeftParenthesisToken::class -> {
                 val funArgs = arrayListOf<INode>()
                 funCallArgs {
                     funArgs.add(expr.eval())
@@ -68,7 +72,7 @@ class PostfixExprEval(private val parser: IParser) : IEval {
                         parser.advance { funArgs.add(expr.eval()) }
                     }
                 }
-                return FunCallNode(id, funArgs)
+                FunCallNode(id!!, funArgs)
             }
             else -> node
         }

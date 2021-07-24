@@ -1,0 +1,8 @@
+var res = ""
+loop var i = 0 : i < 250_000 : i = i + 1 {
+  res = res + i
+  if ~res > 1000 {
+    res = ""
+  }
+}
+true

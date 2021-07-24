@@ -36,6 +36,7 @@ class LoopEval(private val parser: IParser) : IEval {
         loopStep { step = StatementEval(parser).eval() }
         loopBody { body = BlockEval(parser).eval() }
 
+
         if (init != null && cond == null && step == null) {
             cond = init
             init = null
@@ -64,6 +65,7 @@ class LoopEval(private val parser: IParser) : IEval {
      */
     private inline fun loopCond(head: () -> Unit) {
         if (ColonToken::class == parser.token::class) parser.advanceCursor()
+        parser.skipNewLines()
         if (LeftCurlyBraceToken::class == parser.token::class) return
         parser.skipNewLines()
         head()
@@ -74,6 +76,7 @@ class LoopEval(private val parser: IParser) : IEval {
      */
     private inline fun loopStep(head: () -> Unit) {
         if (ColonToken::class == parser.token::class) parser.advanceCursor()
+        parser.skipNewLines()
         if (LeftCurlyBraceToken::class == parser.token::class) return
         parser.skipNewLines()
         head()

@@ -26,7 +26,6 @@ class DeclarationsEval(private val parser: IParser) : IEval {
         val declarations = arrayListOf<Declaration>()
         while (true) {
             declarations.add(evalDeclaration())
-            parser.skipNewLines()
 
             // There are no more variable declarations, break the loop and return the declaration node
             if (CommaToken::class != parser.token::class) break

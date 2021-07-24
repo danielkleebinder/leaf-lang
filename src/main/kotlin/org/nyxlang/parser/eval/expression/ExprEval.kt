@@ -22,10 +22,15 @@ class ExprEval(private val parser: IParser) : IEval {
 
         var node = equalityExpr.eval()
         while (true) {
-            parser.skipNewLines()
             node = when (parser.token::class) {
-                LogicalAndToken::class -> parser.advance { BinaryOperationNode(node, equalityExpr.eval(), BinaryOperation.LOGICAL_AND) }
-                LogicalOrToken::class -> parser.advance { BinaryOperationNode(node, equalityExpr.eval(), BinaryOperation.LOGICAL_OR) }
+                LogicalAndToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, equalityExpr.eval(), BinaryOperation.LOGICAL_AND)
+                }
+                LogicalOrToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, equalityExpr.eval(), BinaryOperation.LOGICAL_OR)
+                }
                 else -> break
             }
         }

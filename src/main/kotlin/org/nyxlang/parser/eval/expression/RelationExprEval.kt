@@ -24,12 +24,23 @@ class RelationExprEval(private val parser: IParser) : IEval {
 
         var node = rangeExpr.eval()
         while (true) {
-            parser.skipNewLines()
             node = when (parser.token::class) {
-                LessThanToken::class -> parser.advance { BinaryOperationNode(node, rangeExpr.eval(), BinaryOperation.LESS_THAN) }
-                LessThanOrEqualToken::class -> parser.advance { BinaryOperationNode(node, rangeExpr.eval(), BinaryOperation.LESS_THAN_OR_EQUAL) }
-                GreaterThanToken::class -> parser.advance { BinaryOperationNode(node, rangeExpr.eval(), BinaryOperation.GREATER_THAN) }
-                GreaterThanOrEqualToken::class -> parser.advance { BinaryOperationNode(node, rangeExpr.eval(), BinaryOperation.GREATER_THAN_OR_EQUAL) }
+                LessThanToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, rangeExpr.eval(), BinaryOperation.LESS_THAN)
+                }
+                LessThanOrEqualToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, rangeExpr.eval(), BinaryOperation.LESS_THAN_OR_EQUAL)
+                }
+                GreaterThanToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, rangeExpr.eval(), BinaryOperation.GREATER_THAN)
+                }
+                GreaterThanOrEqualToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, rangeExpr.eval(), BinaryOperation.GREATER_THAN_OR_EQUAL)
+                }
                 else -> break
             }
         }

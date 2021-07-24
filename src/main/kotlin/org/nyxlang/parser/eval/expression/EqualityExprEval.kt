@@ -22,10 +22,15 @@ class EqualityExprEval(private val parser: IParser) : IEval {
 
         var node = relationExpr.eval()
         while (true) {
-            parser.skipNewLines()
             node = when (parser.token::class) {
-                EqualToken::class -> parser.advance { BinaryOperationNode(node, relationExpr.eval(), BinaryOperation.EQUAL) }
-                NotEqualToken::class -> parser.advance { BinaryOperationNode(node, relationExpr.eval(), BinaryOperation.NOT_EQUAL) }
+                EqualToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, relationExpr.eval(), BinaryOperation.EQUAL)
+                }
+                NotEqualToken::class -> parser.advance {
+                    parser.skipNewLines()
+                    BinaryOperationNode(node, relationExpr.eval(), BinaryOperation.NOT_EQUAL)
+                }
                 else -> break
             }
         }

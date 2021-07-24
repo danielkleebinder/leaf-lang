@@ -18,7 +18,6 @@ class RangeExprEval(private val parser: IParser) : IEval {
 
         var node = additiveExpr.eval()
         while (true) {
-            parser.skipNewLines()
             node = when (parser.token::class) {
                 RangeToken::class -> TODO("Range is not supported yet")
                 else -> break

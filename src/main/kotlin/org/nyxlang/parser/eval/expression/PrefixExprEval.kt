@@ -21,7 +21,6 @@ class PrefixExprEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
         val postfixExpr = PostfixExprEval(parser)
-        println(parser.token)
         return when (parser.token::class) {
             PlusToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.POSITIVE) }
             MinusToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.NEGATE) }
