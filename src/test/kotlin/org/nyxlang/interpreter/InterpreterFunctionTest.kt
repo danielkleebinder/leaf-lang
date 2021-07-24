@@ -100,7 +100,7 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldComputeFactorialRecursively() {
-        val result = execute(readResourceFile("fun-factorial.test.nyx"))
+        val result = execute(readResourceFile("function/fun-factorial.test.nyx"))
         assertEquals(BigDecimal.valueOf(3628800), result)
     }
 
@@ -121,30 +121,30 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldFollowStaticLink1() {
-        execute(readResourceFile("fun-static-link-1.test.nyx"))
+        execute(readResourceFile("function/fun-static-link-1.test.nyx"))
         assertEquals(true, valueOf("res"))
     }
 
     @Test
     fun shouldFollowStaticLink2() {
-        assertThrows(DynamicSemanticException::class.java) { execute(readResourceFile("fun-static-link-2.test.nyx")) }
+        assertThrows(DynamicSemanticException::class.java) { execute(readResourceFile("function/fun-static-link-2.test.nyx")) }
     }
 
     @Test
     fun shouldFollowStaticLink3() {
-        execute(readResourceFile("fun-static-link-3.test.nyx"))
+        execute(readResourceFile("function/fun-static-link-3.test.nyx"))
         assertEquals(BigDecimal.valueOf(46), valueOf("res"))
     }
 
     @Test
     fun shouldFollowStaticLink4() {
-        execute(readResourceFile("fun-static-link-4.test.nyx"))
+        execute(readResourceFile("function/fun-static-link-4.test.nyx"))
         assertTrue(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldFollowStaticLink5() {
-        assertThrows(StaticSemanticException::class.java) { execute(readResourceFile("fun-static-link-5.test.nyx")) }
+        assertThrows(StaticSemanticException::class.java) { execute(readResourceFile("function/fun-static-link-5.test.nyx")) }
         assertNull(valueOf("res"))
     }
 
@@ -178,49 +178,61 @@ class InterpreterFunctionTest : TestSuit() {
     }
 
     @Test
+    fun shouldOverrideReturnVariable() {
+        assertDoesNotThrow {
+            execute("fun test(a: number) :: _ == 10 -> number { const _ = 20; return 10 }")
+            execute("fun test(a: number) :: _ == true -> bool { var _ = 20; return true }")
+        }
+    }
+
+    @Test
     fun shouldAssignReturnValue() {
-        execute(readResourceFile("fun-return-1.test.nyx"))
+        execute(readResourceFile("function/fun-return-1.test.nyx"))
         assertEquals(BigDecimal.valueOf(771), valueOf("x"))
     }
 
     @Test
     fun shouldReturnLocalVariableValue() {
-        execute(readResourceFile("fun-return-2.test.nyx"))
+        execute(readResourceFile("function/fun-return-2.test.nyx"))
         assertEquals(BigDecimal.valueOf(11), valueOf("x"))
     }
 
     @Test
     fun shouldReturnBeforeEnd() {
-        execute(readResourceFile("fun-return-3.test.nyx"))
+        execute(readResourceFile("function/fun-return-3.test.nyx"))
         assertEquals(BigDecimal.valueOf(21), valueOf("c"))
     }
 
     @Test
     fun shouldContainMultipleReturns() {
-        execute(readResourceFile("fun-return-4.test.nyx"))
+        execute(readResourceFile("function/fun-return-4.test.nyx"))
         assertEquals(BigDecimal.valueOf(0), valueOf("x"))
         assertEquals(BigDecimal.valueOf(26), valueOf("y"))
     }
 
     @Test
     fun shouldReturnWithoutResult() {
-        execute(readResourceFile("fun-return-5.test.nyx"))
+        execute(readResourceFile("function/fun-return-5.test.nyx"))
         assertFalse(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldReturnResultFromFunctionLoop() {
-        execute(readResourceFile("fun-return-6.test.nyx"))
+        execute(readResourceFile("function/fun-return-6.test.nyx"))
         assertEquals(BigDecimal.valueOf(205), valueOf("x"))
         assertEquals(BigDecimal.valueOf(305), valueOf("y"))
         assertEquals(BigDecimal.valueOf(0), valueOf("z"))
     }
 
     @Test
-    fun shouldOverrideReturnVariable() {
-        assertDoesNotThrow {
-            execute("fun test(a: number) :: _ == 10 -> number { const _ = 20; return 10 }")
-            execute("fun test(a: number) :: _ == true -> bool { var _ = 20; return true }")
-        }
+    fun shouldAllowLambdas1() {
+        execute(readResourceFile("function/fun-lambda-1.test.nyx"))
+        assertEquals(BigDecimal.valueOf(-20), valueOf("res"))
+    }
+
+    @Test
+    fun shouldAllowLambdas2() {
+        execute(readResourceFile("function/fun-lambda-2.test.nyx"))
+        assertEquals(BigDecimal.valueOf(250), valueOf("res"))
     }
 }

@@ -20,7 +20,7 @@ class FunCallVisitor : IVisitor {
         val activationRecord = interpreter.activationRecord!!
         val funCallNode = node as FunCallNode
         val funName = funCallNode.name
-        val spec = funCallNode.spec ?: (activationRecord[funName] as? FunValue)?.value
+        val spec = (activationRecord[funName] as? FunValue)?.value
         val args = funCallNode.args
 
         // Do we even have access to this function in this scope?

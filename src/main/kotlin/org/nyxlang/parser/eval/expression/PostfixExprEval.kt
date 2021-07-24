@@ -69,7 +69,9 @@ class PostfixExprEval(private val parser: IParser) : IEval {
                 funCallArgs {
                     funArgs.add(expr.eval())
                     while (CommaToken::class == parser.token::class) {
-                        parser.advance { funArgs.add(expr.eval()) }
+                        parser.advanceCursor()
+                        parser.skipNewLines()
+                        funArgs.add(expr.eval())
                     }
                 }
                 FunCallNode(id!!, funArgs)
@@ -85,6 +87,7 @@ class PostfixExprEval(private val parser: IParser) : IEval {
     private inline fun funCallArgs(lambda: () -> Unit) {
         if (LeftParenthesisToken::class != parser.token::class) throw EvalException("Opening parenthesis required for function call")
         parser.advanceCursor()
+        parser.skipNewLines()
 
         // Is the argument list non empty?
         if (RightParenthesisToken::class != parser.token::class) {

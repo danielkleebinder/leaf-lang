@@ -1,0 +1,8 @@
+fun compute(a: fun, b: fun) -> number {
+  return a(5, 5) * b(10, 12)
+}
+
+// 250
+const res = compute(
+  fun (a: number, b: number) -> number = a * b,
+  fun (a: number, b: number) -> number = a % b)
