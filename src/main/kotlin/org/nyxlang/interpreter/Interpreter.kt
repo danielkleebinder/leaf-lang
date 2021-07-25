@@ -1,5 +1,6 @@
 package org.nyxlang.interpreter
 
+import org.nyxlang.RuntimeOptions
 import org.nyxlang.interpreter.exception.DynamicSemanticException
 import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.CallStack
@@ -7,6 +8,7 @@ import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.result.emptyResult
 import org.nyxlang.interpreter.visitor.*
 import org.nyxlang.parser.ast.*
+import java.util.concurrent.Executors
 
 /**
  * Implementation of the interpreter specification.
@@ -38,6 +40,7 @@ class Interpreter : IInterpreter {
             Pair(AsyncNode::class, AsyncVisitor()))
 
     override val callStack = CallStack()
+    override val globalThreadPool = Executors.newFixedThreadPool(RuntimeOptions.processorCores)
 
     init {
         callStack.push(ActivationRecord(name = "global"))

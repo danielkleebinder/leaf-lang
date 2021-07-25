@@ -6,6 +6,7 @@ import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.memory.ICallStack
 import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.parser.ast.INode
+import java.util.concurrent.ExecutorService
 
 /**
  * The interpreter walks through an abstract syntax tree, fetches the
@@ -25,6 +26,11 @@ interface IInterpreter {
      */
     val activationRecord: IActivationRecord?
         get() = callStack.peek()
+
+    /**
+     * Global thread pool of the interpreter.
+     */
+    val globalThreadPool: ExecutorService
 
     /**
      * Interprets the given abstract syntax tree ([ast]).
@@ -62,4 +68,12 @@ inline fun IInterpreter.withStaticScope(name: String? = null,
     body(activationRecord!!)
     if (RuntimeOptions.debug) println(callStack.peek())
     callStack.pop()
+}
+
+/**
+ * Launches a coroutine in the current context of execution using the interpreters
+ * globally available thread pool.
+ */
+fun IInterpreter.launchCoroutine(coroutine: () -> Any) {
+    globalThreadPool.submit(coroutine)
 }

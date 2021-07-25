@@ -17,9 +17,4 @@ object RuntimeOptions {
      * The number of processor cores available on the system.
      */
     val processorCores = Runtime.getRuntime().availableProcessors()
-
-    /**
-     * The global programming language thread pool.
-     */
-    val threadPool = Executors.newFixedThreadPool(processorCores)
 }
