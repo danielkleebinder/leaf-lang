@@ -34,7 +34,8 @@ class Interpreter : IInterpreter {
             Pair(DeclarationsNode::class, VarDeclareVisitor()),
             Pair(FunDeclareNode::class, FunDeclareVisitor()),
             Pair(FunCallNode::class, FunCallVisitor()),
-            Pair(TypeNode::class, TypeVisitor()))
+            Pair(TypeNode::class, TypeVisitor()),
+            Pair(AsyncNode::class, AsyncVisitor()))
 
     override val callStack = CallStack()
 

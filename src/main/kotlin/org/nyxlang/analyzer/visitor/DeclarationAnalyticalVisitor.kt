@@ -17,7 +17,6 @@ class DeclarationAnalyticalVisitor : IAnalyticalVisitor {
                 .forEach {
                     val name = it.identifier
 
-                    println("HERE: $name, ${it.assignmentExpr}, ${analyzer.currentScope.getLocal("_")}")
                     // Check if a variable with the same name is already declared
                     if (analyzer.currentScope.hasLocal(name)) {
                         throw AnalyticalVisitorException("Symbol \"${name}\" is already declared")

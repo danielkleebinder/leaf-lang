@@ -4,7 +4,7 @@
 
 ![Nyx Icon](https://github.com/danielkleebinder/nyxlang/blob/main/nyxlang.png?raw=true)
 
-The nyx programming language (also known as nyxlang) is a statically and strongly typed, lexically scoped and interpreted programming language that allows the developer
+The nyx programming language (nyxlang) is a statically and strongly typed, lexically scoped and interpreted programming language that allows the developer
 to implement traits and custom types. It is object oriented, but does not support inheritance since inheritance is a common source of
 maintainability issues.
 
@@ -13,7 +13,7 @@ maintainability issues.
 
 ## Grammar
 
-The formal language definition in Backus-Naur form looks like the following. Feel free to implement it yourself.
+The formal language definition in Backus-Naur Form looks like the following. Feel free to implement it yourself.
 
 ### Statements
 
@@ -23,9 +23,11 @@ The formal language definition in Backus-Naur form looks like the following. Fee
 
 <statements> ::= <statement> ((';' | (NL)*) <statement>)*
 <statement>  ::= ('const' | 'var') (NL)* <declaration>
+               | 'async' <statement>
                | 'return' ((NL)* <expr>)?
                | 'break'
                | 'continue'
+               | <coroutine>
                | <block>
                | <expr>
 ```

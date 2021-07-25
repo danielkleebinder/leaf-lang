@@ -37,6 +37,7 @@ class NameTokenizer : ITokenizer {
             "number" -> return NumberKeywordToken()
             "bool" -> return BoolKeywordToken()
             "string" -> return StringKeywordToken()
+            "async" -> return AsyncKeywordToken()
             "when" -> return WhenKeywordToken()
         }
         return NameToken(name)
