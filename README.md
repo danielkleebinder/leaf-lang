@@ -4,9 +4,9 @@
 
 ![Nyx Icon](https://github.com/danielkleebinder/nyxlang/blob/main/nyxlang.png?raw=true)
 
-The nyx programming language (nyxlang) is a statically and strongly typed, lexically scoped and interpreted programming language that allows the developer
-to implement traits and custom types. It is object oriented, but does not support inheritance since inheritance is a common source of
-maintainability issues.
+The nyx programming language (nyxlang) is a statically and strongly typed, lexically scoped and interpreted programming language using
+type inference that allows the developer to implement traits and custom types. It is object oriented, but does not support inheritance
+since inheritance is a common source of maintainability issues.
 
 
 (influenced by TypeScript, Kotlin, Go, Eiffel, ML)
@@ -219,16 +219,16 @@ type Dog is Feedable, CanTalk {
 
 
 
-///
-The programming language also supports pre- and postconditions
-(also known as variant and covariant). The application will throw
-an error if one of those is not fullfilled.
-
-The first statement after the parameter list and after the ':' symbol
-is the precondition that the parameters have to fulfill. The statement
-after that is the postcondition. The '_' is a reserved token and
-represents the functions result.
-\\\
+//
+// The programming language also supports pre- and postconditions
+// (also known as variant and covariant). The application will throw
+// an error if one of those is not fullfilled.
+//
+// The first statement after the parameter list and after the ':' symbol
+// is the precondition that the parameters have to fulfill. The statement
+// after that is the postcondition. The '_' is a reserved token and
+// represents the functions result.
+//
 fun add(a: number, b: number) : (a > 0 && b > 0) : (_ >= (a + b)) -> number = a + b
 fun sub(a: number, b: number) :: (_ <= (a - b)) -> number = a - b
 
