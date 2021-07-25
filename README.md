@@ -13,7 +13,7 @@ maintainability issues.
 
 ## Grammar
 
-The formal language definition in Backus-Naur Form looks like the following. Feel free to implement it yourself.
+The formal language definition in **Backus-Naur form** looks like the following. Feel free to implement it yourself.
 
 ### Statements
 
