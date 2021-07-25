@@ -2,6 +2,8 @@ package org.nyxlang.analyzer.visitor
 
 import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.exception.AnalyticalVisitorException
+import org.nyxlang.analyzer.result.StaticAnalysisResult
+import org.nyxlang.analyzer.result.analysisResult
 import org.nyxlang.analyzer.symbol.FunSymbol
 import org.nyxlang.analyzer.symbol.VarSymbol
 import org.nyxlang.analyzer.withScope
@@ -11,8 +13,8 @@ import org.nyxlang.parser.ast.INode
 /**
  * Analyzes a function ('fun') declaration statement.
  */
-class FunDeclareAnalyticalVisitor : IAnalyticalVisitor {
-    override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
+class FunDeclareStaticVisitor : IStaticVisitor {
+    override fun analyze(analyzer: ISemanticAnalyzer, node: INode): StaticAnalysisResult {
         val funDeclareNode = node as FunDeclareNode
 
         val funName = funDeclareNode.name
@@ -61,5 +63,7 @@ class FunDeclareAnalyticalVisitor : IAnalyticalVisitor {
                 }
             }
         }
+
+        return analysisResult("function")
     }
 }

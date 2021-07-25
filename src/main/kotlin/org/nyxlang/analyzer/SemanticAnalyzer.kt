@@ -1,11 +1,12 @@
 package org.nyxlang.analyzer
 
-import org.nyxlang.analyzer.exception.AnalyticalVisitorException
 import org.nyxlang.analyzer.exception.StaticSemanticException
-import org.nyxlang.analyzer.visitor.*
-import org.nyxlang.parser.ast.*
+import org.nyxlang.analyzer.result.StaticAnalysisResult
+import org.nyxlang.analyzer.result.emptyAnalysisResult
 import org.nyxlang.analyzer.symbol.ISymbolTable
 import org.nyxlang.analyzer.symbol.SymbolTable
+import org.nyxlang.analyzer.visitor.*
+import org.nyxlang.parser.ast.*
 
 /**
  * Semantic analyzer implementation.
@@ -13,19 +14,25 @@ import org.nyxlang.analyzer.symbol.SymbolTable
 class SemanticAnalyzer : ISemanticAnalyzer {
 
     private val analyzers = hashMapOf(
-            Pair(ProgramNode::class, ProgramAnalyticalVisitor()),
-            Pair(StatementListNode::class, StatementListAnalyticalVisitor()),
-            Pair(BinaryOperationNode::class, BinaryOperationAnalyticalVisitor()),
-            Pair(VarAccessNode::class, VarAccessAnalyticalVisitor()),
-            Pair(VarAssignNode::class, VarAssignAnalyticalVisitor()),
-            Pair(DeclarationsNode::class, DeclarationAnalyticalVisitor()),
-            Pair(FunCallNode::class, FunCallAnalyticalVisitor()),
-            Pair(FunDeclareNode::class, FunDeclareAnalyticalVisitor()),
-            Pair(ReturnNode::class, ReturnAnalyticalVisitor()),
-            Pair(IfNode::class, IfAnalyticalVisitor()),
-            Pair(WhenNode::class, WhenAnalyticalVisitor()),
-            Pair(LoopNode::class, LoopAnalyticalVisitor()),
-            Pair(BlockNode::class, BlockAnalyticalVisitor()))
+            Pair(ProgramNode::class, ProgramStaticVisitor()),
+            Pair(StatementListNode::class, StatementListStaticVisitor()),
+            Pair(BinaryOperationNode::class, BinaryOperationStaticVisitor()),
+            Pair(UnaryOperationNode::class, UnaryOperationStaticVisitor()),
+            Pair(VarAccessNode::class, VarAccessStaticVisitor()),
+            Pair(VarAssignNode::class, VarAssignStaticVisitor()),
+            Pair(DeclarationsNode::class, DeclarationStaticVisitor()),
+            Pair(FunCallNode::class, FunCallStaticVisitor()),
+            Pair(FunDeclareNode::class, FunDeclareStaticVisitor()),
+            Pair(ReturnNode::class, ReturnStaticVisitor()),
+            Pair(IfNode::class, IfStaticVisitor()),
+            Pair(LoopNode::class, LoopStaticVisitor()),
+            Pair(BlockNode::class, BlockStaticVisitor()),
+            Pair(ArrayNode::class, ArrayStaticVisitor()),
+            Pair(BoolNode::class, BoolStaticVisitor()),
+            Pair(NumberNode::class, NumberStaticVisitor()),
+            Pair(StringNode::class, StringStaticVisitor()),
+            Pair(TypeNode::class, TypeStaticVisitor()),
+    )
 
     // Scoping
     override var currentScope: ISymbolTable = SymbolTable(name = "global", withBuiltIns = true)
@@ -42,11 +49,13 @@ class SemanticAnalyzer : ISemanticAnalyzer {
     }
 
     // Recursive analysis
-    override fun analyze(ast: INode) {
+    override fun analyze(ast: INode): StaticAnalysisResult {
         try {
-            analyzers[ast::class]?.analyze(this, ast)
-        } catch (e: AnalyticalVisitorException) {
-            throw StaticSemanticException(e.message!!)
+            return analyzers[ast::class]
+                    ?.analyze(this, ast)
+                    ?: emptyAnalysisResult()
+        } catch (e: Exception) {
+            throw StaticSemanticException(e.message!!, e)
         }
     }
 }

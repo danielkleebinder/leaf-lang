@@ -3,6 +3,7 @@ package org.nyxlang.interpreter
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
+import org.nyxlang.analyzer.exception.StaticSemanticException
 import org.nyxlang.interpreter.exception.DynamicSemanticException
 import java.math.BigDecimal
 

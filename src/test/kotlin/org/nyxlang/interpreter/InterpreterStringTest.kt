@@ -3,7 +3,7 @@ package org.nyxlang.interpreter
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
-import org.nyxlang.interpreter.exception.DynamicSemanticException
+import org.nyxlang.analyzer.exception.StaticSemanticException
 import java.math.BigDecimal
 
 class InterpreterStringTest : TestSuit() {
@@ -75,7 +75,7 @@ class InterpreterStringTest : TestSuit() {
 
     @Test
     fun shouldErrorForWrongOperators() {
-        assertThrows(DynamicSemanticException::class.java) { execute("\"Test\" / 3") }
-        assertThrows(DynamicSemanticException::class.java) { execute("\"Test\" % 3") }
+        assertThrows(StaticSemanticException::class.java) { execute("\"Test\" / 3") }
+        assertThrows(StaticSemanticException::class.java) { execute("\"Test\" % 3") }
     }
 }

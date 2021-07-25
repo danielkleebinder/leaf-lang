@@ -52,7 +52,7 @@ class Interpreter : IInterpreter {
             val visitor = visitors[ast::class] ?: return emptyResult()
             return visitor.visit(this, ast)
         } catch (e: Exception) {
-            throw DynamicSemanticException(e.message!!)
+            throw DynamicSemanticException(e.message ?: "Unknown semantic error", e)
         }
     }
 }

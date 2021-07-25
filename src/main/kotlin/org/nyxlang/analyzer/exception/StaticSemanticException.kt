@@ -1,3 +1,6 @@
 package org.nyxlang.analyzer.exception
 
-class StaticSemanticException(message: String) : Exception(message)
+/**
+ * Thrown if a static semantic error occurred.
+ */
+class StaticSemanticException(message: String, parent: Exception) : Exception(message, parent)

@@ -2,16 +2,18 @@ package org.nyxlang.analyzer.visitor
 
 import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.exception.AnalyticalVisitorException
-import org.nyxlang.parser.ast.INode
-import org.nyxlang.parser.ast.DeclarationsNode
+import org.nyxlang.analyzer.result.StaticAnalysisResult
+import org.nyxlang.analyzer.result.emptyAnalysisResult
 import org.nyxlang.analyzer.symbol.Symbol
 import org.nyxlang.analyzer.symbol.VarSymbol
+import org.nyxlang.parser.ast.DeclarationsNode
+import org.nyxlang.parser.ast.INode
 
 /**
  * Analyzes declarations.
  */
-class DeclarationAnalyticalVisitor : IAnalyticalVisitor {
-    override fun analyze(analyzer: ISemanticAnalyzer, node: INode) {
+class DeclarationStaticVisitor : IStaticVisitor {
+    override fun analyze(analyzer: ISemanticAnalyzer, node: INode): StaticAnalysisResult {
         val declarationsNode = node as DeclarationsNode
         declarationsNode.declarations
                 .forEach {
@@ -30,12 +32,27 @@ class DeclarationAnalyticalVisitor : IAnalyticalVisitor {
                     }
 
                     // Test if the assignment expression is valid
+                    var assignmentType: StaticAnalysisResult? = null
                     if (it.assignmentExpr != null) {
-                        analyzer.analyze(it.assignmentExpr)
+                        assignmentType = analyzer.analyze(it.assignmentExpr)
+
+                        // Use type inference here
+                        if (type == null && assignmentType.type != null) {
+                            type = Symbol(assignmentType.type!!, analyzer.currentScope.nestingLevel)
+                        }
+                    }
+
+                    // Check if types are compatible
+                    if (type != null && assignmentType != null) {
+                        if (type.name != assignmentType.type) {
+                            throw AnalyticalVisitorException("Declared type ${type.name} for \"$name\" is not compatible with type ${assignmentType.type} of assignment")
+                        }
                     }
 
                     // Register in symbol table
                     analyzer.currentScope.define(VarSymbol(name, type, *declarationsNode.modifiers.toTypedArray()))
                 }
+
+        return emptyAnalysisResult()
     }
 }

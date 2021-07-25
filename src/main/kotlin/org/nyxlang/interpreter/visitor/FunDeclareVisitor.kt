@@ -13,6 +13,7 @@ class FunDeclareVisitor : IVisitor {
     override fun visit(interpreter: IInterpreter, node: INode): DataRuntimeResult {
         val funDeclareNode = node as FunDeclareNode
         val funName = funDeclareNode.name
+        println("$funName: ${funDeclareNode.spec}")
         val result = funResult(funDeclareNode.spec!!)
 
         // Store the function as local variable for later

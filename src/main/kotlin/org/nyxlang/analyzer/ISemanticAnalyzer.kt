@@ -1,7 +1,8 @@
 package org.nyxlang.analyzer
 
-import org.nyxlang.parser.ast.INode
+import org.nyxlang.analyzer.result.StaticAnalysisResult
 import org.nyxlang.analyzer.symbol.ISymbolTable
+import org.nyxlang.parser.ast.INode
 
 /**
  * The semantic analyzer is used to traverse a given abstract syntax tree
@@ -14,7 +15,7 @@ interface ISemanticAnalyzer {
      * Analyses a given abstract syntax tree ([ast]) and returns a list of errors. The
      * list is empty if no errors are found.
      */
-    fun analyze(ast: INode)
+    fun analyze(ast: INode): StaticAnalysisResult
 
     /**
      * The current symbol table used by the semantic analyzer in the current scope.

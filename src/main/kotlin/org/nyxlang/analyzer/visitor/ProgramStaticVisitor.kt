@@ -7,6 +7,6 @@ import org.nyxlang.parser.ast.ProgramNode
 /**
  * Analyzes a program.
  */
-class ProgramAnalyticalVisitor : IAnalyticalVisitor {
+class ProgramStaticVisitor : IStaticVisitor {
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode) = analyzer.analyze((node as ProgramNode).statements)
 }

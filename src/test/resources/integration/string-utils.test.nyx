@@ -3,7 +3,7 @@
 
 
 // Splits a given string using the given delimiter
-fun split(str: string, delimiter: string) : ~delimiter == 1 -> string {
+fun split(str: string, delimiter: string) : ~delimiter == 1 -> array {
   var res = [], buffer = ""
   loop var i = 0 : i < ~str : i = i + 1 {
     if str[i] == delimiter {
