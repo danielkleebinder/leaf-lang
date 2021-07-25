@@ -50,7 +50,9 @@ fun execute(programCode: String) {
             """.trimIndent())
         }
 
-        println("Result: $result")
+        if (result != null) {
+            println("Result: $result")
+        }
     } catch (e: Exception) {
         System.err.println(e)
         Thread.sleep(500)

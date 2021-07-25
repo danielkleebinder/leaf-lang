@@ -1,5 +1,7 @@
 package org.nyxlang.interpreter.visitor
 
+import org.nyxlang.analyzer.symbol.FunSymbol
+import org.nyxlang.analyzer.symbol.NativeFunSymbol
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.exception.VisitorException
 import org.nyxlang.interpreter.memory.IActivationRecord
@@ -7,7 +9,6 @@ import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.result.ReturnRuntimeResult
 import org.nyxlang.interpreter.result.dataResult
 import org.nyxlang.interpreter.result.emptyResult
-import org.nyxlang.interpreter.value.FunValue
 import org.nyxlang.interpreter.withDynamicScope
 import org.nyxlang.parser.ast.FunCallNode
 import org.nyxlang.parser.ast.INode
@@ -20,11 +21,11 @@ class FunCallVisitor : IVisitor {
         val activationRecord = interpreter.activationRecord!!
         val funCallNode = node as FunCallNode
         val funName = funCallNode.name
-        val spec = (activationRecord[funName] as? FunValue)?.value
+        val funValue = activationRecord[funName]
         val args = funCallNode.args
 
         // Do we even have access to this function in this scope?
-        if (spec == null) throw VisitorException("Function with name \"$funName\" not defined in this scope")
+        if (funValue == null) throw VisitorException("Function with name \"$funName\" not defined in this scope")
 
         // Execute the arguments first before creating a new activation record,
         // otherwise, I would already execute the arguments in the context of the
@@ -32,41 +33,54 @@ class FunCallVisitor : IVisitor {
         val actualArgs = args.map { interpreter.interpret(it).data }
         var result: IRuntimeResult = emptyResult()
 
-        // Static vs dynamic link algorithm as described by the new mexico
-        // state university: https://www.cs.nmsu.edu/~rth/cs/cs471/f00/ARIs.html
-        val callerDepth = activationRecord.nestingLevel
-        val declarerDepth = spec.nestingLevel
-        val depthDifference = callerDepth - declarerDepth
+        val spec = funValue.value
 
-        // The algorithm even works for negative depth difference (call up the
-        // stack), because Kotlin won't execute negative ranges without "downTo".
-        var staticLink: IActivationRecord? = activationRecord
-        for (i in 1..depthDifference) staticLink = staticLink?.staticLink
+        // We are dealing with a native function invocation. This is actually much
+        // easier to deal with and faster.
+        if (spec is NativeFunSymbol) {
+            val returnValue = spec.nativeFunction(actualArgs.toTypedArray())
+            return if (returnValue != null) dataResult(returnValue) else emptyResult()
+        }
 
-        // Push a new activation record onto the stack and assign the variables
-        interpreter.withDynamicScope(funName) { activationRecord ->
-            spec.params.zip(actualArgs).forEach {
-                activationRecord.define(it.first.name, it.second)
-            }
+        // It is a user defined function that needs interpretation.
+        if (spec is FunSymbol) {
 
-            // Update the static link of the new activation record
-            activationRecord.staticLink = staticLink
-            activationRecord.nestingLevel = staticLink!!.nestingLevel + 1
+            // Static vs dynamic link algorithm as described by the new mexico
+            // state university: https://www.cs.nmsu.edu/~rth/cs/cs471/f00/ARIs.html
+            val callerDepth = activationRecord.nestingLevel
+            val declarerDepth = spec.nestingLevel
+            val depthDifference = callerDepth - declarerDepth
 
-            if (false == interpreter.interpret(spec.requires).data?.value) {
-                throw VisitorException("Requires expression of function \"$funName\" failed")
-            }
+            // The algorithm even works for negative depth difference (call up the
+            // stack), because Kotlin won't execute negative ranges without "downTo".
+            var staticLink: IActivationRecord? = activationRecord
+            for (i in 1..depthDifference) staticLink = staticLink?.staticLink
 
-            result = interpreter.interpret(spec.body)
+            // Push a new activation record onto the stack and assign the variables
+            interpreter.withDynamicScope(funName) { activationRecord ->
+                spec.params.zip(actualArgs).forEach {
+                    activationRecord.define(it.first.name, it.second)
+                }
 
-            if (result is ReturnRuntimeResult) {
-                result = if (result.hasData()) dataResult(result.data!!) else emptyResult()
-            }
+                // Update the static link of the new activation record
+                activationRecord.staticLink = staticLink
+                activationRecord.nestingLevel = staticLink!!.nestingLevel + 1
 
-            if (result.hasData()) {
-                activationRecord.define("_", result.data)
-                if (false == interpreter.interpret(spec.ensures).data?.value) {
-                    throw VisitorException("Ensures expression of function \"$funName\" failed")
+                if (false == interpreter.interpret(spec.requires).data?.value) {
+                    throw VisitorException("Requires expression of function \"$funName\" failed")
+                }
+
+                result = interpreter.interpret(spec.body)
+
+                if (result is ReturnRuntimeResult) {
+                    result = if (result.hasData()) dataResult(result.data!!) else emptyResult()
+                }
+
+                if (result.hasData()) {
+                    activationRecord.define("_", result.data)
+                    if (false == interpreter.interpret(spec.ensures).data?.value) {
+                        throw VisitorException("Ensures expression of function \"$funName\" failed")
+                    }
                 }
             }
         }

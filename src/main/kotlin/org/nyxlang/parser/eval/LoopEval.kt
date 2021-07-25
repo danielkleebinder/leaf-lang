@@ -36,7 +36,6 @@ class LoopEval(private val parser: IParser) : IEval {
         loopStep { step = StatementEval(parser).eval() }
         loopBody { body = BlockEval(parser).eval() }
 
-
         if (init != null && cond == null && step == null) {
             cond = init
             init = null

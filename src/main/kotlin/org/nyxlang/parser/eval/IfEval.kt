@@ -49,7 +49,6 @@ class IfEval(private val parser: IParser) : IEval {
             } else {
                 elseCase = block.eval()
             }
-            parser.skipNewLines()
         }
 
         return IfNode(cases, elseCase)

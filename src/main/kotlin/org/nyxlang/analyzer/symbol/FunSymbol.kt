@@ -3,7 +3,7 @@ package org.nyxlang.analyzer.symbol
 import org.nyxlang.parser.ast.INode
 
 /**
- * Function symbols represent defined functions.
+ * Function symbols represent user defined functions.
  */
 class FunSymbol(name: String?,
                 var params: ArrayList<VarSymbol> = arrayListOf(),

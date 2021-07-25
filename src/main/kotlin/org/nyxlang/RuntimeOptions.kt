@@ -1,7 +1,5 @@
 package org.nyxlang
 
-import java.util.concurrent.Executors
-
 /**
  * Contains options that can be enabled or disabled
  * for the runtime environment.

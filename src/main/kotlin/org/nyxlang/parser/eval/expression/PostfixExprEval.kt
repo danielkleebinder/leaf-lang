@@ -7,10 +7,10 @@ import org.nyxlang.lexer.token.arithmetic.DecrementToken
 import org.nyxlang.lexer.token.arithmetic.IncrementToken
 import org.nyxlang.lexer.token.bracket.LeftBracketToken
 import org.nyxlang.lexer.token.bracket.LeftParenthesisToken
+import org.nyxlang.lexer.token.bracket.RightBracketToken
 import org.nyxlang.lexer.token.bracket.RightParenthesisToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advance
-import org.nyxlang.parser.advanceBeforeAfter
 import org.nyxlang.parser.ast.*
 import org.nyxlang.parser.eval.AtomEval
 import org.nyxlang.parser.eval.IEval
@@ -57,10 +57,12 @@ class PostfixExprEval(private val parser: IParser) : IEval {
                 }
             }
 
-            LeftBracketToken::class -> parser.advanceBeforeAfter {
+            LeftBracketToken::class -> parser.advance {
                 parser.skipNewLines()
                 val result = expr.eval()
                 parser.skipNewLines()
+                if (RightBracketToken::class != parser.token::class) throw EvalException("Index access requires closing bracket")
+                parser.advanceCursor()
                 BinaryOperationNode(node, result, BinaryOperation.GET)
             }
 

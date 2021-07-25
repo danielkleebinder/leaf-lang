@@ -1,5 +1,8 @@
 package org.nyxlang.native
 
+import org.nyxlang.analyzer.symbol.NativeFunSymbol
+import org.nyxlang.analyzer.symbol.Symbol
+import org.nyxlang.analyzer.symbol.VarSymbol
 import org.nyxlang.interpreter.value.IValue
 
 
@@ -9,4 +12,24 @@ import org.nyxlang.interpreter.value.IValue
  * of arguments are used as input parameters and the native function is allowed to
  * return exactly one value.
  */
-typealias NativeFunction = (args: Array<IValue>) -> IValue
+typealias NativeFunction = (args: Array<IValue?>) -> IValue?
+
+/**
+ * Encapsulates an input parameter for a native function.
+ */
+class NativeParam(val name: String,
+                  val type: String? = null,
+                  val default: String? = null)
+
+/**
+ * Builds a native function symbol
+ */
+fun nativeFunSymbol(name: String, params: Array<NativeParam>, func: NativeFunction, returnType: String? = null): NativeFunSymbol {
+    return NativeFunSymbol(
+            name = name,
+            nativeFunction = func,
+            params = arrayListOf(*params
+                    .map { VarSymbol(it.name, if (it.type != null) Symbol(it.type, 0) else null) }
+                    .toTypedArray()),
+            returns = if (returnType != null) Symbol(returnType, 0) else null)
+}

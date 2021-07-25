@@ -58,6 +58,6 @@ class ArrayValue(override val value: Array<IValue?>) : IValue {
         else -> throw UnknownOperationException("The != operation in array is not supported for $right")
     }
 
-    override fun stringify() = value.toString()
-    override fun toString() = "ArrayValue(value=[${value.joinToString(", ")}])"
+    override fun stringify() = "[" + value.map { it?.stringify() }.joinToString(", ") + "]"
+    override fun toString() = "ArrayValue(value=[${stringify()}])"
 }

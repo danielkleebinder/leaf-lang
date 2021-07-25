@@ -4,9 +4,13 @@ import org.nyxlang.RuntimeOptions
 import org.nyxlang.interpreter.exception.DynamicSemanticException
 import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.CallStack
+import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.result.emptyResult
+import org.nyxlang.interpreter.value.NativeFunValue
 import org.nyxlang.interpreter.visitor.*
+import org.nyxlang.native.INativeModule
+import org.nyxlang.native.io.IOModule
 import org.nyxlang.parser.ast.*
 import java.util.concurrent.Executors
 
@@ -43,7 +47,9 @@ class Interpreter : IInterpreter {
     override val globalThreadPool = Executors.newFixedThreadPool(RuntimeOptions.processorCores)
 
     init {
-        callStack.push(ActivationRecord(name = "global"))
+        val globalActivationRecord = ActivationRecord(name = "global")
+        registerModule(globalActivationRecord, IOModule())
+        callStack.push(globalActivationRecord)
     }
 
     override fun interpret(ast: INode?): IRuntimeResult {
@@ -53,6 +59,12 @@ class Interpreter : IInterpreter {
             return visitor.visit(this, ast)
         } catch (e: Exception) {
             throw DynamicSemanticException(e.message ?: "Unknown semantic error", e)
+        }
+    }
+
+    private fun registerModule(activationRecord: IActivationRecord, module: INativeModule) {
+        module.functions.forEach {
+            activationRecord.define(it.name, NativeFunValue(it))
         }
     }
 }
