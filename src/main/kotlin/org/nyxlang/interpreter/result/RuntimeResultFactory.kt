@@ -3,6 +3,7 @@ package org.nyxlang.interpreter.result
 import org.nyxlang.analyzer.symbol.FunSymbol
 import org.nyxlang.interpreter.value.*
 import java.math.BigDecimal
+import java.util.concurrent.Future
 
 
 /**
@@ -34,6 +35,11 @@ fun boolResult(value: Boolean) = dataResult(boolValue(value))
  * Creates a data runtime result with the given function [value].
  */
 fun funResult(value: FunSymbol) = dataResult(funValue(value))
+
+/**
+ * Creates a data runtime result with the given async [value].
+ */
+fun asyncResult(value: Future<IValue?>) = dataResult(asyncValue(value))
 
 /**
  * Creates a data runtime result with the given number [value].

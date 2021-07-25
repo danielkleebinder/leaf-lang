@@ -5,8 +5,10 @@ import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.memory.ICallStack
 import org.nyxlang.interpreter.result.IRuntimeResult
+import org.nyxlang.interpreter.value.IValue
 import org.nyxlang.parser.ast.INode
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.Future
 
 /**
  * The interpreter walks through an abstract syntax tree, fetches the
@@ -74,6 +76,6 @@ inline fun IInterpreter.withStaticScope(name: String? = null,
  * Launches a coroutine in the current context of execution using the interpreters
  * globally available thread pool.
  */
-fun IInterpreter.launchCoroutine(coroutine: () -> Any) {
-    globalThreadPool.submit(coroutine)
+fun IInterpreter.launchCoroutine(coroutine: () -> IValue?): Future<IValue?> {
+    return globalThreadPool.submit(coroutine)
 }

@@ -27,7 +27,6 @@ The formal language definition in Backus-Naur Form looks like the following. Fee
                | 'return' ((NL)* <expr>)?
                | 'break'
                | 'continue'
-               | <coroutine>
                | <block>
                | <expr>
 ```
@@ -111,6 +110,7 @@ The formal language definition in Backus-Naur Form looks like the following. Fee
          | <if-expr>
          | <fun-declaration>
          | <loop-stmt>
+         | <coroutine>
          | <empty>
 
 <type>  ::= <number> | <bool> | <string> | <fun>

@@ -2,6 +2,7 @@ package org.nyxlang.interpreter.value
 
 import org.nyxlang.analyzer.symbol.FunSymbol
 import java.math.BigDecimal
+import java.util.concurrent.Future
 
 
 /**
@@ -28,3 +29,8 @@ fun arrayValue(value: Array<IValue?>) = ArrayValue(value)
  * Creates a function [value].
  */
 fun funValue(value: FunSymbol) = FunValue(value)
+
+/**
+ * Creates an async [value].
+ */
+fun asyncValue(value: Future<IValue?>) = AsyncValue(value)

@@ -26,7 +26,6 @@ class StatementEval(private val parser: IParser) : IEval {
                         .also { it.modifiers.add(Modifier.CONSTANT) }
             }
             VarKeywordToken::class -> parser.advance { return DeclarationsEval(parser).eval() }
-            AsyncKeywordToken::class -> parser.advance { return AsyncNode(StatementEval(parser).eval()) }
             ReturnKeywordToken::class -> parser.advance { return ReturnNode(ExprEval(parser).eval()) }
             BreakKeywordToken::class -> parser.advance { return BreakNode() }
             ContinueKeywordToken::class -> parser.advance { return ContinueNode() }
