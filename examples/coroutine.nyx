@@ -1,14 +1,20 @@
+// COROUTINES
+// Shows the concept of coroutines and how to work with them
+
 fun fibonacci(n: number): n > 0 -> number {
   if n == 1 || n == 2 { return 1 }
   if n <= 0 { return 0 }
   return fibonacci(n - 1) + fibonacci(n - 2)
 }
 
+// The the expensive fibonacci computation as
+// its own coroutine
 const computationResult = async fibonacci(34)
 
 // ...
 // do other stuff
 // ...
 
+// Wait for the fibonacci result
 const res = ~computationResult
 res
