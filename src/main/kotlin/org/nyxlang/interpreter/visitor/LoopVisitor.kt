@@ -2,6 +2,7 @@ package org.nyxlang.interpreter.visitor
 
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.result.*
+import org.nyxlang.interpreter.withStaticScope
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.LoopNode
 
@@ -12,25 +13,32 @@ class LoopVisitor : IVisitor {
 
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val loopNode = node as LoopNode
+        var result: IRuntimeResult = emptyResult()
 
-        // Do the initialization of the loop
-        if (loopNode.init != null) interpreter.interpret(loopNode.init)
+        interpreter.withStaticScope("loop") {
 
-        // Run the actual loop
-        while (loopNode.condition == null ||
-                interpreter.interpret(loopNode.condition).data?.value == true) {
-            val bodyResult = interpreter.interpret(loopNode.body)
+            // Do the initialization of the loop
+            if (loopNode.init != null) interpreter.interpret(loopNode.init)
 
-            // Break the loop if necessary
-            if (bodyResult is BreakRuntimeResult) break
+            // Run the actual loop
+            while (loopNode.condition == null ||
+                    interpreter.interpret(loopNode.condition).data?.value == true) {
+                val bodyResult = interpreter.interpret(loopNode.body)
 
-            // Do one step of the loops step expression
-            interpreter.interpret(loopNode.step)
+                // Break the loop if necessary
+                if (bodyResult is BreakRuntimeResult) break
 
-            // Other options to break out of a loop
-            if (bodyResult is ContinueRuntimeResult) continue
-            if (bodyResult is ReturnRuntimeResult) return bodyResult
+                // Do one step of the loops step expression
+                interpreter.interpret(loopNode.step)
+
+                // Other options to break out of a loop
+                if (bodyResult is ContinueRuntimeResult) continue
+                if (bodyResult is ReturnRuntimeResult) {
+                    result = bodyResult
+                    break
+                }
+            }
         }
-        return emptyResult()
+        return result
     }
 }

@@ -1,0 +1,117 @@
+// FRUIT NINJA
+// Collect all the fruits and level up
+
+
+// The game field constraints
+const fieldWidth = 40
+const fieldHeight = 10
+const fieldTotal = fieldWidth * fieldHeight
+
+// This is the field on which the player will be
+// playing the game
+var field: array = []
+
+// The x and y coordinates of the player on the
+// playing field
+var x = 1, y = 1
+
+
+// Initializes the game by setting variables properly
+// and setting up the playing field
+fun initGame {
+  var tile: string = ""
+  loop var i = 0 : i < (fieldWidth * fieldHeight) : i = i + 1 {
+    if (i < fieldWidth) ||
+	   (i % fieldWidth == 0) ||
+	   (i % fieldWidth == fieldWidth - 1) ||
+	   (i > (fieldWidth * fieldHeight - fieldWidth)) {
+	  tile = "#"
+	} else {
+	  tile = " "
+	}
+    field = field + tile
+  }
+}
+
+
+// Clears the screen by jumping some lines down
+fun clearScreen = loop var i = 0 : i < 100 : i = i + 1 { println() }
+
+
+// Draws the playing field, the fruits and the player
+fun drawGame {
+  var buffer = "", tile: string
+  loop var i = 0 : i < ~field : i = i + 1 {
+    if (i % fieldWidth == x) && (i / fieldWidth == y) {
+	  tile = "x"
+	} else {
+      tile = field[i]
+	}
+	buffer = buffer + tile
+
+	if (i + 1) % fieldWidth == 0 {
+	  buffer = buffer + "\n"
+	}
+  }
+  clearScreen()
+  println(buffer)
+}
+
+
+// Tests if the given coordinates are within the defined
+// bounds of the game
+fun isInField(x: number, y: number) -> bool =
+  x >= 1 &&
+  x <= fieldWidth - 1 &&
+  y >= 1 &&
+  y <= fieldHeight - 1
+
+
+// Spawns fruits at random locations on the field
+fun spawnFruits {
+  const fx = randomUInt() % (fieldWidth - 2) + 1
+  const fy = randomUInt() % (fieldHeight - 2) + 1
+  const idx = fy * fieldWidth + fx
+
+  var newField = []
+  loop var i = 0 : i < ~field : i = i + 1 {
+    if i == idx {
+	  newField = newField + "."
+	} else {
+      newField = newField + field[i]
+	}
+  }
+  field = newField
+}
+
+// Moves the player (if possible) by the given [dx] and [dy]
+// coordinates on the field
+fun move(dx: number, dy: number) {
+  if isInField(x + dx, y + dy) {
+    x = x + dx
+	y = y + dy
+  }
+}
+
+
+// The main function that runs the game loop
+fun main {
+  initGame()
+
+  loop {
+
+    if random() < 0.2 { spawnFruits() }
+
+    drawGame()
+
+    const in = readLine()
+	if in == "#" { break }
+	if in == "a" { move(-1, 0) }
+	if in == "d" { move(+1, 0) }
+	if in == "w" { move(0, -1) }
+	if in == "s" { move(0, +1) }
+
+  }
+}
+
+main()

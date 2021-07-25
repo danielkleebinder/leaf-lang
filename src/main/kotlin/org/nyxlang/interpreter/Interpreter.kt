@@ -11,6 +11,7 @@ import org.nyxlang.interpreter.value.NativeFunValue
 import org.nyxlang.interpreter.visitor.*
 import org.nyxlang.native.INativeModule
 import org.nyxlang.native.io.IOModule
+import org.nyxlang.native.math.MathModule
 import org.nyxlang.parser.ast.*
 import java.util.concurrent.Executors
 
@@ -49,6 +50,7 @@ class Interpreter : IInterpreter {
     init {
         val globalActivationRecord = ActivationRecord(name = "global")
         registerModule(globalActivationRecord, IOModule())
+        registerModule(globalActivationRecord, MathModule())
         callStack.push(globalActivationRecord)
     }
 

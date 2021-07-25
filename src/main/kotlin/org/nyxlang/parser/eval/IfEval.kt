@@ -4,9 +4,9 @@ import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
 import org.nyxlang.lexer.token.keyword.ElseKeywordToken
 import org.nyxlang.lexer.token.keyword.IfKeywordToken
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.ast.IfNode
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.IfCase
+import org.nyxlang.parser.ast.IfNode
 import org.nyxlang.parser.eval.expression.ExprEval
 import org.nyxlang.parser.exception.EvalException
 

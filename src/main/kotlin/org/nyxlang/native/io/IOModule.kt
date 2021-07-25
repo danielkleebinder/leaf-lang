@@ -1,6 +1,5 @@
 package org.nyxlang.native.io
 
-import org.nyxlang.analyzer.symbol.NativeFunSymbol
 import org.nyxlang.native.INativeModule
 import org.nyxlang.native.NativeParam
 import org.nyxlang.native.nativeFunSymbol
@@ -10,7 +9,7 @@ import org.nyxlang.native.nativeFunSymbol
  */
 class IOModule : INativeModule {
     override val name = "io"
-    override val functions: List<NativeFunSymbol> = listOf(
+    override val functions = listOf(
             nativeFunSymbol("print", arrayOf(NativeParam("str", "string")), { ioPrint(it) }),
             nativeFunSymbol("println", arrayOf(NativeParam("str", "string")), { ioPrintln(it) }),
             nativeFunSymbol("clear", arrayOf(), { ioClear(it) }),

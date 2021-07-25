@@ -33,7 +33,7 @@ class InterpreterLoopTest : TestSuit() {
 
     @Test
     fun shouldLoopInitConditionStep() {
-        execute("loop var i = 0 : i < 5 : i = i + 1 {}")
+        execute("var i = 0; loop i = 0 : i < 5 : i = i + 1 {}")
         assertEquals(BigDecimal.valueOf(5), valueOf("i"))
     }
 
@@ -41,6 +41,16 @@ class InterpreterLoopTest : TestSuit() {
     fun shouldEvaluateConditionNotJustOnce() {
         execute("var i = 5; loop i > 0 { i = i - 1 }")
         assertEquals(BigDecimal.ZERO, valueOf("i"))
+    }
+
+    @Test
+    fun shouldAllowRedeclareOfSameInitVar()  {
+        assertDoesNotThrow {
+            execute("""
+                loop var i = 0 : i < 5 : i = i + 1 {}
+                loop var i = 0 : i < 5 : i = i + 1 {}
+            """.trimIndent())
+        }
     }
 
     @Test
