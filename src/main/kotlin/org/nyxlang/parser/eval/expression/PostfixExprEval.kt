@@ -59,11 +59,18 @@ class PostfixExprEval(private val parser: IParser) : IEval {
 
             LeftBracketToken::class -> parser.advance {
                 parser.skipNewLines()
-                val result = expr.eval()
+                val indexExpr = expr.eval()
                 parser.skipNewLines()
+
                 if (RightBracketToken::class != parser.token::class) throw EvalException("Index access requires closing bracket")
                 parser.advanceCursor()
-                AccessNode(id!!, result)
+
+                if (AssignToken::class == parser.token::class) {
+                    parser.advanceCursor()
+                    return AssignmentNode(id!!, expr.eval(), indexExpr)
+                }
+
+                AccessNode(id!!, indexExpr)
             }
 
             LeftParenthesisToken::class -> {
