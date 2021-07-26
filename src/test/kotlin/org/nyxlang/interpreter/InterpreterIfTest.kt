@@ -72,4 +72,15 @@ class InterpreterIfTest : TestSuit() {
         execute(readResourceFile("conditional-2.test.nyx"))
         assertTrue(valueOf("res") as Boolean)
     }
+
+    @Test
+    fun shouldBeUsedAsExpression() {
+        execute("const a = if true { 10 } else { 15 }")
+        assertTrue(globalActivationRecord.has("a"))
+        assertEquals(BigDecimal.valueOf(10), valueOf("a"))
+
+        execute("const x = if 1 + 1 == 0 { 10 } else { 15 }")
+        assertTrue(globalActivationRecord.has("x"))
+        assertEquals(BigDecimal.valueOf(15), valueOf("x"))
+    }
 }

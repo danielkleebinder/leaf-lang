@@ -25,4 +25,11 @@ class InterpreterBlockTest : TestSuit() {
         assertFalse(globalActivationRecord.has("c"))
         assertTrue(globalActivationRecord.has("a"))
     }
+
+    @Test
+    fun shouldBeUsedAsExpression() {
+        execute("const a = { const a = 10; var c = a + 5; c }")
+        assertTrue(globalActivationRecord.has("a"))
+        assertEquals(BigDecimal.valueOf(15), valueOf("a"))
+    }
 }

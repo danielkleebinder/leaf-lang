@@ -1,5 +1,6 @@
 package org.nyxlang.parser.eval
 
+import org.nyxlang.lexer.token.NewLineToken
 import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
 import org.nyxlang.lexer.token.keyword.ElseKeywordToken
 import org.nyxlang.lexer.token.keyword.IfKeywordToken
@@ -35,6 +36,9 @@ class IfEval(private val parser: IParser) : IEval {
         ifHead { condition = expr.eval() }
         cases.add(IfCase(condition, block.eval()))
 
+        var wasNewLine = NewLineToken::class == parser.token::class
+        parser.skipNewLines()
+
         // Evaluate further case blocks
         while (ElseKeywordToken::class == parser.token::class) {
             parser.advanceCursor()
@@ -49,7 +53,15 @@ class IfEval(private val parser: IParser) : IEval {
             } else {
                 elseCase = block.eval()
             }
+            wasNewLine = NewLineToken::class == parser.token::class
+            parser.skipNewLines()
         }
+
+        // This is a little bit tricky since I have to look "over" all
+        // the new lines and check if the else keyword was found. If I
+        // do not find an else keyword I have to undo the new line skipping.
+        // Otherwise statements could not be separated properly.
+        if (wasNewLine) parser.advanceCursor(-1)
 
         return IfNode(cases, elseCase)
     }

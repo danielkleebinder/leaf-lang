@@ -27,7 +27,8 @@ The formal language definition in **Backus-Naur form** looks like the following.
                | 'return' ((NL)* <expr>)?
                | 'break'
                | 'continue'
-               | <block>
+               | <assignment>
+               | <loop-stmt>
                | <expr>
 ```
 
@@ -44,7 +45,8 @@ The formal language definition in **Backus-Naur form** looks like the following.
 <fun-requires> ::= ':' (NL)* <expr>
 <fun-ensures>  ::= ':' (NL)* <expr>
 <fun-return>   ::= '->' (NL)* <type>
-<fun-body>     ::= <block> | ('=' (NL)* <expr>)
+<fun-body>     ::= <block>
+                 | ('=' (NL)* <statement>)
 ```
 
 ### Conditionals
@@ -74,6 +76,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
 ```
 <declarations> ::= <declaration> (NL)* (',' (NL)* <declaration>)*
 <declaration>  ::= <name> (NL)* (':' (NL)* <type>)? ('=' (NL)* <expr>)?
+<assignment>   ::= <name> (<index-suffix>)? '=' <expr>
 ```
 
 ### Expressions & Precedence
@@ -93,7 +96,6 @@ The formal language definition in **Backus-Naur form** looks like the following.
 ### Suffix
 ```
 <suffix> ::= ('++' | '--' | '?')
-           | <assign-suffix>
            | <index-suffix>
            | <call-suffix>
 
@@ -109,8 +111,8 @@ The formal language definition in **Backus-Naur form** looks like the following.
          | <arr-expr>
          | <if-expr>
          | <fun-declaration>
-         | <loop-stmt>
          | <coroutine>
+         | <block>
          | <empty>
 
 <type>  ::= <number> | <bool> | <string> | <fun>

@@ -30,7 +30,8 @@ import org.nyxlang.parser.exception.EvalException
  * <fun-requires> ::= ':' (NL)* <expr>
  * <fun-ensures>  ::= ':' (NL)* <expr>
  * <fun-return>   ::= '->' (NL)* <type>
- * <fun-body>     ::= <block> | ('=' (NL)* <expr>)
+ * <fun-body>     ::= <block>
+ *                  | ('=' (NL)* <statement>)
  *
  * Example of a function:
  *
@@ -53,7 +54,7 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
         funRequires { requires = ExprEval(parser).eval() }
         funEnsures { ensures = ExprEval(parser).eval() }
         funReturns { returns = TypeEval(parser).eval() }
-        funBody { body = if (it) ExprEval(parser).eval() else StatementListEval(parser).eval() }
+        funBody { body = if (it) StatementEval(parser).eval() else StatementListEval(parser).eval() }
 
         return FunDeclareNode(
                 name = name,

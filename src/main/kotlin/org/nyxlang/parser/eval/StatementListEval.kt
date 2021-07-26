@@ -3,6 +3,7 @@ package org.nyxlang.parser.eval
 import org.nyxlang.lexer.token.NewLineToken
 import org.nyxlang.lexer.token.StatementSeparatorToken
 import org.nyxlang.parser.IParser
+import org.nyxlang.parser.ast.EmptyNode
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.StatementListNode
 
@@ -23,7 +24,9 @@ class StatementListEval(private val parser: IParser) : IEval {
                 NewLineToken::class == parser.token::class) {
             parser.advanceCursor()
             parser.skipNewLines()
-            result.add(statement.eval())
+
+            val evaluated = statement.eval()
+            if (EmptyNode::class != evaluated::class) result.add(evaluated)
         }
         return StatementListNode(result)
     }

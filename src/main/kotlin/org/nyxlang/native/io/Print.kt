@@ -24,7 +24,9 @@ fun ioPrintln(args: Array<IValue?>): IValue? {
 fun ioClear(args: Array<IValue?>): IValue? {
     val os = System.getProperty("os.name").toLowerCase()
     if (os.contains("win")) {
-        Runtime.getRuntime().exec(arrayOf("cmd", "/c", "cls"))
+        // Needs some trickery:
+        // https://www.reddit.com/r/Kotlin/comments/hhbat8/how_could_you_clear_the_terminal_in_kotlin/
+        print("\u001b[H\u001b[2J")
     } else {
         Runtime.getRuntime().exec(arrayOf("clear"))
     }
