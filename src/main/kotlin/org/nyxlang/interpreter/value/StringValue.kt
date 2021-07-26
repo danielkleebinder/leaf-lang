@@ -9,7 +9,25 @@ import java.math.BigDecimal
  * String values are used to perform certain operations and
  * enable type coercion.
  */
-class StringValue(override val value: String) : IValue {
+class StringValue(override var value: String) : IValue {
+
+    override fun set(index: IValue, newValue: IValue) = when (index) {
+        is NumberValue -> {
+            val indexAsInt = index.value.toInt()
+            if (indexAsInt < 0 || indexAsInt >= value.length) throw UnknownOperationException("String index $indexAsInt out of bounds")
+            value = value.replaceRange(indexAsInt, indexAsInt + 1, newValue.stringify())
+        }
+        else -> throw UnknownOperationException("The index based set operation in string is not supported for $index")
+    }
+
+    override fun get(index: IValue) = when (index) {
+        is NumberValue -> {
+            val indexAsInt = index.value.toInt()
+            if (indexAsInt < 0 || indexAsInt >= value.length) throw UnknownOperationException("String index $indexAsInt out of bounds")
+            stringValue(value[indexAsInt].toString())
+        }
+        else -> throw UnknownOperationException("The index based get operation in string is not supported for $index")
+    }
 
     override fun unary(op: UnaryOperation) = when (op) {
         UnaryOperation.BIT_COMPLEMENT -> NumberValue(BigDecimal.valueOf(value.length.toLong()))
@@ -18,7 +36,6 @@ class StringValue(override val value: String) : IValue {
 
     override fun binary(right: IValue, op: BinaryOperation) = when (op) {
         BinaryOperation.PLUS -> binaryPlus(right)
-        BinaryOperation.GET -> binaryGet(right)
         BinaryOperation.EQUAL -> binaryEqual(right)
         BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
         BinaryOperation.LESS_THAN -> binaryLessThan(right)

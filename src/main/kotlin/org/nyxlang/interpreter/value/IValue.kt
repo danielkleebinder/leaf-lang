@@ -14,6 +14,16 @@ interface IValue {
     val value: Any
 
     /**
+     * Sets a [newValue] at the given [index].
+     */
+    fun set(index: IValue, newValue: IValue)
+
+    /**
+     * Returns the value at the given [index].
+     */
+    fun get(index: IValue): IValue
+
+    /**
      * Performs a unary [op] on this value.
      */
     fun unary(op: UnaryOperation): IValue

@@ -16,6 +16,5 @@ enum class BinaryOperation {
     GREATER_THAN,
     GREATER_THAN_OR_EQUAL,
     LOGICAL_AND,
-    LOGICAL_OR,
-    GET
+    LOGICAL_OR
 }

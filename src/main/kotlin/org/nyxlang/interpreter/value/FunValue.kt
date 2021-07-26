@@ -11,6 +11,8 @@ import org.nyxlang.parser.ast.UnaryOperation
  */
 class FunValue(override val value: FunSymbol) : IValue {
 
+    override fun set(index: IValue, newValue: IValue) = throw UnknownOperationException("Functions do not support index based assignment")
+    override fun get(index: IValue) = throw UnknownOperationException("Functions do not support index based access")
     override fun unary(op: UnaryOperation) = throw UnknownOperationException("Functions do not support unary operations")
 
     override fun binary(right: IValue, op: BinaryOperation) = when (op) {

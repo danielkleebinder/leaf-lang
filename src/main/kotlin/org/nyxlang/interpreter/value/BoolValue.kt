@@ -11,6 +11,9 @@ import org.nyxlang.parser.ast.UnaryOperation
  */
 class BoolValue(override val value: Boolean) : IValue {
 
+    override fun set(index: IValue, newValue: IValue) = throw UnknownOperationException("Bools do not support index based assignment")
+    override fun get(index: IValue) = throw UnknownOperationException("Bools do not support index based access")
+
     override fun unary(op: UnaryOperation) = when (op) {
         UnaryOperation.LOGICAL_NEGATE -> boolValue(!value)
         UnaryOperation.BIT_COMPLEMENT -> boolValue(!value)

@@ -19,6 +19,8 @@ class AsyncValue(override val value: Future<IValue?>) : IValue {
     }
 
     override fun binary(right: IValue, op: BinaryOperation) = throw UnknownOperationException("Binary operations are not supported on async values")
+    override fun set(index: IValue, newValue: IValue) = throw UnknownOperationException("Async values do not support index based assignment")
+    override fun get(index: IValue) = throw UnknownOperationException("Async values do not support index based access")
 
     override fun stringify() = value.toString()
     override fun toString() = "AsyncValue(value=$value)"

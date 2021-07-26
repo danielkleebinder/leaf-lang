@@ -11,6 +11,9 @@ import java.math.BigDecimal
  */
 class NumberValue(override val value: BigDecimal) : IValue {
 
+    override fun set(index: IValue, newValue: IValue) = throw UnknownOperationException("Numbers do not support index based assignment")
+    override fun get(index: IValue) = throw UnknownOperationException("Numbers do not support index based access")
+
     override fun unary(op: UnaryOperation) = when (op) {
         UnaryOperation.POSITIVE -> this
         UnaryOperation.NEGATE -> numberValue(value.unaryMinus())

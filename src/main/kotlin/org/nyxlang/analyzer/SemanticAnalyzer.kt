@@ -18,7 +18,7 @@ class SemanticAnalyzer : ISemanticAnalyzer {
             Pair(StatementListNode::class, StatementListStaticVisitor()),
             Pair(BinaryOperationNode::class, BinaryOperationStaticVisitor()),
             Pair(UnaryOperationNode::class, UnaryOperationStaticVisitor()),
-            Pair(VarAccessNode::class, VarAccessStaticVisitor()),
+            Pair(AccessNode::class, VarAccessStaticVisitor()),
             Pair(VarAssignNode::class, VarAssignStaticVisitor()),
             Pair(DeclarationsNode::class, DeclarationStaticVisitor()),
             Pair(FunCallNode::class, FunCallStaticVisitor()),

@@ -23,7 +23,6 @@ class BinaryOperationStaticVisitor : IStaticVisitor {
         if (left == right) return analysisResult(left)
 
         return when (op) {
-            BinaryOperation.GET -> emptyAnalysisResult()
             BinaryOperation.LESS_THAN -> analysisResult("bool")
             BinaryOperation.LESS_THAN_OR_EQUAL -> analysisResult("bool")
             BinaryOperation.GREATER_THAN -> analysisResult("bool")

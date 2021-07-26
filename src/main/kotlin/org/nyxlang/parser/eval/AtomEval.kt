@@ -36,7 +36,7 @@ class AtomEval(private val parser: IParser) : IEval {
             BoolToken::class -> BoolNode((parser.tokenAndAdvance as BoolToken).value)
             NumberToken::class -> NumberNode((parser.tokenAndAdvance as NumberToken).value)
             StringToken::class -> StringNode((parser.tokenAndAdvance as StringToken).value)
-            NameToken::class -> VarAccessNode((parser.tokenAndAdvance as NameToken).value)
+            NameToken::class -> AccessNode((parser.tokenAndAdvance as NameToken).value)
 
             LeftBracketToken::class -> ArrayExprEval(parser).eval()
             IfKeywordToken::class -> IfEval(parser).eval()
