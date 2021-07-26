@@ -45,6 +45,12 @@ class InterpreterArrayTest : TestSuit() {
     }
 
     @Test
+    fun shouldAssignElements() {
+        assertArrayEquals(arrayOfBigDecimal(999, 20, 30), (execute("const a = [10,20,30]; a[0] = 999; a") as List<*>).toTypedArray())
+        assertArrayEquals(arrayOfBigDecimal(10, -74, 30), (execute("const b = [10,20,30]; b[1] = -74; b") as List<*>).toTypedArray())
+    }
+
+    @Test
     fun shouldAccessLength() {
         assertEquals(BigDecimal.valueOf(0), execute("~[]"))
         assertEquals(BigDecimal.valueOf(3), execute("~[5,6,7]"))
