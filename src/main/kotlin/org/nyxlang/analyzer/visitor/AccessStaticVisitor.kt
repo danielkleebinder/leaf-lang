@@ -6,18 +6,21 @@ import org.nyxlang.analyzer.result.StaticAnalysisResult
 import org.nyxlang.analyzer.result.analysisResult
 import org.nyxlang.analyzer.result.emptyAnalysisResult
 import org.nyxlang.analyzer.symbol.VarSymbol
-import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.AccessNode
+import org.nyxlang.parser.ast.INode
 
 /**
- * Analyzes a variable access.
+ * Analyzes access nodes.
  */
-class VarAccessStaticVisitor : IStaticVisitor {
+class AccessStaticVisitor : IStaticVisitor {
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode): StaticAnalysisResult {
-        val varAccessNode = node as AccessNode
+        val accessNode = node as AccessNode
 
-        val varSymbol = analyzer.currentScope.get(varAccessNode.name)
-                ?: throw AnalyticalVisitorException("Symbol with name \"${varAccessNode.name}\" not defined")
+        // We cannot determine statically what type the offset value might have
+        if (accessNode.offsetExpr != null) return emptyAnalysisResult()
+
+        val varSymbol = analyzer.currentScope.get(accessNode.name)
+                ?: throw AnalyticalVisitorException("Symbol with name \"${accessNode.name}\" not defined")
 
         if (varSymbol is VarSymbol && varSymbol.type != null) {
             return analysisResult(varSymbol.type.name)
