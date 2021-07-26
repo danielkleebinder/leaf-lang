@@ -53,7 +53,7 @@ class PostfixExprEval(private val parser: IParser) : IEval {
 
                 parser.advance {
                     parser.skipNewLines()
-                    VarAssignNode(id, expr.eval())
+                    AssignmentNode(id, expr.eval())
                 }
             }
 

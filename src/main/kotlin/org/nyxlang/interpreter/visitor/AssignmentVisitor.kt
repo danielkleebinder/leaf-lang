@@ -4,16 +4,16 @@ import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.result.emptyResult
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.parser.ast.VarAssignNode
+import org.nyxlang.parser.ast.AssignmentNode
 
 /**
  * Interprets the var assign node.
  */
-class VarAssignVisitor : IVisitor {
+class AssignmentVisitor : IVisitor {
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
-        val varAssignNode = node as VarAssignNode
-        val varName = varAssignNode.identifier
-        val varAssignment = varAssignNode.assignmentExpr
+        val assignmentNode = node as AssignmentNode
+        val varName = assignmentNode.name
+        val varAssignment = assignmentNode.assignmentExpr
         val activationRecord = interpreter.activationRecord!!
         activationRecord[varName] = interpreter.interpret(varAssignment).data
         return emptyResult()

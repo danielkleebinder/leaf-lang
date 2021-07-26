@@ -6,7 +6,7 @@ import org.nyxlang.lexer.token.bracket.LeftBracketToken
 import org.nyxlang.lexer.token.bracket.RightBracketToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.parser.ast.VarAssignNode
+import org.nyxlang.parser.ast.AssignmentNode
 import org.nyxlang.parser.eval.expression.ExprEval
 import org.nyxlang.parser.exception.EvalException
 
@@ -35,7 +35,7 @@ class AssignmentEval(private val parser: IParser) : IEval {
         if (AssignToken::class == parser.token::class) {
             parser.skipNewLines()
             parser.advanceCursor()
-            return VarAssignNode(id, ExprEval(parser).eval())
+            return AssignmentNode(id, ExprEval(parser).eval())
         }
         return expr.eval()
     }
