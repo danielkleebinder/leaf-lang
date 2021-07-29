@@ -1,5 +1,7 @@
 package org.nyxlang
 
+import java.math.MathContext
+
 /**
  * Contains options that can be enabled or disabled
  * for the runtime environment.
@@ -15,4 +17,9 @@ object RuntimeOptions {
      * The number of processor cores available on the system.
      */
     val processorCores = Runtime.getRuntime().availableProcessors()
+
+    /**
+     * Min math decimal precision.
+     */
+    val mathContext = MathContext(32)
 }

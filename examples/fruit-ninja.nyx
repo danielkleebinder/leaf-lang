@@ -101,13 +101,15 @@ fun main {
     drawGame()
 
     const in = readLine()
-	if in == "#" { break }
 	if in == "a" { move(-1, 0) }
 	if in == "d" { move(+1, 0) }
 	if in == "w" { move(0, -1) }
 	if in == "s" { move(0, +1) }
+	if in == "#" { break }
 
   }
+
+  println("Bye and thanks for playing the game <3")
 }
 
 main()

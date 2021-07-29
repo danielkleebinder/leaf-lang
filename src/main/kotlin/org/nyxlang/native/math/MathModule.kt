@@ -12,5 +12,11 @@ class MathModule : INativeModule {
             nativeFunSymbol("random", arrayOf(), { mathRandom(it) }),
             nativeFunSymbol("randomInt", arrayOf(), { mathRandomInt(it) }),
             nativeFunSymbol("randomUInt", arrayOf(), { mathRandomUInt(it) }),
-            nativeFunSymbol("randomBool", arrayOf(), { mathRandomBool(it) }))
+            nativeFunSymbol("randomBool", arrayOf(), { mathRandomBool(it) }),
+            nativeFunSymbol("sqrt", arrayOf(), { mathSqrt(it) }),
+            nativeFunSymbol("abs", arrayOf(), { mathAbs(it) }),
+            nativeFunSymbol("round", arrayOf(), { mathRound(it) }),
+            nativeFunSymbol("min", arrayOf(), { mathMin(it) }),
+            nativeFunSymbol("max", arrayOf(), { mathMax(it) }),
+    )
 }

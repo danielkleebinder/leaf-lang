@@ -14,6 +14,7 @@ class IOModule : INativeModule {
             nativeFunSymbol("println", arrayOf(NativeParam("str", "string")), { ioPrintln(it) }),
             nativeFunSymbol("clear", arrayOf(), { ioClear(it) }),
             nativeFunSymbol("readLine", arrayOf(), { ioReadLine(it) }),
+            nativeFunSymbol("writeFile", arrayOf(NativeParam("fileName", "string"), NativeParam("content", "string")), { ioReadFile(it) }),
             nativeFunSymbol("readFile", arrayOf(NativeParam("str", "string")), { ioReadFile(it) })
     )
 }

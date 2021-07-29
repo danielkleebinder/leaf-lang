@@ -280,11 +280,21 @@ fun main {
 }
 ```
 
-#### Recursion
+### Recursion
 The following program shows a very simple example on how recursion can be implemented. The function does
 not return any value and is invoked 5 times:
 
 ```kotlin
 fun recursion(a: number) = if a > 0 { recursion(a - 1) }
 recursion(5)
+```
+
+### Lambdas
+```kotlin
+fun compute(a: fun, b: fun) -> number = a(5,5) * b(10,8)
+
+// Result is 20
+compute(
+  fun (a: number, b: number) -> number = a * b,
+  fun (a: number, b: number) -> number = a % b)
 ```

@@ -1,6 +1,7 @@
 package org.nyxlang.native.io
 
 import org.nyxlang.interpreter.value.IValue
+import org.nyxlang.interpreter.value.stringValue
 
 /**
  * Writes the given arguments onto the command line.
@@ -31,6 +32,13 @@ fun ioClear(args: Array<IValue?>): IValue? {
         Runtime.getRuntime().exec(arrayOf("clear"))
     }
     return null
+}
+
+/**
+ * Reads one line of text (delimited by a new line symbol) from the command line.
+ */
+fun ioReadLine(args: Array<IValue?>): IValue? {
+    return stringValue(readLine() ?: "")
 }
 
 /**
