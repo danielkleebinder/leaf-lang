@@ -1,5 +1,6 @@
 package org.nyxlang
 
+import java.io.PrintWriter
 import java.math.MathContext
 
 /**
@@ -22,4 +23,9 @@ object RuntimeOptions {
      * Min math decimal precision.
      */
     val mathContext = MathContext(32)
+
+    /**
+     * The standard console writer.
+     */
+    var consoleWriter = PrintWriter(System.out)
 }

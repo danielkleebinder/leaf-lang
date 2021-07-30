@@ -75,8 +75,12 @@ The formal language definition in **Backus-Naur form** looks like the following.
 
 ### Custom Types
 ```
-<type-declaration> ::= 'type' (NL)* <name> (NL)*
-                          '{' (NL)* (<declarations> (NL)*)* '}'
+<type-declaration>   ::= 'type' (NL)* <name> (NL)*
+                            '{' (NL)* (<declarations> (NL)*)* '}'
+
+<type-inst>  ::= <name> <inst-body>
+<inst-body>  ::= '{' (NL)* (<inst-value> (NL)* (',' (NL)* <inst-value> (NL)*)* )? '}'
+<inst-value> ::= (<name> '=')? <expr>
 ```
 
 ### Declarations
@@ -98,6 +102,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
 
 <prefix-expr> ::= ('!' | '+' | '-' | '~')? <postfix-expr>
 <postfix-expr> ::= <atom> (<suffix>)?
+                 | <type-instantiation>
 ```
 
 ### Suffix

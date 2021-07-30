@@ -1,5 +1,6 @@
 package org.nyxlang.native.io
 
+import org.nyxlang.RuntimeOptions
 import org.nyxlang.interpreter.value.IValue
 import org.nyxlang.interpreter.value.stringValue
 
@@ -7,7 +8,8 @@ import org.nyxlang.interpreter.value.stringValue
  * Writes the given arguments onto the command line.
  */
 fun ioPrint(args: Array<IValue?>): IValue? {
-    print(buildStringFromArgs(args))
+    RuntimeOptions.consoleWriter.print(buildStringFromArgs(args))
+    RuntimeOptions.consoleWriter.flush()
     return null
 }
 
@@ -15,7 +17,8 @@ fun ioPrint(args: Array<IValue?>): IValue? {
  * Writes the given arguments onto the command line and appends a new line at the end.
  */
 fun ioPrintln(args: Array<IValue?>): IValue? {
-    println(buildStringFromArgs(args))
+    RuntimeOptions.consoleWriter.println(buildStringFromArgs(args))
+    RuntimeOptions.consoleWriter.flush()
     return null
 }
 

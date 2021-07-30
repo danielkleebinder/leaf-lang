@@ -1,6 +1,9 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.*
+import org.nyxlang.lexer.token.BoolToken
+import org.nyxlang.lexer.token.NameToken
+import org.nyxlang.lexer.token.NumberToken
+import org.nyxlang.lexer.token.StringToken
 import org.nyxlang.lexer.token.bracket.LeftBracketToken
 import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
 import org.nyxlang.lexer.token.bracket.LeftParenthesisToken

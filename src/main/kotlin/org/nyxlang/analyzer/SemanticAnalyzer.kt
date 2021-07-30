@@ -32,7 +32,7 @@ class SemanticAnalyzer : ISemanticAnalyzer {
             Pair(NumberNode::class, NumberStaticVisitor()),
             Pair(StringNode::class, StringStaticVisitor()),
             Pair(TypeNode::class, TypeStaticVisitor()),
-    )
+            Pair(TypeDeclareNode::class, TypeDeclareStaticVisitor()))
 
     // Scoping
     override var currentScope: ISymbolTable = SymbolTable(name = "global", withBuiltIns = true)

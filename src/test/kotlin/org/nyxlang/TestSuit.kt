@@ -13,7 +13,9 @@ import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.Parser
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.PrintWriter
 import java.math.BigDecimal
 
 /**
@@ -80,5 +82,21 @@ open class TestSuit {
      */
     fun readResourceFile(fileName: String): String {
         return File("src/test/resources/$fileName").readText()
+    }
+
+    /**
+     * Changes the output stream of the program for the given function call
+     * to the given [printWriter].
+     */
+    inline fun withLocalOutStream(fn: () -> Unit): String {
+        val prev = RuntimeOptions.consoleWriter
+        val outStream = ByteArrayOutputStream()
+        RuntimeOptions.consoleWriter = PrintWriter(outStream)
+        try {
+            fn()
+        } finally {
+            RuntimeOptions.consoleWriter = prev
+            return outStream.toString()
+        }
     }
 }

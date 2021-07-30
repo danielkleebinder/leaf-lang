@@ -6,7 +6,7 @@ import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
 import org.nyxlang.lexer.token.bracket.RightCurlyBraceToken
 import org.nyxlang.lexer.token.keyword.TypeKeywordToken
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.ast.DeclarationsNode
+import org.nyxlang.parser.ast.Declaration
 import org.nyxlang.parser.ast.TypeDeclareNode
 import org.nyxlang.parser.exception.EvalException
 
@@ -21,7 +21,7 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
 
     override fun eval(): TypeDeclareNode {
         var name = "<anonymous>"
-        val vars = arrayListOf<DeclarationsNode>()
+        val fields = arrayListOf<Declaration>()
 
         typeName { name = (parser.tokenAndAdvance as NameToken).value }
 
@@ -33,7 +33,7 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
             typeBody {
                 val declarations = DeclarationsEval(parser)
                 while (RightCurlyBraceToken::class != parser.token::class) {
-                    vars.add(declarations.eval())
+                    fields.addAll(declarations.eval().declarations)
                     parser.skipNewLines()
                 }
             }
@@ -41,9 +41,7 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
             parser.advanceCursor(-1)
         }
 
-        return TypeDeclareNode(
-                name = name,
-                vars = vars)
+        return TypeDeclareNode(name, fields.toList())
     }
 
     /**
@@ -75,5 +73,6 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
         }
 
         if (RightCurlyBraceToken::class != parser.token::class) throw EvalException("Custom types require closing curly brace, but got ${parser.token}")
+        parser.advanceCursor()
     }
 }

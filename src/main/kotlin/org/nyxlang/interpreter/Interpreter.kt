@@ -13,6 +13,7 @@ import org.nyxlang.native.INativeModule
 import org.nyxlang.native.io.IOModule
 import org.nyxlang.native.math.MathModule
 import org.nyxlang.parser.ast.*
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 /**
@@ -42,10 +43,11 @@ class Interpreter : IInterpreter {
             Pair(FunDeclareNode::class, FunDeclareVisitor()),
             Pair(FunCallNode::class, FunCallVisitor()),
             Pair(TypeNode::class, TypeVisitor()),
+            Pair(TypeDeclareNode::class, TypeDeclareVisitor()),
             Pair(AsyncNode::class, AsyncVisitor()))
 
     override val callStack = CallStack()
-    override val globalThreadPool = Executors.newFixedThreadPool(RuntimeOptions.processorCores)
+    override val globalThreadPool: ExecutorService = Executors.newFixedThreadPool(RuntimeOptions.processorCores)
 
     init {
         val globalActivationRecord = ActivationRecord(name = "global")
