@@ -19,16 +19,21 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
 
         if (analyzer.currentScope.has(typeName)) throw AnalyticalVisitorException("Type \"$typeName\" is already defined")
 
-        val typeFields = typeDeclareNode.fields
-                .map { VarSymbol(it.identifier, analyzer.currentScope.get(it.typeExpr!!.type)) }
-
         val typeSymbol = TypeSymbol(
                 name = typeName,
-                fields = typeFields,
                 nestingLevel = analyzer.currentScope.nestingLevel)
 
         typeDeclareNode.spec = typeSymbol
         analyzer.currentScope.define(typeSymbol)
+
+        // I have to do that here, otherwise recursive data types would not be
+        // possible to define. Example:
+        //   type Human {
+        //     name: string
+        //     parent: Human
+        //   }
+        typeSymbol.fields = typeDeclareNode.fields
+                .map { VarSymbol(it.identifier, analyzer.currentScope.get(it.typeExpr!!.type)) }
 
         return emptyAnalysisResult()
     }

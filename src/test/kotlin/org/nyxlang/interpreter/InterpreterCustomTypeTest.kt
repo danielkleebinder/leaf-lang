@@ -49,4 +49,9 @@ class InterpreterCustomTypeTest : TestSuit() {
         assertThrows(StaticSemanticException::class.java) { execute("type X{a:number}; new X{\"Hey\"}") }
         assertThrows(StaticSemanticException::class.java) { execute("type X{a:number,b:string}; new X{10,20}") }
     }
+
+    @Test
+    fun shouldAllowRecursiveDataTypeDeclaration() {
+        assertDoesNotThrow { execute("type Human { name: string, parent: Human }") }
+    }
 }
