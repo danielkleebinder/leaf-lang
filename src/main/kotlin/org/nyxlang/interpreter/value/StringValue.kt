@@ -42,7 +42,7 @@ class StringValue(override var value: String) : IValue {
         BinaryOperation.LESS_THAN_OR_EQUAL -> binaryLessThanOrEqual(right)
         BinaryOperation.GREATER_THAN -> binaryGreaterThan(right)
         BinaryOperation.GREATER_THAN_OR_EQUAL -> binaryGreaterThanOrEqual(right)
-        else -> throw UnknownOperationException("The operation $op is not supported for data type bool")
+        else -> throw UnknownOperationException("The operation $op is not supported for data type string")
     }
 
     /**

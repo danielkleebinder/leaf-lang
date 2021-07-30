@@ -78,8 +78,8 @@ The formal language definition in **Backus-Naur form** looks like the following.
 <type-declaration>   ::= 'type' (NL)* <name> (NL)*
                             '{' (NL)* (<declarations> (NL)*)* '}'
 
-<type-inst>  ::= <name> <inst-body>
-<inst-body>  ::= '{' (NL)* (<inst-value> (NL)* (',' (NL)* <inst-value> (NL)*)* )? '}'
+<type-inst>  ::= 'new' <name> ('{' (NL)* <inst-body> (NL)* '}')?
+<inst-body>  ::= (<inst-value> (NL)* (',' (NL)* <inst-value> (NL)*)* )?
 <inst-value> ::= (<name> '=')? <expr>
 ```
 
@@ -102,7 +102,6 @@ The formal language definition in **Backus-Naur form** looks like the following.
 
 <prefix-expr> ::= ('!' | '+' | '-' | '~')? <postfix-expr>
 <postfix-expr> ::= <atom> (<suffix>)?
-                 | <type-instantiation>
 ```
 
 ### Suffix
@@ -120,6 +119,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
 ```
 <atom> ::= <bool> | <number> | <string> | <name>
          | '(' <expr> ')'
+         | <type-inst>
          | <arr-expr>
          | <if-expr>
          | <fun-declaration>

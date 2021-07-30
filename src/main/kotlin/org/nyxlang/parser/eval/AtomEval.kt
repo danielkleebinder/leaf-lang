@@ -11,6 +11,7 @@ import org.nyxlang.lexer.token.bracket.RightParenthesisToken
 import org.nyxlang.lexer.token.keyword.AsyncKeywordToken
 import org.nyxlang.lexer.token.keyword.FunKeywordToken
 import org.nyxlang.lexer.token.keyword.IfKeywordToken
+import org.nyxlang.lexer.token.keyword.NewKeywordToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advance
 import org.nyxlang.parser.ast.*
@@ -23,6 +24,7 @@ import org.nyxlang.parser.exception.EvalException
  *
  * <atom> ::= <bool> | <number> | <string> | <name>
  *          | '(' <expr> ')'
+ *          | <type-inst>
  *          | <arr-expr>
  *          | <if-expr>
  *          | <fun-declaration>
@@ -44,6 +46,7 @@ class AtomEval(private val parser: IParser) : IEval {
             LeftBracketToken::class -> ArrayExprEval(parser).eval()
             IfKeywordToken::class -> IfEval(parser).eval()
             FunKeywordToken::class -> FunDeclarationEval(parser).eval()
+            NewKeywordToken::class -> TypeInstantiationEval(parser).eval()
             AsyncKeywordToken::class -> parser.advance { AsyncNode(StatementEval(parser).eval()) }
             LeftCurlyBraceToken::class -> BlockEval(parser).eval()
 

@@ -39,6 +39,7 @@ class NameTokenizer : ITokenizer {
             "string" -> return StringKeywordToken()
             "type" -> return TypeKeywordToken()
             "trait" -> return TraitKeywordToken()
+            "new" -> return NewKeywordToken()
             "async" -> return AsyncKeywordToken()
         }
         return NameToken(name)

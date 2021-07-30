@@ -25,9 +25,20 @@ class FunCallStaticVisitor : IStaticVisitor {
             val paramCount = (funSymbol as FunSymbol).params.size
             val argsCount = funCallNode.args.size
             val returns = funSymbol.returns
-            if (paramCount != argsCount) {
-                throw AnalyticalVisitorException("Expected $paramCount arguments in function \"$funName\" but got $argsCount")
-            }
+
+            // Do we have enough arguments?
+            if (paramCount != argsCount) throw AnalyticalVisitorException("Expected $paramCount arguments in function \"$funName\" but got $argsCount")
+
+            // Check if the argument types match with the parameter types
+            funSymbol.params.zip(funCallNode.args)
+                    .forEach {
+                        val expectedType = it.first.type?.name
+                        val actualType = analyzer.analyze(it.second).type
+                        if (expectedType != actualType) {
+                            throw AnalyticalVisitorException("Expected type \"$expectedType\" for parameter \"${it.first.name}\" but got \"${actualType}\"")
+                        }
+                    }
+
             if (returns != null) return analysisResult(returns.name)
         }
 

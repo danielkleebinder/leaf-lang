@@ -5,20 +5,21 @@ import org.nyxlang.lexer.token.CommaToken
 import org.nyxlang.lexer.token.NameToken
 import org.nyxlang.lexer.token.arithmetic.DecrementToken
 import org.nyxlang.lexer.token.arithmetic.IncrementToken
-import org.nyxlang.lexer.token.bracket.*
+import org.nyxlang.lexer.token.bracket.LeftBracketToken
+import org.nyxlang.lexer.token.bracket.LeftParenthesisToken
+import org.nyxlang.lexer.token.bracket.RightBracketToken
+import org.nyxlang.lexer.token.bracket.RightParenthesisToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advance
 import org.nyxlang.parser.ast.*
 import org.nyxlang.parser.eval.AtomEval
 import org.nyxlang.parser.eval.IEval
-import org.nyxlang.parser.eval.TypeInstantiationEval
 import org.nyxlang.parser.exception.EvalException
 
 /**
  * Evaluates the additive semantics:
  *
  * <postfix-expr> ::= <atom> (<suffix>)?
- *                 | <type-instantiation>
  *
  * <suffix> ::= ('++' | '--' | '?')
  *            | <assign-suffix>
@@ -35,9 +36,6 @@ class PostfixExprEval(private val parser: IParser) : IEval {
     override fun eval(): INode {
         var id: String? = null
         if (NameToken::class == parser.token::class) {
-            if (LeftCurlyBraceToken::class == parser.peekNextToken::class) {
-                return TypeInstantiationEval(parser).eval()
-            }
             id = (parser.token as NameToken).value
         }
 

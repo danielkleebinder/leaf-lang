@@ -5,6 +5,7 @@ import org.nyxlang.lexer.token.CommaToken
 import org.nyxlang.lexer.token.NameToken
 import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
 import org.nyxlang.lexer.token.bracket.RightCurlyBraceToken
+import org.nyxlang.lexer.token.keyword.NewKeywordToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.TypeArgument
 import org.nyxlang.parser.ast.TypeInstantiationNode
@@ -14,14 +15,17 @@ import org.nyxlang.parser.exception.EvalException
 /**
  * Evaluates the type semantics:
  *
- * <type-inst>  ::= <name> <inst-body>
- * <inst-body>  ::= '{' (NL)* (<inst-value> (NL)* (',' (NL)* <inst-value> (NL)*)* )? '}'
+ * <type-inst>  ::= 'new' <name> ('{' (NL)* <inst-body> (NL)* '}')?
+ * <inst-body>  ::= (<inst-value> (NL)* (',' (NL)* <inst-value> (NL)*)* )?
  * <inst-value> ::= (<name> '=')? <expr>
  *
  */
 class TypeInstantiationEval(private val parser: IParser) : IEval {
 
     override fun eval(): TypeInstantiationNode {
+        if (NewKeywordToken::class != parser.token::class) throw EvalException("Keyword 'new' expected for instantiation, but got ${parser.token}")
+        parser.advanceCursor()
+
         if (NameToken::class != parser.token::class) throw EvalException("Type name required for instantiation, but got ${parser.token}")
         val typeName = (parser.tokenAndAdvance as NameToken).value
         val typeArgs = arrayListOf<TypeArgument>()
@@ -44,7 +48,7 @@ class TypeInstantiationEval(private val parser: IParser) : IEval {
      * Evaluates the instantiation body (if available).
      */
     private inline fun instanceBody(fn: () -> Unit) {
-        if (LeftCurlyBraceToken::class != parser.token::class) throw EvalException("Type instantiation requires opening curly brace, but got ${parser.token}")
+        if (LeftCurlyBraceToken::class != parser.token::class) return
         parser.advanceCursor()
         parser.skipNewLines()
 

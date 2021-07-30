@@ -178,6 +178,13 @@ class InterpreterFunctionTest : TestSuit() {
     }
 
     @Test
+    fun shouldErrorWrongType() {
+        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) = a; f(\"Test\")") }
+        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) = a; const n: string = f(10)") }
+        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: bool) -> string = a; f(10)") }
+    }
+
+    @Test
     fun shouldOverrideReturnVariable() {
         assertDoesNotThrow {
             execute("fun test(a: number) :: _ == 10 -> number { const _ = 20; return 10 }")
