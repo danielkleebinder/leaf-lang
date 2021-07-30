@@ -27,6 +27,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
                | 'return' ((NL)* <expr>)?
                | 'break'
                | 'continue'
+               | <type-declaration>
                | <assignment>
                | <loop-stmt>
                | <expr>
@@ -70,6 +71,12 @@ The formal language definition in **Backus-Naur form** looks like the following.
 <loop-cond> ::= ':' (NL)* <expr>
 <loop-step> ::= ':' (NL)* <statement>
 <loop-body> ::= <block>
+```
+
+### Custom Types
+```
+<type-declaration> ::= 'type' (NL)* <name> (NL)*
+                          '{' (NL)* (<declarations> (NL)*)* '}'
 ```
 
 ### Declarations
@@ -200,24 +207,17 @@ use "system.io"
 use "math"
 
 
-trait Feedable {
-  fun feed()
-}
+trait Feedable
+trait CanTalk
 
-trait CanTalk {
-  fun CanTalk.talk(text: string)
-}
-
-type Dog is Feedable, CanTalk {
-
+type Dog : Feedable, CanTalk {
   fed: bool, happy: bool
   age: number
-
-  fun feed = fed = true
-  fun name() -> string = 'Bello'
-  fun talk(text: string) = print(name . ' says: ' . text)
-
 }
+
+fun (number).feed = fed = true
+fun (Dog, Cat) name() -> string = 'Bello'
+fun (Dog) talk(text: string) = print(name . ' says: ' . text)
 
 
 
@@ -266,7 +266,7 @@ fun main {
     dog.feed()
   }
 
-  // Use the print function from system.io
+  // Use the print function from io
   print(dog.fed)       // true
   print(dog == dog)    // true
   print(~(-7+3**2))    // -3
@@ -290,6 +290,9 @@ recursion(5)
 ```
 
 ### Lambdas
+Lambdas are typically used to implement some sort of functional programming pattern that focuses on the
+computational part of a problem. Lambdas can be used as follows:
+
 ```kotlin
 fun compute(a: fun, b: fun) -> number = a(5,5) * b(10,8)
 

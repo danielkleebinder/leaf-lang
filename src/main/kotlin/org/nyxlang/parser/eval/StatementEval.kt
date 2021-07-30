@@ -17,6 +17,7 @@ import org.nyxlang.parser.eval.expression.ExprEval
  *                | 'return' ((NL)* <expr>)?
  *                | 'break'
  *                | 'continue'
+ *                | <type-declaration>
  *                | <assignment>
  *                | <loop-stmt>
  *                | <expr>
@@ -30,6 +31,7 @@ class StatementEval(private val parser: IParser) : IEval {
         BreakKeywordToken::class -> parser.advance { BreakNode() }
         ContinueKeywordToken::class -> parser.advance { ContinueNode() }
         LoopKeywordToken::class -> LoopEval(parser).eval()
+        TypeKeywordToken::class -> TypeDeclarationEval(parser).eval()
         else -> ExprEval(parser).eval()
     }
 }

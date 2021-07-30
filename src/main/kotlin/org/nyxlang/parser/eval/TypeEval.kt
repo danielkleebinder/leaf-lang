@@ -10,7 +10,7 @@ import org.nyxlang.parser.exception.EvalException
 /**
  * Evaluates the type semantics:
  *
- * <type> ::= <number> | <bool> | <string>
+ * <type>  ::= <number> | <bool> | <string> | <fun>
  *
  */
 class TypeEval(private val parser: IParser) : IEval {
