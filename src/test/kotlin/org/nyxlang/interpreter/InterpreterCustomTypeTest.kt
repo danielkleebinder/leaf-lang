@@ -51,6 +51,13 @@ class InterpreterCustomTypeTest : TestSuit() {
     }
 
     @Test
+    fun shouldErrorForFieldRedeclaration() {
+        assertThrows(StaticSemanticException::class.java) { execute("type X{a:string,a:string}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X{a:string,a:number}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X{a:string,b:number,a:string}") }
+    }
+
+    @Test
     fun shouldAllowRecursiveDataTypeDeclaration() {
         assertDoesNotThrow { execute("type Human { name: string, parent: Human }") }
     }

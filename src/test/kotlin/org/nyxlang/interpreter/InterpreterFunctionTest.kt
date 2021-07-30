@@ -178,10 +178,17 @@ class InterpreterFunctionTest : TestSuit() {
     }
 
     @Test
-    fun shouldErrorWrongType() {
+    fun shouldErrorForWrongType() {
         assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) = a; f(\"Test\")") }
         assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) = a; const n: string = f(10)") }
         assertThrows(StaticSemanticException::class.java) { execute("fun f(a: bool) -> string = a; f(10)") }
+    }
+
+    @Test
+    fun shouldErrorForParameterRedeclaration() {
+        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number, a: number) {}") }
+        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number, a: string) {}") }
+        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number, b: string, a: number) {}") }
     }
 
     @Test

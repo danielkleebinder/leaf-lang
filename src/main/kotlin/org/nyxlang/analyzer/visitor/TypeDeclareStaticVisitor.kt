@@ -35,6 +35,15 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
         typeSymbol.fields = typeDeclareNode.fields
                 .map { VarSymbol(it.identifier, analyzer.currentScope.get(it.typeExpr!!.type)) }
 
+        // One record cannot define two or more fields with the same name
+        typeSymbol.fields
+                .forEach { field ->
+                    val count = typeSymbol.fields.count { field.name == it.name }
+                    if (count >= 2) {
+                        throw AnalyticalVisitorException("Type \"$typeName\" declares field \"${field.name}\" $count times")
+                    }
+                }
+
         return emptyAnalysisResult()
     }
 }

@@ -34,3 +34,8 @@ fun funValue(value: FunSymbol) = FunValue(value)
  * Creates an async [value].
  */
 fun asyncValue(value: Future<IValue?>) = AsyncValue(value)
+
+/**
+ * Creates an object [value].
+ */
+fun objectValue(value: MutableMap<String, IValue>) = ObjectValue(value)

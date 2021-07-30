@@ -52,6 +52,11 @@ fun numberResult(value: BigDecimal) = dataResult(numberValue(value))
 fun stringResult(value: String) = dataResult(stringValue(value))
 
 /**
+ * Creates a data runtime result with the given object [value].
+ */
+fun objectResult(value: MutableMap<String, IValue>) = dataResult(objectValue(value))
+
+/**
  * Creates an empty runtime result.
  */
 fun emptyResult() = EmptyRuntimeResult()
