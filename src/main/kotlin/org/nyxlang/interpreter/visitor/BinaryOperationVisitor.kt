@@ -23,6 +23,6 @@ class BinaryOperationVisitor : IVisitor {
             return dataResult(left.binary(right, op))
         }
 
-        throw VisitorException("Given value $left is not compatible with $right")
+        throw VisitorException("Given value ${binaryOperationNode.leftNode} is not compatible with ${binaryOperationNode.rightNode}")
     }
 }

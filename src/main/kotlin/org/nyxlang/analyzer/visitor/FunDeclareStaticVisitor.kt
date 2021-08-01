@@ -9,6 +9,7 @@ import org.nyxlang.analyzer.symbol.VarSymbol
 import org.nyxlang.analyzer.withScope
 import org.nyxlang.parser.ast.FunDeclareNode
 import org.nyxlang.parser.ast.INode
+import org.nyxlang.parser.ast.Modifier
 
 /**
  * Analyzes a function ('fun') declaration statement.
@@ -34,6 +35,9 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                         .map { VarSymbol(it.identifier, analyzer.currentScope.get(it.typeExpr!!.type)) }
                 funSymbol.params.addAll(funParams)
             }
+
+            // Define the "object" context
+            it.define(VarSymbol("object", modifiers = arrayOf(Modifier.CONSTANT)))
 
             // Requires without parameters does not make sense
             if ((funDeclareNode.params == null || funDeclareNode.params.declarations.isEmpty()) && funDeclareNode.requires != null) {

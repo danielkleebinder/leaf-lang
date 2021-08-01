@@ -32,6 +32,7 @@ class AccessStaticVisitor : IStaticVisitor {
 
         if (symbol is BuiltInSymbol) return analysisResult(symbol.name, true)
         if (symbol is VarSymbol && symbol.type != null) return analysisResult(symbol.type!!.name, symbol.modifiers.contains(Modifier.CONSTANT))
+        if (symbol is FunSymbol || symbol is NativeFunSymbol) return analysisResult("function")
 
         return emptyAnalysisResult()
     }
@@ -39,11 +40,11 @@ class AccessStaticVisitor : IStaticVisitor {
     /**
      * Analyzes the field access or throws an exception if something is semantically wrong.
      */
-    private fun analyzeFieldAccess(symbol: Symbol, node: AccessFieldNode, analyzer: ISemanticAnalyzer): Symbol {
+    private fun analyzeFieldAccess(symbol: Symbol, node: AccessFieldNode, analyzer: ISemanticAnalyzer): Symbol? {
         val fieldName = node.name
         val symbolName = symbol.name
 
-        if (symbol !is ITypedSymbol || symbol.type == null) throw AnalyticalVisitorException("\"$symbolName\" does not have a custom type attached to it")
+        if (symbol !is ITypedSymbol || symbol.type == null) return null
         val typeSymbol = analyzer.currentScope.get(symbol.type!!.name)
 
         if (typeSymbol !is TypeSymbol) throw AnalyticalVisitorException("\"$symbolName\" is not a custom type and cannot be dereferenced by \"$fieldName\"")
@@ -60,6 +61,11 @@ class AccessStaticVisitor : IStaticVisitor {
     private fun analyzeCallAccess(symbol: Symbol, node: AccessCallNode, analyzer: ISemanticAnalyzer): Symbol? {
         // Check if all arguments are correct
         node.args.forEach { analyzer.analyze(it) }
+
+        // If this is a native function symbol we can stop preemptively
+        if (symbol is NativeFunSymbol) {
+            return if (symbol.returns != null) analyzer.currentScope.get(symbol.returns!!.name) else null
+        }
 
         // This is not a function symbol
         if (FunSymbol::class != symbol::class) return null
@@ -78,8 +84,10 @@ class AccessStaticVisitor : IStaticVisitor {
                 .forEach {
                     val expectedType = it.first.type?.name
                     val actualType = analyzer.analyze(it.second).type
-                    if (expectedType != actualType) {
-                        throw AnalyticalVisitorException("Expected type \"$expectedType\" for parameter \"${it.first.name}\" but got \"${actualType}\"")
+                    if (expectedType != null && actualType != null) {
+                        if (expectedType != actualType) {
+                            throw AnalyticalVisitorException("Expected type \"$expectedType\" for parameter \"${it.first.name}\" but got \"${actualType}\"")
+                        }
                     }
                 }
 

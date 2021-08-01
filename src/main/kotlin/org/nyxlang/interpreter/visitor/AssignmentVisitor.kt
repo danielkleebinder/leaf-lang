@@ -20,7 +20,11 @@ class AssignmentVisitor : IVisitor {
         val assignmentValue = interpreter.interpret(assignmentExpr).data
                 ?: throw VisitorException("Assignment value for \"${accessNode.name}\" is undefined")
 
-        access?.assign(assignmentValue)
+        if (access != null) {
+            access.assign(assignmentValue)
+        } else if (accessNode.children.isEmpty()) {
+            interpreter.activationRecord!![accessNode.name] = assignmentValue
+        }
         return emptyResult()
     }
 }

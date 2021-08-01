@@ -26,7 +26,7 @@
             <Keywords name="Folders in comment, close"></Keywords>
             <Keywords name="Keywords1">async&#x000D;&#x000A;break continue return&#x000D;&#x000A;if else loop fun&#x000D;&#x000A;type trait&#x000D;&#x000A;new</Keywords>
             <Keywords name="Keywords2">array&#x000D;&#x000A;bool&#x000D;&#x000A;number&#x000D;&#x000A;string</Keywords>
-            <Keywords name="Keywords3">true false</Keywords>
+            <Keywords name="Keywords3">true false object this</Keywords>
             <Keywords name="Keywords4">const var</Keywords>
             <Keywords name="Keywords5"></Keywords>
             <Keywords name="Keywords6"></Keywords>

@@ -9,14 +9,14 @@ import org.nyxlang.native.nativeFunSymbol
 class MathModule : INativeModule {
     override val name = "math"
     override val functions = listOf(
-            nativeFunSymbol("random", arrayOf(), { mathRandom(it) }),
-            nativeFunSymbol("randomInt", arrayOf(), { mathRandomInt(it) }),
-            nativeFunSymbol("randomUInt", arrayOf(), { mathRandomUInt(it) }),
-            nativeFunSymbol("randomBool", arrayOf(), { mathRandomBool(it) }),
-            nativeFunSymbol("sqrt", arrayOf(), { mathSqrt(it) }),
-            nativeFunSymbol("abs", arrayOf(), { mathAbs(it) }),
-            nativeFunSymbol("round", arrayOf(), { mathRound(it) }),
-            nativeFunSymbol("min", arrayOf(), { mathMin(it) }),
-            nativeFunSymbol("max", arrayOf(), { mathMax(it) }),
+            nativeFunSymbol("random", arrayOf(), { mathRandom(it) }, "number"),
+            nativeFunSymbol("randomInt", arrayOf(), { mathRandomInt(it) }, "number"),
+            nativeFunSymbol("randomUInt", arrayOf(), { mathRandomUInt(it) }, "number"),
+            nativeFunSymbol("randomBool", arrayOf(), { mathRandomBool(it) }, "bool"),
+            nativeFunSymbol("sqrt", arrayOf(), { mathSqrt(it) }, "number"),
+            nativeFunSymbol("abs", arrayOf(), { mathAbs(it) }, "number"),
+            nativeFunSymbol("round", arrayOf(), { mathRound(it) }, "number"),
+            nativeFunSymbol("min", arrayOf(), { mathMin(it) }, "number"),
+            nativeFunSymbol("max", arrayOf(), { mathMax(it) }, "number"),
     )
 }

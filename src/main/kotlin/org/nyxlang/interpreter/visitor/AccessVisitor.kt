@@ -5,11 +5,11 @@ import org.nyxlang.analyzer.symbol.NativeFunSymbol
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.exception.VisitorException
 import org.nyxlang.interpreter.memory.IActivationRecord
+import org.nyxlang.interpreter.memory.cell.IMemoryCell
 import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.result.ReturnRuntimeResult
 import org.nyxlang.interpreter.result.dataResult
 import org.nyxlang.interpreter.result.emptyResult
-import org.nyxlang.interpreter.memory.cell.IMemoryCell
 import org.nyxlang.interpreter.withDynamicScope
 import org.nyxlang.parser.ast.*
 
@@ -23,15 +23,18 @@ class AccessVisitor : IVisitor {
         val name = accessNode.name
 
         var value: IMemoryCell? = interpreter.activationRecord!![name]
+        var previousValue: IMemoryCell? = null
 
         for (child in accessNode.children) {
             if (value == null) throw VisitorException("Cannot perform operation \"$child\" because nothing was returned from the previous call")
+            val tmp = value
             value = when (child::class) {
-                AccessCallNode::class -> visitCallAccess(value, child as AccessCallNode, interpreter)
+                AccessCallNode::class -> visitCallAccess(previousValue, value, child as AccessCallNode, interpreter)
                 AccessFieldNode::class -> visitFieldAccess(value, child as AccessFieldNode)
                 AccessIndexNode::class -> visitIndexAccess(value, child as AccessIndexNode, interpreter)
                 else -> throw VisitorException("Invalid child node \"$value\" for access")
             }
+            previousValue = tmp
         }
 
         return if (value != null) dataResult(value) else emptyResult()
@@ -59,7 +62,7 @@ class AccessVisitor : IVisitor {
     /**
      * Visits the call access node and returns the interpreted result.
      */
-    private fun visitCallAccess(current: IMemoryCell, node: AccessCallNode, interpreter: IInterpreter): IMemoryCell? {
+    private fun visitCallAccess(previous: IMemoryCell?, current: IMemoryCell, node: AccessCallNode, interpreter: IInterpreter): IMemoryCell? {
         val activationRecord = interpreter.activationRecord!!
         val args = node.args
 
@@ -101,6 +104,9 @@ class AccessVisitor : IVisitor {
                 // Update the static link of the new activation record
                 activationRecord.staticLink = staticLink
                 activationRecord.nestingLevel = staticLink!!.nestingLevel + 1
+
+                // Define the "object" context for this call access
+                if (previous != null) activationRecord.define("object", previous)
 
                 if (false == interpreter.interpret(spec.requires).data?.value) {
                     throw VisitorException("Requires expression of function \"$funName\" failed")
