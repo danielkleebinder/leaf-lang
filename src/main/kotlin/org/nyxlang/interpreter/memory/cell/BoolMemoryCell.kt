@@ -1,4 +1,4 @@
-package org.nyxlang.interpreter.value
+package org.nyxlang.interpreter.memory.cell
 
 import org.nyxlang.interpreter.exception.UnknownOperationException
 import org.nyxlang.interpreter.exception.VisitorException
@@ -9,27 +9,27 @@ import org.nyxlang.parser.ast.UnaryOperation
  * Bool values are used to perform certain operations and
  * enable type coercion.
  */
-class BoolValue(private var data: Boolean,
-                override val members: Map<String, IValue> = mapOf()) : IValue {
+class BoolMemoryCell(private var data: Boolean,
+                     override val members: Map<String, IMemoryCell> = mapOf()) : IMemoryCell {
 
     override val value: Boolean
         get() = data
 
-    override fun assign(newValue: IValue) {
-        if (newValue !is BoolValue) throw UnknownOperationException("Cannot assign \"$newValue\" to bool")
+    override fun assign(newValue: IMemoryCell) {
+        if (newValue !is BoolMemoryCell) throw UnknownOperationException("Cannot assign \"$newValue\" to bool")
         data = newValue.value
     }
 
-    override fun set(index: IValue, newValue: IValue) = throw UnknownOperationException("Bools do not support index based assignment")
-    override fun get(index: IValue) = throw UnknownOperationException("Bools do not support index based access")
+    override fun copy() = boolMemoryCell(data)
+    override fun get(index: IMemoryCell) = throw UnknownOperationException("Bools do not support index based access")
 
     override fun unary(op: UnaryOperation) = when (op) {
-        UnaryOperation.LOGICAL_NEGATE -> boolValue(!data)
-        UnaryOperation.BIT_COMPLEMENT -> boolValue(!data)
+        UnaryOperation.LOGICAL_NEGATE -> boolMemoryCell(!data)
+        UnaryOperation.BIT_COMPLEMENT -> boolMemoryCell(!data)
         else -> throw VisitorException("The operation $op is not supported for data type bool")
     }
 
-    override fun binary(right: IValue, op: BinaryOperation) = when (op) {
+    override fun binary(right: IMemoryCell, op: BinaryOperation) = when (op) {
         BinaryOperation.PLUS -> binaryPlus(right)
         BinaryOperation.EQUAL -> binaryEqual(right)
         BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
@@ -41,41 +41,41 @@ class BoolValue(private var data: Boolean,
     /**
      * Performs the '+' operation.
      */
-    private fun binaryPlus(right: IValue) = when (right) {
-        is StringValue -> stringValue(stringify() + right.value)
-        is ArrayValue -> arrayValue(arrayOf(this, *right.value))
+    private fun binaryPlus(right: IMemoryCell) = when (right) {
+        is StringMemoryCell -> stringMemoryCell(stringify() + right.value)
+        is ArrayMemoryCell -> arrayMemoryCell(arrayOf(this, *right.value))
         else -> throw UnknownOperationException("The plus operation in bool is not supported for $right")
     }
 
     /**
      * Performs the '==' operation.
      */
-    private fun binaryEqual(right: IValue) = when (right) {
-        is BoolValue -> boolValue(data == right.data)
+    private fun binaryEqual(right: IMemoryCell) = when (right) {
+        is BoolMemoryCell -> boolMemoryCell(data == right.data)
         else -> throw UnknownOperationException("The == operation in bool is not supported for $right")
     }
 
     /**
      * Performs the '!=' operation.
      */
-    private fun binaryNotEqual(right: IValue) = when (right) {
-        is BoolValue -> boolValue(data != right.data)
+    private fun binaryNotEqual(right: IMemoryCell) = when (right) {
+        is BoolMemoryCell -> boolMemoryCell(data != right.data)
         else -> throw UnknownOperationException("The != operation in bool is not supported for $right")
     }
 
     /**
      * Performs the '&&' operation.
      */
-    private fun binaryLogicalAnd(right: IValue) = when (right) {
-        is BoolValue -> boolValue(data && right.data)
+    private fun binaryLogicalAnd(right: IMemoryCell) = when (right) {
+        is BoolMemoryCell -> boolMemoryCell(data && right.data)
         else -> throw UnknownOperationException("The && operation in bool is not supported for $right")
     }
 
     /**
      * Performs the '||' operation.
      */
-    private fun binaryLogicalOr(right: IValue) = when (right) {
-        is BoolValue -> boolValue(data || right.data)
+    private fun binaryLogicalOr(right: IMemoryCell) = when (right) {
+        is BoolMemoryCell -> boolMemoryCell(data || right.data)
         else -> throw UnknownOperationException("The || operation in bool is not supported for $right")
     }
 

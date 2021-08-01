@@ -1,4 +1,4 @@
-package org.nyxlang.interpreter.value
+package org.nyxlang.interpreter.memory.cell
 
 import org.nyxlang.interpreter.exception.CoroutineException
 import org.nyxlang.interpreter.exception.UnknownOperationException
@@ -10,8 +10,8 @@ import java.util.concurrent.Future
  * Async values are used to perform certain operations and
  * enable type coercion.
  */
-class AsyncValue(override val value: Future<IValue?>,
-                 override val members: Map<String, IValue> = mapOf()) : IValue {
+class AsyncMemoryCell(override val value: Future<IMemoryCell?>,
+                      override val members: Map<String, IMemoryCell> = mapOf()) : IMemoryCell {
 
     override fun unary(op: UnaryOperation) = when (op) {
         UnaryOperation.BIT_COMPLEMENT -> value.get()
@@ -19,11 +19,11 @@ class AsyncValue(override val value: Future<IValue?>,
         else -> throw UnknownOperationException("The operation $op is not supported for array data type")
     }
 
-    override fun binary(right: IValue, op: BinaryOperation) = throw UnknownOperationException("Binary operations are not supported on async values")
-    override fun assign(newValue: IValue) = throw UnknownOperationException("Assignments are not supported on async values")
+    override fun copy() = asyncMemoryCell(value)
+    override fun binary(right: IMemoryCell, op: BinaryOperation) = throw UnknownOperationException("Binary operations are not supported on async values")
+    override fun assign(newValue: IMemoryCell) = throw UnknownOperationException("Assignments are not supported on async values")
 
-    override fun set(index: IValue, newValue: IValue) = throw UnknownOperationException("Async values do not support index based assignment")
-    override fun get(index: IValue) = throw UnknownOperationException("Async values do not support index based access")
+    override fun get(index: IMemoryCell) = throw UnknownOperationException("Async values do not support index based access")
 
     override fun stringify() = value.toString()
     override fun toString() = "AsyncValue(value=$value)"

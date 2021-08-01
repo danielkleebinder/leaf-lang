@@ -1,4 +1,4 @@
-package org.nyxlang.interpreter.value
+package org.nyxlang.interpreter.memory.cell
 
 import org.nyxlang.interpreter.exception.UnknownOperationException
 import org.nyxlang.parser.ast.BinaryOperation
@@ -9,41 +9,34 @@ import java.math.BigDecimal
  * String values are used to perform certain operations and
  * enable type coercion.
  */
-class StringValue(private var data: String,
-                  override val members: Map<String, IValue> = mapOf()) : IValue {
+class StringMemoryCell(private var data: String,
+                       override val members: Map<String, IMemoryCell> = mapOf()) : IMemoryCell {
 
     override val value: String
         get() = data
 
-    override fun assign(newValue: IValue) {
-        if (newValue !is StringValue) throw UnknownOperationException("Cannot assign \"$newValue\" to string")
+    override fun assign(newValue: IMemoryCell) {
+        if (newValue !is StringMemoryCell) throw UnknownOperationException("Cannot assign \"$newValue\" to string")
         data = newValue.value
     }
 
-    override fun set(index: IValue, newValue: IValue) = when (index) {
-        is NumberValue -> {
-            val indexAsInt = index.value.toInt()
-            if (indexAsInt < 0 || indexAsInt >= data.length) throw UnknownOperationException("String index $indexAsInt out of bounds")
-            data = data.replaceRange(indexAsInt, indexAsInt + 1, newValue.stringify())
-        }
-        else -> throw UnknownOperationException("The index based set operation in string is not supported for $index")
-    }
+    override fun copy() = stringMemoryCell(data)
 
-    override fun get(index: IValue) = when (index) {
-        is NumberValue -> {
+    override fun get(index: IMemoryCell) = when (index) {
+        is NumberMemoryCell -> {
             val indexAsInt = index.value.toInt()
             if (indexAsInt < 0 || indexAsInt >= data.length) throw UnknownOperationException("String index $indexAsInt out of bounds")
-            stringValue(data[indexAsInt].toString())
+            stringMemoryCell(data[indexAsInt].toString())
         }
         else -> throw UnknownOperationException("The index based get operation in string is not supported for $index")
     }
 
     override fun unary(op: UnaryOperation) = when (op) {
-        UnaryOperation.BIT_COMPLEMENT -> NumberValue(BigDecimal.valueOf(data.length.toLong()))
+        UnaryOperation.BIT_COMPLEMENT -> NumberMemoryCell(BigDecimal.valueOf(data.length.toLong()))
         else -> throw UnknownOperationException("The operation $op is not supported for string data type")
     }
 
-    override fun binary(right: IValue, op: BinaryOperation) = when (op) {
+    override fun binary(right: IMemoryCell, op: BinaryOperation) = when (op) {
         BinaryOperation.PLUS -> binaryPlus(right)
         BinaryOperation.EQUAL -> binaryEqual(right)
         BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
@@ -57,53 +50,53 @@ class StringValue(private var data: String,
     /**
      * Performs the '+' operation.
      */
-    private fun binaryPlus(right: IValue) = stringValue(stringify() + right.stringify())
+    private fun binaryPlus(right: IMemoryCell) = stringMemoryCell(stringify() + right.stringify())
 
     /**
      * Performs the '==' operation.
      */
-    private fun binaryEqual(right: IValue) = when (right) {
-        is StringValue -> boolValue(data == right.data)
+    private fun binaryEqual(right: IMemoryCell) = when (right) {
+        is StringMemoryCell -> boolMemoryCell(data == right.data)
         else -> throw UnknownOperationException("The == operation in number is not supported for $right")
     }
 
     /**
      * Performs the '!=' operation.
      */
-    private fun binaryNotEqual(right: IValue) = when (right) {
-        is StringValue -> boolValue(data != right.data)
+    private fun binaryNotEqual(right: IMemoryCell) = when (right) {
+        is StringMemoryCell -> boolMemoryCell(data != right.data)
         else -> throw UnknownOperationException("The != operation in number is not supported for $right")
     }
 
     /**
      * Performs the '<' operation.
      */
-    private fun binaryLessThan(right: IValue) = when (right) {
-        is StringValue -> boolValue(data < right.data)
+    private fun binaryLessThan(right: IMemoryCell) = when (right) {
+        is StringMemoryCell -> boolMemoryCell(data < right.data)
         else -> throw UnknownOperationException("The < operation in number is not supported for $right")
     }
 
     /**
      * Performs the '<=' operation.
      */
-    private fun binaryLessThanOrEqual(right: IValue) = when (right) {
-        is StringValue -> boolValue(data <= right.data)
+    private fun binaryLessThanOrEqual(right: IMemoryCell) = when (right) {
+        is StringMemoryCell -> boolMemoryCell(data <= right.data)
         else -> throw UnknownOperationException("The <= operation in number is not supported for $right")
     }
 
     /**
      * Performs the '>' operation.
      */
-    private fun binaryGreaterThan(right: IValue) = when (right) {
-        is StringValue -> boolValue(data > right.data)
+    private fun binaryGreaterThan(right: IMemoryCell) = when (right) {
+        is StringMemoryCell -> boolMemoryCell(data > right.data)
         else -> throw UnknownOperationException("The > operation in number is not supported for $right")
     }
 
     /**
      * Performs the '>=' operation.
      */
-    private fun binaryGreaterThanOrEqual(right: IValue) = when (right) {
-        is StringValue -> boolValue(data >= right.data)
+    private fun binaryGreaterThanOrEqual(right: IMemoryCell) = when (right) {
+        is StringMemoryCell -> boolMemoryCell(data >= right.data)
         else -> throw UnknownOperationException("The >= operation in number is not supported for $right")
     }
 

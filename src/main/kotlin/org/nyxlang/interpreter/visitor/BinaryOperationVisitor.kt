@@ -4,7 +4,7 @@ import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.exception.VisitorException
 import org.nyxlang.interpreter.result.DataRuntimeResult
 import org.nyxlang.interpreter.result.dataResult
-import org.nyxlang.interpreter.value.IValue
+import org.nyxlang.interpreter.memory.cell.IMemoryCell
 import org.nyxlang.parser.ast.BinaryOperationNode
 import org.nyxlang.parser.ast.INode
 
@@ -19,7 +19,7 @@ class BinaryOperationVisitor : IVisitor {
         val right = interpreter.interpret(binaryOperationNode.rightNode).data
         val op = binaryOperationNode.op
 
-        if (left is IValue && right is IValue) {
+        if (left is IMemoryCell && right is IMemoryCell) {
             return dataResult(left.binary(right, op))
         }
 

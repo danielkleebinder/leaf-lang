@@ -9,7 +9,7 @@ import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.result.ReturnRuntimeResult
 import org.nyxlang.interpreter.result.dataResult
 import org.nyxlang.interpreter.result.emptyResult
-import org.nyxlang.interpreter.value.IValue
+import org.nyxlang.interpreter.memory.cell.IMemoryCell
 import org.nyxlang.interpreter.withDynamicScope
 import org.nyxlang.parser.ast.*
 
@@ -22,7 +22,7 @@ class AccessVisitor : IVisitor {
         val accessNode = node as AccessNode
         val name = accessNode.name
 
-        var value: IValue? = interpreter.activationRecord!![name]
+        var value: IMemoryCell? = interpreter.activationRecord!![name]
 
         for (child in accessNode.children) {
             if (value == null) throw VisitorException("Cannot perform operation \"$child\" because nothing was returned from the previous call")
@@ -40,7 +40,7 @@ class AccessVisitor : IVisitor {
     /**
      * Visits the field access node and returns the fields value.
      */
-    private fun visitFieldAccess(current: IValue, node: AccessFieldNode): IValue {
+    private fun visitFieldAccess(current: IMemoryCell, node: AccessFieldNode): IMemoryCell {
         val fieldName = node.name
         return current.members[fieldName]
                 ?: throw VisitorException("Member field with name \"${fieldName}\" not found on value \"$current\"")
@@ -49,7 +49,7 @@ class AccessVisitor : IVisitor {
     /**
      * Visits the index access node and returns the value at the index of the current value.
      */
-    private fun visitIndexAccess(current: IValue, node: AccessIndexNode, interpreter: IInterpreter): IValue {
+    private fun visitIndexAccess(current: IMemoryCell, node: AccessIndexNode, interpreter: IInterpreter): IMemoryCell {
         val indexExpr = node.indexExpr
         val index = interpreter.interpret(indexExpr).data
                 ?: throw VisitorException("Not an index expression")
@@ -59,7 +59,7 @@ class AccessVisitor : IVisitor {
     /**
      * Visits the call access node and returns the interpreted result.
      */
-    private fun visitCallAccess(current: IValue, node: AccessCallNode, interpreter: IInterpreter): IValue? {
+    private fun visitCallAccess(current: IMemoryCell, node: AccessCallNode, interpreter: IInterpreter): IMemoryCell? {
         val activationRecord = interpreter.activationRecord!!
         val args = node.args
 

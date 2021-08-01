@@ -4,7 +4,7 @@ import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.exception.VisitorException
 import org.nyxlang.interpreter.result.DataRuntimeResult
 import org.nyxlang.interpreter.result.dataResult
-import org.nyxlang.interpreter.value.IValue
+import org.nyxlang.interpreter.memory.cell.IMemoryCell
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.UnaryOperationNode
 
@@ -18,7 +18,7 @@ class UnaryOperationVisitor : IVisitor {
         val value = interpreter.interpret(unaryOperationNode.node).data
         val op = unaryOperationNode.op
 
-        if (value is IValue) {
+        if (value is IMemoryCell) {
             return dataResult(value.unary(op))
         }
 

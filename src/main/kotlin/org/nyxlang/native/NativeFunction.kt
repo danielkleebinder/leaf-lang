@@ -3,7 +3,7 @@ package org.nyxlang.native
 import org.nyxlang.analyzer.symbol.NativeFunSymbol
 import org.nyxlang.analyzer.symbol.Symbol
 import org.nyxlang.analyzer.symbol.VarSymbol
-import org.nyxlang.interpreter.value.IValue
+import org.nyxlang.interpreter.memory.cell.IMemoryCell
 
 
 /**
@@ -12,7 +12,7 @@ import org.nyxlang.interpreter.value.IValue
  * of arguments are used as input parameters and the native function is allowed to
  * return exactly one value.
  */
-typealias NativeFunction = (args: Array<IValue?>) -> IValue?
+typealias NativeFunction = (args: Array<IMemoryCell?>) -> IMemoryCell?
 
 /**
  * Encapsulates an input parameter for a native function.

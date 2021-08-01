@@ -7,7 +7,7 @@ import org.nyxlang.interpreter.memory.RuntimeStack
 import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.result.emptyResult
-import org.nyxlang.interpreter.value.NativeFunValue
+import org.nyxlang.interpreter.memory.cell.NativeFunMemoryCell
 import org.nyxlang.interpreter.visitor.*
 import org.nyxlang.native.INativeModule
 import org.nyxlang.native.io.IOModule
@@ -68,7 +68,7 @@ class Interpreter : IInterpreter {
 
     private fun registerModule(activationRecord: IActivationRecord, module: INativeModule) {
         module.functions.forEach {
-            activationRecord.define(it.name, NativeFunValue(it))
+            activationRecord.define(it.name, NativeFunMemoryCell(it))
         }
     }
 }

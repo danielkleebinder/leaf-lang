@@ -1,4 +1,4 @@
-package org.nyxlang.interpreter.value
+package org.nyxlang.interpreter.memory.cell
 
 import org.nyxlang.parser.ast.BinaryOperation
 import org.nyxlang.parser.ast.UnaryOperation
@@ -6,7 +6,7 @@ import org.nyxlang.parser.ast.UnaryOperation
 /**
  * A value that provides certain functions.
  */
-interface IValue {
+interface IMemoryCell {
 
     /**
      * The actual value data as read only property.
@@ -16,12 +16,12 @@ interface IValue {
     /**
      * Assigns the [newValue] to this value.
      */
-    fun assign(newValue: IValue)
+    fun assign(newValue: IMemoryCell)
 
     /**
      * The values name members.
      */
-    val members: Map<String, IValue>
+    val members: Map<String, IMemoryCell>
 
     /**
      * Checks if the value has members.
@@ -29,24 +29,24 @@ interface IValue {
     fun hasMembers() = members.isNotEmpty()
 
     /**
-     * Sets a [newValue] at the given [index].
-     */
-    fun set(index: IValue, newValue: IValue)
-
-    /**
      * Returns the value at the given [index].
      */
-    fun get(index: IValue): IValue
+    fun get(index: IMemoryCell): IMemoryCell
 
     /**
      * Performs a unary [op] on this value.
      */
-    fun unary(op: UnaryOperation): IValue
+    fun unary(op: UnaryOperation): IMemoryCell
 
     /**
      * Performs a binary [op] on this value given the [right] other value.
      */
-    fun binary(right: IValue, op: BinaryOperation): IValue
+    fun binary(right: IMemoryCell, op: BinaryOperation): IMemoryCell
+
+    /**
+     * Creates a copy of this value.
+     */
+    fun copy(): IMemoryCell
 
     /**
      * Stringifies the value. This is not to confuse with the [toString] function

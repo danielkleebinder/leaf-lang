@@ -1,7 +1,7 @@
 package org.nyxlang.interpreter.result
 
-import org.nyxlang.interpreter.value.ArrayValue
-import org.nyxlang.interpreter.value.IValue
+import org.nyxlang.interpreter.memory.cell.ArrayMemoryCell
+import org.nyxlang.interpreter.memory.cell.IMemoryCell
 
 /**
  * Visitors always return a result which can hold different information
@@ -12,7 +12,7 @@ interface IRuntimeResult {
     /**
      * Some data that is the result of a runtime analysis.
      */
-    val data: IValue?
+    val data: IMemoryCell?
 
     /**
      * Checks if data is available.
@@ -26,8 +26,8 @@ interface IRuntimeResult {
  */
 fun IRuntimeResult.unpack(): Any? {
     fun unroll(data: Any?): List<Any>? {
-        if (data is ArrayValue) return listOf(data.value.flatMap { unroll(it)!! })
-        if (data is IValue) return listOf(data.value)
+        if (data is ArrayMemoryCell) return listOf(data.value.flatMap { unroll(it)!! })
+        if (data is IMemoryCell) return listOf(data.value)
         return null
     }
 

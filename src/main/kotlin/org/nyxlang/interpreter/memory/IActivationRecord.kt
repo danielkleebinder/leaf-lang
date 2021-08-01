@@ -1,6 +1,6 @@
 package org.nyxlang.interpreter.memory
 
-import org.nyxlang.interpreter.value.IValue
+import org.nyxlang.interpreter.memory.cell.IMemoryCell
 
 /**
  * An activation record provides the local environment for a function call. It
@@ -33,18 +33,18 @@ interface IActivationRecord {
      * Sets the value of a variable in this activation record or any parent using
      * the given [identifier] and the new [value].
      */
-    operator fun set(identifier: String, value: IValue?)
+    operator fun set(identifier: String, value: IMemoryCell?)
 
     /**
      * Places a new local variable into the activation record using the
      * given [value] for the given [identifier].
      */
-    fun define(identifier: String, value: IValue?)
+    fun define(identifier: String, value: IMemoryCell?)
 
     /**
      * Returns the value associated with the given [identifier].
      */
-    operator fun get(identifier: String): IValue?
+    operator fun get(identifier: String): IMemoryCell?
 
     /**
      * Returns true if the given [identifier] exists in the activation record, otherwise

@@ -1,9 +1,7 @@
 package org.nyxlang.interpreter.visitor
 
 import org.nyxlang.interpreter.IInterpreter
-import org.nyxlang.interpreter.result.dataResult
 import org.nyxlang.interpreter.result.numberResult
-import org.nyxlang.interpreter.value.NumberValue
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.NumberNode
 

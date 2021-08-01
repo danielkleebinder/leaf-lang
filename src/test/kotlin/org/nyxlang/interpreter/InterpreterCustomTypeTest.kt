@@ -1,5 +1,6 @@
 package org.nyxlang.interpreter
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -61,5 +62,14 @@ class InterpreterCustomTypeTest : TestSuit() {
     @Test
     fun shouldAllowRecursiveDataTypeDeclaration() {
         assertDoesNotThrow { execute("type Human { name: string, parent: Human }") }
+    }
+
+    @Test
+    fun shouldAssignAndAccessFields() {
+        execute("type User { name: string }; const peter = new User { \"Peter\" }; const res1 = peter.name")
+        assertEquals("Peter", valueOf("res1"))
+
+        execute("const frank = new User { \"Daniel\" }; frank.name = \"Frank\"; const res2 = frank.name")
+        assertEquals("Frank", valueOf("res2"))
     }
 }

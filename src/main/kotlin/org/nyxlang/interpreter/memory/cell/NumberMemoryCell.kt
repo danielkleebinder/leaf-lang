@@ -1,4 +1,4 @@
-package org.nyxlang.interpreter.value
+package org.nyxlang.interpreter.memory.cell
 
 import org.nyxlang.interpreter.exception.UnknownOperationException
 import org.nyxlang.parser.ast.BinaryOperation
@@ -9,30 +9,30 @@ import java.math.BigDecimal
  * Number values are used to perform certain operations and
  * enable type coercion.
  */
-class NumberValue(private var data: BigDecimal,
-                  override val members: Map<String, IValue> = mapOf()) : IValue {
+class NumberMemoryCell(private var data: BigDecimal,
+                       override val members: Map<String, IMemoryCell> = mapOf()) : IMemoryCell {
 
     override val value: BigDecimal
         get() = data
 
-    override fun assign(newValue: IValue) {
-        if (newValue !is NumberValue) throw UnknownOperationException("Cannot assign \"$newValue\" to number")
+    override fun assign(newValue: IMemoryCell) {
+        if (newValue !is NumberMemoryCell) throw UnknownOperationException("Cannot assign \"$newValue\" to number")
         data = newValue.value
     }
 
-    override fun set(index: IValue, newValue: IValue) = throw UnknownOperationException("Numbers do not support index based assignment")
-    override fun get(index: IValue) = throw UnknownOperationException("Numbers do not support index based access")
+    override fun copy() = numberMemoryCell(data)
+    override fun get(index: IMemoryCell) = throw UnknownOperationException("Numbers do not support index based access")
 
     override fun unary(op: UnaryOperation) = when (op) {
         UnaryOperation.POSITIVE -> this
-        UnaryOperation.NEGATE -> numberValue(data.unaryMinus())
-        UnaryOperation.INCREMENT -> numberValue(data.inc())
-        UnaryOperation.DECREMENT -> numberValue(data.dec())
-        UnaryOperation.BIT_COMPLEMENT -> numberValue(BigDecimal.valueOf(data.toLong().inv()))
+        UnaryOperation.NEGATE -> numberMemoryCell(data.unaryMinus())
+        UnaryOperation.INCREMENT -> numberMemoryCell(data.inc())
+        UnaryOperation.DECREMENT -> numberMemoryCell(data.dec())
+        UnaryOperation.BIT_COMPLEMENT -> numberMemoryCell(BigDecimal.valueOf(data.toLong().inv()))
         else -> throw UnknownOperationException("The operation $op is not supported for data type number")
     }
 
-    override fun binary(right: IValue, op: BinaryOperation) = when (op) {
+    override fun binary(right: IMemoryCell, op: BinaryOperation) = when (op) {
         BinaryOperation.PLUS -> binaryPlus(right)
         BinaryOperation.MINUS -> binaryMinus(right)
         BinaryOperation.DIV -> binaryDiv(right)
@@ -50,90 +50,90 @@ class NumberValue(private var data: BigDecimal,
     /**
      * Performs the '+' operation.
      */
-    private fun binaryPlus(right: IValue) = when (right) {
-        is NumberValue -> numberValue(data + right.data)
-        is StringValue -> stringValue(stringify() + right.value)
-        is ArrayValue -> arrayValue(arrayOf(this, *right.value))
+    private fun binaryPlus(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> numberMemoryCell(data + right.data)
+        is StringMemoryCell -> stringMemoryCell(stringify() + right.value)
+        is ArrayMemoryCell -> arrayMemoryCell(arrayOf(this, *right.value))
         else -> throw UnknownOperationException("The plus operation in number is not supported for $right")
     }
 
     /**
      * Performs the '-' operation.
      */
-    private fun binaryMinus(right: IValue) = when (right) {
-        is NumberValue -> numberValue(data - right.data)
+    private fun binaryMinus(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> numberMemoryCell(data - right.data)
         else -> throw UnknownOperationException("The minus operation in number is not supported for $right")
     }
 
     /**
      * Performs the '/' operation.
      */
-    private fun binaryDiv(right: IValue) = when (right) {
-        is NumberValue -> numberValue(data / right.data)
+    private fun binaryDiv(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> numberMemoryCell(data / right.data)
         else -> throw UnknownOperationException("The divide operation in number is not supported for $right")
     }
 
     /**
      * Performs the '*' operation.
      */
-    private fun binaryTimes(right: IValue) = when (right) {
-        is NumberValue -> numberValue(data * right.data)
+    private fun binaryTimes(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> numberMemoryCell(data * right.data)
         else -> throw UnknownOperationException("The multiply operation in number is not supported for $right")
     }
 
     /**
      * Performs the '%' operation.
      */
-    private fun binaryRem(right: IValue) = when (right) {
-        is NumberValue -> numberValue(data % right.data)
+    private fun binaryRem(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> numberMemoryCell(data % right.data)
         else -> throw UnknownOperationException("The remainder operation in number is not supported for $right")
     }
 
     /**
      * Performs the '==' operation.
      */
-    private fun binaryEqual(right: IValue) = when (right) {
-        is NumberValue -> boolValue(data == right.data)
+    private fun binaryEqual(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> boolMemoryCell(data == right.data)
         else -> throw UnknownOperationException("The remainder operation in number is not supported for $right")
     }
 
     /**
      * Performs the '!=' operation.
      */
-    private fun binaryNotEqual(right: IValue) = when (right) {
-        is NumberValue -> boolValue(data != right.data)
+    private fun binaryNotEqual(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> boolMemoryCell(data != right.data)
         else -> throw UnknownOperationException("The != operation in number is not supported for $right")
     }
 
     /**
      * Performs the '<' operation.
      */
-    private fun binaryLessThan(right: IValue) = when (right) {
-        is NumberValue -> boolValue(data < right.data)
+    private fun binaryLessThan(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> boolMemoryCell(data < right.data)
         else -> throw UnknownOperationException("The < operation in number is not supported for $right")
     }
 
     /**
      * Performs the '<=' operation.
      */
-    private fun binaryLessThanOrEqual(right: IValue) = when (right) {
-        is NumberValue -> boolValue(data <= right.data)
+    private fun binaryLessThanOrEqual(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> boolMemoryCell(data <= right.data)
         else -> throw UnknownOperationException("The <= operation in number is not supported for $right")
     }
 
     /**
      * Performs the '>' operation.
      */
-    private fun binaryGreaterThan(right: IValue) = when (right) {
-        is NumberValue -> boolValue(data > right.data)
+    private fun binaryGreaterThan(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> boolMemoryCell(data > right.data)
         else -> throw UnknownOperationException("The > operation in number is not supported for $right")
     }
 
     /**
      * Performs the '>=' operation.
      */
-    private fun binaryGreaterThanOrEqual(right: IValue) = when (right) {
-        is NumberValue -> boolValue(data >= right.data)
+    private fun binaryGreaterThanOrEqual(right: IMemoryCell) = when (right) {
+        is NumberMemoryCell -> boolMemoryCell(data >= right.data)
         else -> throw UnknownOperationException("The >= operation in number is not supported for $right")
     }
 

@@ -1,7 +1,7 @@
 package org.nyxlang.interpreter.memory
 
 import org.nyxlang.interpreter.exception.MemoryException
-import org.nyxlang.interpreter.value.IValue
+import org.nyxlang.interpreter.memory.cell.IMemoryCell
 
 /**
  * Implementation of the activation record specification. The given parameter [staticLink]
@@ -13,9 +13,9 @@ class ActivationRecord(override var staticLink: IActivationRecord? = null,
                        override val name: String? = null,
                        override var nestingLevel: Int = 0) : IActivationRecord {
 
-    private val localVariables = hashMapOf<String, IValue?>()
+    private val localVariables = hashMapOf<String, IMemoryCell?>()
 
-    override operator fun set(identifier: String, value: IValue?) {
+    override operator fun set(identifier: String, value: IMemoryCell?) {
         when {
             localVariables.containsKey(identifier) -> localVariables[identifier] = value
             staticLink != null -> staticLink!![identifier] = value
@@ -23,11 +23,11 @@ class ActivationRecord(override var staticLink: IActivationRecord? = null,
         }
     }
 
-    override fun define(identifier: String, value: IValue?) {
+    override fun define(identifier: String, value: IMemoryCell?) {
         localVariables[identifier] = value
     }
 
-    override operator fun get(identifier: String): IValue? {
+    override operator fun get(identifier: String): IMemoryCell? {
         if (localVariables.containsKey(identifier)) return localVariables[identifier]
         if (staticLink != null) return staticLink!![identifier]
         return null
@@ -44,7 +44,7 @@ class ActivationRecord(override var staticLink: IActivationRecord? = null,
         |--------------------------------
         |${
         localVariables
-                .map { "${"%8s".format(it.key)} -> ${it.value}\n" }
+                .map { "${"%12s".format(it.key)} -> ${it.value}\n" }
                 .fold("") { acc, s -> acc + s }
     }
     """.trimMargin()

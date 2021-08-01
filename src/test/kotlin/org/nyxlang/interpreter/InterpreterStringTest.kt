@@ -66,13 +66,6 @@ class InterpreterStringTest : TestSuit() {
     }
 
     @Test
-    fun shouldAssignCharacters() {
-        assertEquals("Hello 2 3", execute("const a = \"1 2 3\"; a[0] = \"Hello\"; a"))
-        assertEquals("1 Another Test 3", execute("const b = \"1 2 3\"; b[2] = \"Another Test\"; b"))
-        assertEquals("1 2 4", execute("const c = \"1 2 3\"; c[4] = \"4\"; c"))
-    }
-
-    @Test
     fun shouldCheckEquality() {
         assertTrue(execute("\"Test\" == \"Test\"") as Boolean)
         assertTrue(execute("\"Test\" != \"Test2\"") as Boolean)

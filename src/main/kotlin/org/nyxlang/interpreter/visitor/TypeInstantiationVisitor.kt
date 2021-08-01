@@ -2,9 +2,7 @@ package org.nyxlang.interpreter.visitor
 
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.result.DataRuntimeResult
-import org.nyxlang.interpreter.result.dataResult
 import org.nyxlang.interpreter.result.objectResult
-import org.nyxlang.interpreter.value.ObjectValue
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.TypeInstantiationNode
 
@@ -20,7 +18,9 @@ class TypeInstantiationVisitor : IVisitor {
                     val paramName = arg.name ?: typeSpec.fields[index].name
                     val argumentValue = interpreter.interpret(arg.valueExpr).data!!
                     Pair(paramName, argumentValue)
-                }.toMap()
+                }
+                .toMap()
+                .toMutableMap()
         return objectResult(fields.toMutableMap())
     }
 }

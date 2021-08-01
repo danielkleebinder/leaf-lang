@@ -1,4 +1,4 @@
-package org.nyxlang.interpreter.value
+package org.nyxlang.interpreter.memory.cell
 
 import org.nyxlang.interpreter.exception.UnknownOperationException
 import org.nyxlang.parser.ast.BinaryOperation
@@ -9,28 +9,21 @@ import java.math.BigDecimal
  * Array values are used to perform certain operations and
  * enable type coercion.
  */
-class ArrayValue(private var data: Array<IValue?>,
-                 override val members: Map<String, IValue> = mapOf()) : IValue {
+class ArrayMemoryCell(private var data: Array<IMemoryCell?>,
+                      override val members: Map<String, IMemoryCell> = mapOf()) : IMemoryCell {
 
-    override val value: Array<IValue?>
+    override val value: Array<IMemoryCell?>
         get() = data
 
-    override fun assign(newValue: IValue) {
-        if (newValue !is ArrayValue) throw UnknownOperationException("Cannot assign \"$newValue\" to array")
+    override fun assign(newValue: IMemoryCell) {
+        if (newValue !is ArrayMemoryCell) throw UnknownOperationException("Cannot assign \"$newValue\" to array")
         data = newValue.value
     }
 
-    override fun set(index: IValue, newValue: IValue) = when (index) {
-        is NumberValue -> {
-            val indexAsInt = index.value.toInt()
-            if (indexAsInt < 0 || indexAsInt >= data.size) throw UnknownOperationException("Array index $indexAsInt out of bounds")
-            data[indexAsInt] = newValue
-        }
-        else -> throw UnknownOperationException("The index based set operation in array is not supported for $index")
-    }
+    override fun copy() = arrayMemoryCell(data.copyOf())
 
-    override fun get(index: IValue) = when (index) {
-        is NumberValue -> {
+    override fun get(index: IMemoryCell) = when (index) {
+        is NumberMemoryCell -> {
             val indexAsInt = index.value.toInt()
             if (indexAsInt < 0 || indexAsInt >= data.size) throw UnknownOperationException("Array index $indexAsInt out of bounds")
             data[indexAsInt]!!
@@ -39,11 +32,11 @@ class ArrayValue(private var data: Array<IValue?>,
     }
 
     override fun unary(op: UnaryOperation) = when (op) {
-        UnaryOperation.BIT_COMPLEMENT -> NumberValue(BigDecimal.valueOf(data.size.toLong()))
+        UnaryOperation.BIT_COMPLEMENT -> NumberMemoryCell(BigDecimal.valueOf(data.size.toLong()))
         else -> throw UnknownOperationException("The operation $op is not supported for array data type")
     }
 
-    override fun binary(right: IValue, op: BinaryOperation) = when (op) {
+    override fun binary(right: IMemoryCell, op: BinaryOperation) = when (op) {
         BinaryOperation.PLUS -> binaryPlus(right)
         BinaryOperation.EQUAL -> binaryEqual(right)
         BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
@@ -53,21 +46,21 @@ class ArrayValue(private var data: Array<IValue?>,
     /**
      * Performs the '+' operations.
      */
-    private fun binaryPlus(right: IValue) = arrayValue(data + right)
+    private fun binaryPlus(right: IMemoryCell) = arrayMemoryCell(data + right.copy())
 
     /**
      * Performs the '==' operation.
      */
-    private fun binaryEqual(right: IValue) = when (right) {
-        is ArrayValue -> boolValue(data.contentEquals(right.data))
+    private fun binaryEqual(right: IMemoryCell) = when (right) {
+        is ArrayMemoryCell -> boolMemoryCell(data.contentEquals(right.data))
         else -> throw UnknownOperationException("The == operation in array is not supported for $right")
     }
 
     /**
      * Performs the '!=' operation.
      */
-    private fun binaryNotEqual(right: IValue) = when (right) {
-        is ArrayValue -> boolValue(!data.contentEquals(right.data))
+    private fun binaryNotEqual(right: IMemoryCell) = when (right) {
+        is ArrayMemoryCell -> boolMemoryCell(!data.contentEquals(right.data))
         else -> throw UnknownOperationException("The != operation in array is not supported for $right")
     }
 
