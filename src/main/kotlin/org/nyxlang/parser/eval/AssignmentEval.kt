@@ -2,41 +2,31 @@ package org.nyxlang.parser.eval
 
 import org.nyxlang.lexer.token.AssignToken
 import org.nyxlang.lexer.token.NameToken
-import org.nyxlang.lexer.token.bracket.LeftBracketToken
-import org.nyxlang.lexer.token.bracket.RightBracketToken
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.AssignmentNode
-import org.nyxlang.parser.eval.expression.ExprEval
+import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.exception.EvalException
 
 /**
  * Evaluates the assignment semantics:
  *
- * <assignment> ::= <name> (<index-suffix>)? '=' <expr>
+ * <assignment> ::= <var> ('=' <expr>)?
  *
  */
 class AssignmentEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
-        if (NameToken::class != parser.token::class) throw EvalException("Identifier expected, but got ${parser.token}")
-        val id = (parser.tokenAndAdvance as NameToken).value
-        var indexAccess: INode? = null
-        val expr = ExprEval(parser)
+        if (NameToken::class != parser.token::class) throw EvalException("Identifier expected for assignment, but got ${parser.token}")
 
-        if (LeftBracketToken::class == parser.token::class) {
-            parser.skipNewLines()
-            indexAccess = expr.eval()
-            parser.skipNewLines()
-            if (RightBracketToken::class != parser.token::class) throw EvalException("Index access requires closing bracket")
-            parser.advanceCursor()
-        }
+        val variable = VariableEval(parser).eval()
 
         if (AssignToken::class == parser.token::class) {
             parser.skipNewLines()
             parser.advanceCursor()
-            return AssignmentNode(id, ExprEval(parser).eval())
+
+            val assignmentExpr = ExprEval(parser).eval()
+            return AssignmentNode(variable, assignmentExpr)
         }
-        return expr.eval()
+        return variable
     }
 }

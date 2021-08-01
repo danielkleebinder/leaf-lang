@@ -9,11 +9,13 @@ import org.nyxlang.parser.ast.UnaryOperation
  * Function values are used to perform certain operations and
  * enable type coercion.
  */
-class FunValue(override val value: FunSymbol) : IValue {
+class FunValue(override var value: FunSymbol,
+               override val members: Map<String, IValue> = mapOf()) : IValue {
 
     override fun set(index: IValue, newValue: IValue) = throw UnknownOperationException("Functions do not support index based assignment")
     override fun get(index: IValue) = throw UnknownOperationException("Functions do not support index based access")
     override fun unary(op: UnaryOperation) = throw UnknownOperationException("Functions do not support unary operations")
+    override fun assign(newValue: IValue) = throw UnknownOperationException("Assignments are not supported on function values")
 
     override fun binary(right: IValue, op: BinaryOperation) = when (op) {
         BinaryOperation.EQUAL -> binaryEqual(right)

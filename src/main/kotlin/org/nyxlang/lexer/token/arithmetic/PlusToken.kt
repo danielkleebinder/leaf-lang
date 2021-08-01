@@ -6,5 +6,5 @@ import org.nyxlang.lexer.token.IToken
  * Identifies number addition.
  */
 class PlusToken : IToken {
-    override fun toString() = "PlusToken{+}"
+    override fun toString() = "PlusToken(+)"
 }

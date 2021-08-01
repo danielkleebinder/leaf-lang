@@ -1,4 +1,4 @@
-package org.nyxlang.parser.eval.expression
+package org.nyxlang.parser.eval
 
 import org.nyxlang.lexer.token.CommaToken
 import org.nyxlang.lexer.token.bracket.LeftBracketToken
@@ -7,7 +7,6 @@ import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.ArrayNode
 import org.nyxlang.parser.ast.EmptyNode
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.parser.eval.IEval
 import org.nyxlang.parser.exception.EvalException
 
 /**

@@ -6,5 +6,5 @@ import org.nyxlang.lexer.token.IToken
  * Identifies decrement token.
  */
 class DecrementToken : IToken {
-    override fun toString() = "DecrementToken{--}"
+    override fun toString() = "DecrementToken(--)"
 }

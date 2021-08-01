@@ -6,5 +6,5 @@ import org.nyxlang.lexer.token.IToken
  * Identifies the "continue" keyword.
  */
 class ContinueKeywordToken : IToken {
-    override fun toString() = "ContinueKeywordToken{continue}"
+    override fun toString() = "ContinueKeywordToken(continue)"
 }

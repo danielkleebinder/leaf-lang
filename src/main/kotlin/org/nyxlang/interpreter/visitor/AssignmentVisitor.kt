@@ -13,22 +13,14 @@ import org.nyxlang.parser.ast.INode
 class AssignmentVisitor : IVisitor {
     override fun visit(interpreter: IInterpreter, node: INode): IRuntimeResult {
         val assignmentNode = node as AssignmentNode
-        val name = assignmentNode.name
-        val offsetExpr = assignmentNode.offsetExpr
+        val accessNode = assignmentNode.accessNode
         val assignmentExpr = assignmentNode.assignmentExpr
-        val activationRecord = interpreter.activationRecord!!
 
+        val access = interpreter.interpret(accessNode).data
         val assignmentValue = interpreter.interpret(assignmentExpr).data
-        if (offsetExpr != null) {
-            val offset = interpreter.interpret(offsetExpr).data
-                    ?: throw VisitorException("Provided get offset $offsetExpr is invalid")
-            val storedValue = activationRecord[name]
-                    ?: throw VisitorException("Variable with name \"$name\" does not exist")
-            storedValue.set(offset, assignmentValue!!)
-        } else {
-            activationRecord[name] = assignmentValue
-        }
+                ?: throw VisitorException("Assignment value for \"${accessNode.name}\" is undefined")
 
+        access?.assign(assignmentValue)
         return emptyResult()
     }
 }

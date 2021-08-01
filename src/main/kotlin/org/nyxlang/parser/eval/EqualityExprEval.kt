@@ -1,4 +1,4 @@
-package org.nyxlang.parser.eval.expression
+package org.nyxlang.parser.eval
 
 import org.nyxlang.lexer.token.logical.EqualToken
 import org.nyxlang.lexer.token.logical.NotEqualToken
@@ -7,7 +7,6 @@ import org.nyxlang.parser.advance
 import org.nyxlang.parser.ast.BinaryOperation
 import org.nyxlang.parser.ast.BinaryOperationNode
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.parser.eval.IEval
 
 /**
  * Evaluates the equality semantics:

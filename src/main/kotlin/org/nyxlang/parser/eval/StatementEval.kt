@@ -1,5 +1,6 @@
 package org.nyxlang.parser.eval
 
+import org.nyxlang.lexer.token.NameToken
 import org.nyxlang.lexer.token.keyword.*
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advance
@@ -7,7 +8,6 @@ import org.nyxlang.parser.ast.BreakNode
 import org.nyxlang.parser.ast.ContinueNode
 import org.nyxlang.parser.ast.Modifier
 import org.nyxlang.parser.ast.ReturnNode
-import org.nyxlang.parser.eval.expression.ExprEval
 
 /**
  * Evaluates the statement semantics:
@@ -25,7 +25,7 @@ import org.nyxlang.parser.eval.expression.ExprEval
  */
 class StatementEval(private val parser: IParser) : IEval {
     override fun eval() = when (parser.token::class) {
-        ConstKeywordToken::class -> parser.advance { DeclarationsEval(parser).eval().also { it.modifiers.add(Modifier.CONSTANT) } }
+        ConstKeywordToken::class -> parser.advance { DeclarationsEval(parser, Modifier.CONSTANT).eval() }
         VarKeywordToken::class -> parser.advance { DeclarationsEval(parser).eval() }
         ReturnKeywordToken::class -> parser.advance { ReturnNode(ExprEval(parser).eval()) }
         BreakKeywordToken::class -> parser.advance { BreakNode() }

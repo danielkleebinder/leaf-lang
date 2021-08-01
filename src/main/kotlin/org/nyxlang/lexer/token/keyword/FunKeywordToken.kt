@@ -6,5 +6,5 @@ import org.nyxlang.lexer.token.IToken
  * Identifies the "fun" keyword.
  */
 class FunKeywordToken : IToken {
-    override fun toString() = "FunctionKeywordToken{fun}"
+    override fun toString() = "FunKeywordToken(fun)"
 }

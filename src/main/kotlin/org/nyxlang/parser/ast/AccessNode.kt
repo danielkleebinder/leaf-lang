@@ -1,9 +1,10 @@
 package org.nyxlang.parser.ast
 
 /**
- * Access variables and constants with this node.
+ * Access variables and constants with this node. It is also used
+ * for field access in arrays and custom types.
  */
 class AccessNode(val name: String,
-                 val offsetExpr: INode? = null) : INode {
-    override fun toString() = "AccessNode(name=$name, offset=$offsetExpr)"
+                 val children: List<INode> = listOf()) : INode {
+    override fun toString() = "AccessNode(name=$name, children=$children)"
 }

@@ -6,5 +6,5 @@ import org.nyxlang.lexer.token.IToken
  * Identifies the "else" keyword.
  */
 class ElseKeywordToken : IToken {
-    override fun toString() = "ElseKeywordToken{else}"
+    override fun toString() = "ElseKeywordToken(else)"
 }

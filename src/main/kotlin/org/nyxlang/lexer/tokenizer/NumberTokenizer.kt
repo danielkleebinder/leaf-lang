@@ -2,6 +2,7 @@ package org.nyxlang.lexer.tokenizer
 
 import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.exception.TokenizerException
+import org.nyxlang.lexer.token.DotToken
 import org.nyxlang.lexer.token.IToken
 import org.nyxlang.lexer.token.NumberToken
 import java.math.BigDecimal
@@ -30,9 +31,9 @@ class NumberTokenizer : ITokenizer {
         }
         lexer.advanceCursor(-1)
         val numberStr = numberBuilder.toString()
-        if (decimalPointCount <= 1) {
-            return NumberToken(BigDecimal(numberStr))
-        }
+
+        if (decimalPointCount == 1 && numberStr.length == 1) return DotToken()
+        if (decimalPointCount <= 1) return NumberToken(BigDecimal(numberStr))
         throw TokenizerException("More than one decimal point not allowed at \"$numberStr\", did you mean to separate it?", lexer.cursorPosition)
     }
 }

@@ -48,6 +48,7 @@ class InterpreterCustomTypeTest : TestSuit() {
         assertThrows(StaticSemanticException::class.java) { execute("type X{a:string}; new X{10}") }
         assertThrows(StaticSemanticException::class.java) { execute("type X{a:number}; new X{\"Hey\"}") }
         assertThrows(StaticSemanticException::class.java) { execute("type X{a:number,b:string}; new X{10,20}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X{a:string}; new X{a=10}") }
     }
 
     @Test

@@ -9,9 +9,24 @@ import org.nyxlang.parser.ast.UnaryOperation
 interface IValue {
 
     /**
-     * The actual value.
+     * The actual value data as read only property.
      */
     val value: Any
+
+    /**
+     * Assigns the [newValue] to this value.
+     */
+    fun assign(newValue: IValue)
+
+    /**
+     * The values name members.
+     */
+    val members: Map<String, IValue>
+
+    /**
+     * Checks if the value has members.
+     */
+    fun hasMembers() = members.isNotEmpty()
 
     /**
      * Sets a [newValue] at the given [index].

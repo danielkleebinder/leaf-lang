@@ -38,7 +38,7 @@ fun execute(programCode: String) {
         val timeAnalyzer = measureNanoTime { analyzer.analyze(ast!!) }
 
         val timeInterpreter = measureNanoTime { result = interpreter.interpret(ast).unpack() }
-        if (RuntimeOptions.debug) println("Global Memory       : " + interpreter.callStack)
+        if (RuntimeOptions.debug) println("Global Memory       : " + interpreter.runtimeStack)
 
         if (RuntimeOptions.debug) {
             println("""

@@ -3,7 +3,7 @@ package org.nyxlang.interpreter
 import org.nyxlang.RuntimeOptions
 import org.nyxlang.interpreter.memory.ActivationRecord
 import org.nyxlang.interpreter.memory.IActivationRecord
-import org.nyxlang.interpreter.memory.ICallStack
+import org.nyxlang.interpreter.memory.IRuntimeStack
 import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.value.IValue
 import org.nyxlang.parser.ast.INode
@@ -20,14 +20,14 @@ interface IInterpreter {
     /**
      * The activation record call stack.
      */
-    val callStack: ICallStack
+    val runtimeStack: IRuntimeStack
 
     /**
      * The current activation record on top of the stack. This is
      * equivalent to calling `peekActivationRecord()`.
      */
     val activationRecord: IActivationRecord?
-        get() = callStack.peek()
+        get() = runtimeStack.peek()
 
     /**
      * Global thread pool of the interpreter.
@@ -47,13 +47,13 @@ interface IInterpreter {
  */
 inline fun IInterpreter.withDynamicScope(name: String? = null,
                                          body: (activationRecord: IActivationRecord) -> Unit) {
-    callStack.push(ActivationRecord(
+    runtimeStack.push(ActivationRecord(
             name = name,
             dynamicLink = activationRecord,
             nestingLevel = if (activationRecord == null) 0 else activationRecord!!.nestingLevel + 1))
     body(activationRecord!!)
-    if (RuntimeOptions.debug) println(callStack.peek())
-    callStack.pop()
+    if (RuntimeOptions.debug) println(runtimeStack.peek())
+    runtimeStack.pop()
 }
 
 /**
@@ -63,13 +63,13 @@ inline fun IInterpreter.withDynamicScope(name: String? = null,
  */
 inline fun IInterpreter.withStaticScope(name: String? = null,
                                         body: (activationRecord: IActivationRecord) -> Unit) {
-    callStack.push(ActivationRecord(
+    runtimeStack.push(ActivationRecord(
             name = name,
             staticLink = activationRecord,
             nestingLevel = if (activationRecord == null) 0 else activationRecord!!.nestingLevel + 1))
     body(activationRecord!!)
-    if (RuntimeOptions.debug) println(callStack.peek())
-    callStack.pop()
+    if (RuntimeOptions.debug) println(runtimeStack.peek())
+    runtimeStack.pop()
 }
 
 /**

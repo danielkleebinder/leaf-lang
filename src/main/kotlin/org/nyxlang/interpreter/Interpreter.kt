@@ -3,7 +3,7 @@ package org.nyxlang.interpreter
 import org.nyxlang.RuntimeOptions
 import org.nyxlang.interpreter.exception.DynamicSemanticException
 import org.nyxlang.interpreter.memory.ActivationRecord
-import org.nyxlang.interpreter.memory.CallStack
+import org.nyxlang.interpreter.memory.RuntimeStack
 import org.nyxlang.interpreter.memory.IActivationRecord
 import org.nyxlang.interpreter.result.IRuntimeResult
 import org.nyxlang.interpreter.result.emptyResult
@@ -41,20 +41,19 @@ class Interpreter : IInterpreter {
             Pair(AssignmentNode::class, AssignmentVisitor()),
             Pair(DeclarationsNode::class, VarDeclareVisitor()),
             Pair(FunDeclareNode::class, FunDeclareVisitor()),
-            Pair(FunCallNode::class, FunCallVisitor()),
             Pair(TypeNode::class, TypeVisitor()),
             Pair(TypeDeclareNode::class, TypeDeclareVisitor()),
             Pair(TypeInstantiationNode::class, TypeInstantiationVisitor()),
             Pair(AsyncNode::class, AsyncVisitor()))
 
-    override val callStack = CallStack()
+    override val runtimeStack = RuntimeStack()
     override val globalThreadPool: ExecutorService = Executors.newFixedThreadPool(RuntimeOptions.processorCores)
 
     init {
         val globalActivationRecord = ActivationRecord(name = "global")
         registerModule(globalActivationRecord, IOModule())
         registerModule(globalActivationRecord, MathModule())
-        callStack.push(globalActivationRecord)
+        runtimeStack.push(globalActivationRecord)
     }
 
     override fun interpret(ast: INode?): IRuntimeResult {

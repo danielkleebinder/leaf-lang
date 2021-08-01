@@ -7,7 +7,7 @@ import org.nyxlang.analyzer.symbol.ISymbolTable
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.Interpreter
 import org.nyxlang.interpreter.memory.IActivationRecord
-import org.nyxlang.interpreter.memory.ICallStack
+import org.nyxlang.interpreter.memory.IRuntimeStack
 import org.nyxlang.interpreter.result.unpack
 import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
@@ -29,7 +29,7 @@ open class TestSuit {
     lateinit var interpreter: IInterpreter
     lateinit var globalSymbolTable: ISymbolTable
     lateinit var globalActivationRecord: IActivationRecord
-    lateinit var callStack: ICallStack
+    lateinit var runtimeStack: IRuntimeStack
 
     @BeforeEach
     fun beforeEach() {
@@ -39,7 +39,7 @@ open class TestSuit {
         interpreter = Interpreter()
         globalSymbolTable = analyzer.currentScope
         globalActivationRecord = interpreter.activationRecord!!
-        callStack = interpreter.callStack
+        runtimeStack = interpreter.runtimeStack
     }
 
     /**

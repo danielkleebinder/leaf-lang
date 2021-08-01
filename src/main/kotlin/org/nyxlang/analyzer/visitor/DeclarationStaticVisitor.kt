@@ -21,7 +21,7 @@ class DeclarationStaticVisitor : IStaticVisitor {
 
                     // Check if a variable with the same name is already declared
                     if (analyzer.currentScope.hasLocal(name)) {
-                        throw AnalyticalVisitorException("Symbol \"${name}\" is already declared")
+                        throw AnalyticalVisitorException("Symbol \"$name\" is already declared in scope \"${analyzer.currentScope.name}\"")
                     }
 
                     // Check if the type exists that is declared

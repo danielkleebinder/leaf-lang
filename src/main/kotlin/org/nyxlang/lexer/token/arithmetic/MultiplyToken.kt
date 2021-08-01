@@ -6,5 +6,5 @@ import org.nyxlang.lexer.token.IToken
  * Identifies number multiplication.
  */
 class MultiplyToken : IToken {
-    override fun toString() = "MultiplyToken{*}"
+    override fun toString() = "MultiplyToken(*)"
 }

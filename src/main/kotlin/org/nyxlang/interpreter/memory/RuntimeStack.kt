@@ -3,7 +3,7 @@ package org.nyxlang.interpreter.memory
 /**
  * Call stack implementation for activation records.
  */
-class CallStack : ICallStack {
+class RuntimeStack : IRuntimeStack {
 
     private val records = ArrayDeque<IActivationRecord>()
 
@@ -15,7 +15,7 @@ class CallStack : ICallStack {
         |
         |${records.reversed().fold("") { acc, ar -> acc + ar }}
         |===========================
-        |CALL STACK
+        |RUNTIME STACK
         |
     """.trimMargin()
 }

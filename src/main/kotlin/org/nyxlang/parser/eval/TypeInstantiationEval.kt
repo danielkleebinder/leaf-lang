@@ -9,7 +9,6 @@ import org.nyxlang.lexer.token.keyword.NewKeywordToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.TypeArgument
 import org.nyxlang.parser.ast.TypeInstantiationNode
-import org.nyxlang.parser.eval.expression.ExprEval
 import org.nyxlang.parser.exception.EvalException
 
 /**

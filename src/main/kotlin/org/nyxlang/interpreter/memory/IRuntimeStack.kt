@@ -4,7 +4,7 @@ package org.nyxlang.interpreter.memory
  * The call stack is used to hold activation records of different
  * scope and context.
  */
-interface ICallStack {
+interface IRuntimeStack {
 
     /**
      * Pushes the given [activationRecord] on top of the stack.

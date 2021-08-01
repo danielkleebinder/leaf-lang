@@ -6,5 +6,5 @@ import org.nyxlang.lexer.token.IToken
  * Identifies the right parenthesis.
  */
 class RightParenthesisToken : IToken {
-    override fun toString() = "RightParenthesisToken{)}"
+    override fun toString() = "RightParenthesisToken())"
 }

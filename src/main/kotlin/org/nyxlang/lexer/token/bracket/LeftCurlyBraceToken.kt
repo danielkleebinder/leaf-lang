@@ -6,5 +6,5 @@ import org.nyxlang.lexer.token.IToken
  * Identifies the left brace.
  */
 class LeftCurlyBraceToken : IToken {
-    override fun toString() = "LeftCurlyBraceToken{{}"
+    override fun toString() = "LeftCurlyBraceToken({)"
 }

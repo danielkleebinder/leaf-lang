@@ -6,7 +6,9 @@ import org.nyxlang.parser.ast.Modifier
  * Variable symbols are variables that were defined with a certain
  * type and some modifiers.
  */
-class VarSymbol(name: String, val type: Symbol? = null, vararg modifiers: Modifier) : Symbol(name) {
+class VarSymbol(name: String,
+                override val type: Symbol? = null,
+                vararg modifiers: Modifier) : Symbol(name), ITypedSymbol {
 
     val modifiers = arrayListOf<Modifier>()
 

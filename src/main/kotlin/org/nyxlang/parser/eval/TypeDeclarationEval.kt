@@ -6,7 +6,7 @@ import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
 import org.nyxlang.lexer.token.bracket.RightCurlyBraceToken
 import org.nyxlang.lexer.token.keyword.TypeKeywordToken
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.ast.Declaration
+import org.nyxlang.parser.ast.DeclarationsNode
 import org.nyxlang.parser.ast.TypeDeclareNode
 import org.nyxlang.parser.exception.EvalException
 
@@ -21,7 +21,7 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
 
     override fun eval(): TypeDeclareNode {
         var name = "<anonymous>"
-        val fields = arrayListOf<Declaration>()
+        val fields = arrayListOf<DeclarationsNode>()
 
         typeName { name = (parser.tokenAndAdvance as NameToken).value }
 
@@ -33,7 +33,7 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
             typeBody {
                 val declarations = DeclarationsEval(parser)
                 while (RightCurlyBraceToken::class != parser.token::class) {
-                    fields.addAll(declarations.eval().declarations)
+                    fields.add(declarations.eval())
                     parser.skipNewLines()
                 }
             }

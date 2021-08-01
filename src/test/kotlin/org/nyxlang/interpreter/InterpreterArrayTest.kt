@@ -3,6 +3,7 @@ package org.nyxlang.interpreter
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
+import org.nyxlang.analyzer.exception.StaticSemanticException
 import org.nyxlang.interpreter.exception.DynamicSemanticException
 import org.nyxlang.parser.exception.ParserException
 import java.math.BigDecimal
@@ -71,5 +72,11 @@ class InterpreterArrayTest : TestSuit() {
         assertThrows(ParserException::class.java) { execute("[1,2,") }
         assertThrows(ParserException::class.java) { execute("[[2") }
         assertThrows(ParserException::class.java) { execute("[3[") }
+    }
+
+    @Test
+    fun shouldDeclareArrayType() {
+        assertArrayEquals(arrayOfBigDecimal(8, 9, 10), (execute("const a: array = [8,9,10]; a") as List<*>).toTypedArray())
+        assertThrows(StaticSemanticException::class.java) {execute("const a: array, b = 10; a = b")}
     }
 }

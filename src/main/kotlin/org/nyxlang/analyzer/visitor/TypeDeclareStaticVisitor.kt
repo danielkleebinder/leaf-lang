@@ -6,6 +6,7 @@ import org.nyxlang.analyzer.result.StaticAnalysisResult
 import org.nyxlang.analyzer.result.emptyAnalysisResult
 import org.nyxlang.analyzer.symbol.TypeSymbol
 import org.nyxlang.analyzer.symbol.VarSymbol
+import org.nyxlang.analyzer.withScope
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.TypeDeclareNode
 
@@ -26,23 +27,20 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
         typeDeclareNode.spec = typeSymbol
         analyzer.currentScope.define(typeSymbol)
 
-        // I have to do that here, otherwise recursive data types would not be
-        // possible to define. Example:
-        //   type Human {
-        //     name: string
-        //     parent: Human
-        //   }
-        typeSymbol.fields = typeDeclareNode.fields
-                .map { VarSymbol(it.identifier, analyzer.currentScope.get(it.typeExpr!!.type)) }
+        // Each type defines a new static symbol table scope
+        analyzer.withScope(typeName) {
+            typeDeclareNode.fields.forEach { field -> analyzer.analyze(field) }
 
-        // One record cannot define two or more fields with the same name
-        typeSymbol.fields
-                .forEach { field ->
-                    val count = typeSymbol.fields.count { field.name == it.name }
-                    if (count >= 2) {
-                        throw AnalyticalVisitorException("Type \"$typeName\" declares field \"${field.name}\" $count times")
-                    }
-                }
+            // I have to do that here, otherwise recursive data types would not be
+            // possible to define. Example:
+            //   type Human {
+            //     name: string
+            //     parent: Human
+            //   }
+            typeSymbol.fields = typeDeclareNode.fields
+                    .flatMap { it.declarations }
+                    .map { VarSymbol(it.identifier, analyzer.currentScope.get(it.typeExpr!!.type)) }
+        }
 
         return emptyAnalysisResult()
     }

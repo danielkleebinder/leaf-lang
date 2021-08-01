@@ -28,11 +28,9 @@ class ActivationRecord(override var staticLink: IActivationRecord? = null,
     }
 
     override operator fun get(identifier: String): IValue? {
-        val variable = localVariables[identifier]
-        if (staticLink != null && variable == null) {
-            return staticLink!![identifier]
-        }
-        return variable
+        if (localVariables.containsKey(identifier)) return localVariables[identifier]
+        if (staticLink != null) return staticLink!![identifier]
+        return null
     }
 
     override fun remove(identifier: String) = localVariables.remove(identifier)

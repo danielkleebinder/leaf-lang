@@ -6,5 +6,5 @@ import org.nyxlang.lexer.token.IToken
  * Identifies the left bracket.
  */
 class LeftBracketToken : IToken {
-    override fun toString() = "LeftBracketToken{[}"
+    override fun toString() = "LeftBracketToken([)"
 }

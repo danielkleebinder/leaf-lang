@@ -8,5 +8,5 @@ import org.nyxlang.parser.ast.INode
  * Analyzes the number expression.
  */
 class NumberStaticVisitor : IStaticVisitor {
-    override fun analyze(analyzer: ISemanticAnalyzer, node: INode) = analysisResult("number")
+    override fun analyze(analyzer: ISemanticAnalyzer, node: INode) = analysisResult("number", true)
 }

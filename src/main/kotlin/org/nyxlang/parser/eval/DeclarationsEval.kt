@@ -6,11 +6,7 @@ import org.nyxlang.lexer.token.CommaToken
 import org.nyxlang.lexer.token.NameToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advanceIf
-import org.nyxlang.parser.ast.Declaration
-import org.nyxlang.parser.ast.DeclarationsNode
-import org.nyxlang.parser.ast.INode
-import org.nyxlang.parser.ast.TypeNode
-import org.nyxlang.parser.eval.expression.ExprEval
+import org.nyxlang.parser.ast.*
 import org.nyxlang.parser.exception.EvalException
 
 /**
@@ -20,7 +16,8 @@ import org.nyxlang.parser.exception.EvalException
  * <declaration>  ::= <name> (NL)* (':' (NL)* <type>)? ('=' (NL)* <expr>)?
  *
  */
-class DeclarationsEval(private val parser: IParser) : IEval {
+class DeclarationsEval(private val parser: IParser,
+                       private vararg val modifiers: Modifier) : IEval {
 
     override fun eval(): DeclarationsNode {
         val declarations = arrayListOf<Declaration>()
@@ -32,7 +29,7 @@ class DeclarationsEval(private val parser: IParser) : IEval {
             parser.advanceCursor()
             parser.skipNewLines()
         }
-        return DeclarationsNode(declarations)
+        return DeclarationsNode(declarations, *modifiers)
     }
 
     /**

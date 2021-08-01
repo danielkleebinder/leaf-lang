@@ -6,6 +6,9 @@ import org.nyxlang.analyzer.result.emptyAnalysisResult
 import org.nyxlang.analyzer.symbol.ISymbolTable
 import org.nyxlang.analyzer.symbol.SymbolTable
 import org.nyxlang.analyzer.visitor.*
+import org.nyxlang.native.INativeModule
+import org.nyxlang.native.io.IOModule
+import org.nyxlang.native.math.MathModule
 import org.nyxlang.parser.ast.*
 
 /**
@@ -21,7 +24,6 @@ class SemanticAnalyzer : ISemanticAnalyzer {
             Pair(AccessNode::class, AccessStaticVisitor()),
             Pair(AssignmentNode::class, AssignmentStaticVisitor()),
             Pair(DeclarationsNode::class, DeclarationStaticVisitor()),
-            Pair(FunCallNode::class, FunCallStaticVisitor()),
             Pair(FunDeclareNode::class, FunDeclareStaticVisitor()),
             Pair(ReturnNode::class, ReturnStaticVisitor()),
             Pair(IfNode::class, IfStaticVisitor()),
@@ -37,6 +39,11 @@ class SemanticAnalyzer : ISemanticAnalyzer {
 
     // Scoping
     override var currentScope: ISymbolTable = SymbolTable(name = "global", withBuiltIns = true)
+
+    init {
+        registerModule(currentScope, IOModule())
+        registerModule(currentScope, MathModule())
+    }
 
     override fun enterScope(name: String?) {
         currentScope = SymbolTable(
@@ -58,5 +65,9 @@ class SemanticAnalyzer : ISemanticAnalyzer {
         } catch (e: Exception) {
             throw StaticSemanticException(e.message!!, e)
         }
+    }
+
+    private fun registerModule(symbolTable: ISymbolTable, module: INativeModule) {
+        module.functions.forEach { symbolTable.define(it) }
     }
 }

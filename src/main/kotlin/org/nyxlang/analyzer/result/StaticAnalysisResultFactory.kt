@@ -9,4 +9,4 @@ fun emptyAnalysisResult() = StaticAnalysisResult(null)
 /**
  * Creates a static analysis result with the given [type].
  */
-fun analysisResult(type: String) = StaticAnalysisResult(type)
+fun analysisResult(type: String, constant: Boolean = false) = StaticAnalysisResult(type, constant)

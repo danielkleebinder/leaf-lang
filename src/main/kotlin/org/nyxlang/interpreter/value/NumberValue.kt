@@ -9,17 +9,26 @@ import java.math.BigDecimal
  * Number values are used to perform certain operations and
  * enable type coercion.
  */
-class NumberValue(override val value: BigDecimal) : IValue {
+class NumberValue(private var data: BigDecimal,
+                  override val members: Map<String, IValue> = mapOf()) : IValue {
+
+    override val value: BigDecimal
+        get() = data
+
+    override fun assign(newValue: IValue) {
+        if (newValue !is NumberValue) throw UnknownOperationException("Cannot assign \"$newValue\" to number")
+        data = newValue.value
+    }
 
     override fun set(index: IValue, newValue: IValue) = throw UnknownOperationException("Numbers do not support index based assignment")
     override fun get(index: IValue) = throw UnknownOperationException("Numbers do not support index based access")
 
     override fun unary(op: UnaryOperation) = when (op) {
         UnaryOperation.POSITIVE -> this
-        UnaryOperation.NEGATE -> numberValue(value.unaryMinus())
-        UnaryOperation.INCREMENT -> numberValue(value.inc())
-        UnaryOperation.DECREMENT -> numberValue(value.dec())
-        UnaryOperation.BIT_COMPLEMENT -> numberValue(BigDecimal.valueOf(value.toLong().inv()))
+        UnaryOperation.NEGATE -> numberValue(data.unaryMinus())
+        UnaryOperation.INCREMENT -> numberValue(data.inc())
+        UnaryOperation.DECREMENT -> numberValue(data.dec())
+        UnaryOperation.BIT_COMPLEMENT -> numberValue(BigDecimal.valueOf(data.toLong().inv()))
         else -> throw UnknownOperationException("The operation $op is not supported for data type number")
     }
 
@@ -42,7 +51,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '+' operation.
      */
     private fun binaryPlus(right: IValue) = when (right) {
-        is NumberValue -> numberValue(value + right.value)
+        is NumberValue -> numberValue(data + right.data)
         is StringValue -> stringValue(stringify() + right.value)
         is ArrayValue -> arrayValue(arrayOf(this, *right.value))
         else -> throw UnknownOperationException("The plus operation in number is not supported for $right")
@@ -52,7 +61,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '-' operation.
      */
     private fun binaryMinus(right: IValue) = when (right) {
-        is NumberValue -> numberValue(value - right.value)
+        is NumberValue -> numberValue(data - right.data)
         else -> throw UnknownOperationException("The minus operation in number is not supported for $right")
     }
 
@@ -60,7 +69,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '/' operation.
      */
     private fun binaryDiv(right: IValue) = when (right) {
-        is NumberValue -> numberValue(value / right.value)
+        is NumberValue -> numberValue(data / right.data)
         else -> throw UnknownOperationException("The divide operation in number is not supported for $right")
     }
 
@@ -68,7 +77,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '*' operation.
      */
     private fun binaryTimes(right: IValue) = when (right) {
-        is NumberValue -> numberValue(value * right.value)
+        is NumberValue -> numberValue(data * right.data)
         else -> throw UnknownOperationException("The multiply operation in number is not supported for $right")
     }
 
@@ -76,7 +85,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '%' operation.
      */
     private fun binaryRem(right: IValue) = when (right) {
-        is NumberValue -> numberValue(value % right.value)
+        is NumberValue -> numberValue(data % right.data)
         else -> throw UnknownOperationException("The remainder operation in number is not supported for $right")
     }
 
@@ -84,7 +93,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '==' operation.
      */
     private fun binaryEqual(right: IValue) = when (right) {
-        is NumberValue -> boolValue(value == right.value)
+        is NumberValue -> boolValue(data == right.data)
         else -> throw UnknownOperationException("The remainder operation in number is not supported for $right")
     }
 
@@ -92,7 +101,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '!=' operation.
      */
     private fun binaryNotEqual(right: IValue) = when (right) {
-        is NumberValue -> boolValue(value != right.value)
+        is NumberValue -> boolValue(data != right.data)
         else -> throw UnknownOperationException("The != operation in number is not supported for $right")
     }
 
@@ -100,7 +109,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '<' operation.
      */
     private fun binaryLessThan(right: IValue) = when (right) {
-        is NumberValue -> boolValue(value < right.value)
+        is NumberValue -> boolValue(data < right.data)
         else -> throw UnknownOperationException("The < operation in number is not supported for $right")
     }
 
@@ -108,7 +117,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '<=' operation.
      */
     private fun binaryLessThanOrEqual(right: IValue) = when (right) {
-        is NumberValue -> boolValue(value <= right.value)
+        is NumberValue -> boolValue(data <= right.data)
         else -> throw UnknownOperationException("The <= operation in number is not supported for $right")
     }
 
@@ -116,7 +125,7 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '>' operation.
      */
     private fun binaryGreaterThan(right: IValue) = when (right) {
-        is NumberValue -> boolValue(value > right.value)
+        is NumberValue -> boolValue(data > right.data)
         else -> throw UnknownOperationException("The > operation in number is not supported for $right")
     }
 
@@ -124,10 +133,10 @@ class NumberValue(override val value: BigDecimal) : IValue {
      * Performs the '>=' operation.
      */
     private fun binaryGreaterThanOrEqual(right: IValue) = when (right) {
-        is NumberValue -> boolValue(value >= right.value)
+        is NumberValue -> boolValue(data >= right.data)
         else -> throw UnknownOperationException("The >= operation in number is not supported for $right")
     }
 
-    override fun stringify() = value.toString()
-    override fun toString() = "NumberValue(value=$value)"
+    override fun stringify() = data.toString()
+    override fun toString() = "NumberValue(value=$data)"
 }

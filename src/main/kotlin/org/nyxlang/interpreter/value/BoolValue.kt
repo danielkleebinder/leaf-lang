@@ -9,14 +9,23 @@ import org.nyxlang.parser.ast.UnaryOperation
  * Bool values are used to perform certain operations and
  * enable type coercion.
  */
-class BoolValue(override val value: Boolean) : IValue {
+class BoolValue(private var data: Boolean,
+                override val members: Map<String, IValue> = mapOf()) : IValue {
+
+    override val value: Boolean
+        get() = data
+
+    override fun assign(newValue: IValue) {
+        if (newValue !is BoolValue) throw UnknownOperationException("Cannot assign \"$newValue\" to bool")
+        data = newValue.value
+    }
 
     override fun set(index: IValue, newValue: IValue) = throw UnknownOperationException("Bools do not support index based assignment")
     override fun get(index: IValue) = throw UnknownOperationException("Bools do not support index based access")
 
     override fun unary(op: UnaryOperation) = when (op) {
-        UnaryOperation.LOGICAL_NEGATE -> boolValue(!value)
-        UnaryOperation.BIT_COMPLEMENT -> boolValue(!value)
+        UnaryOperation.LOGICAL_NEGATE -> boolValue(!data)
+        UnaryOperation.BIT_COMPLEMENT -> boolValue(!data)
         else -> throw VisitorException("The operation $op is not supported for data type bool")
     }
 
@@ -42,7 +51,7 @@ class BoolValue(override val value: Boolean) : IValue {
      * Performs the '==' operation.
      */
     private fun binaryEqual(right: IValue) = when (right) {
-        is BoolValue -> boolValue(value == right.value)
+        is BoolValue -> boolValue(data == right.data)
         else -> throw UnknownOperationException("The == operation in bool is not supported for $right")
     }
 
@@ -50,7 +59,7 @@ class BoolValue(override val value: Boolean) : IValue {
      * Performs the '!=' operation.
      */
     private fun binaryNotEqual(right: IValue) = when (right) {
-        is BoolValue -> boolValue(value != right.value)
+        is BoolValue -> boolValue(data != right.data)
         else -> throw UnknownOperationException("The != operation in bool is not supported for $right")
     }
 
@@ -58,7 +67,7 @@ class BoolValue(override val value: Boolean) : IValue {
      * Performs the '&&' operation.
      */
     private fun binaryLogicalAnd(right: IValue) = when (right) {
-        is BoolValue -> boolValue(value && right.value)
+        is BoolValue -> boolValue(data && right.data)
         else -> throw UnknownOperationException("The && operation in bool is not supported for $right")
     }
 
@@ -66,10 +75,10 @@ class BoolValue(override val value: Boolean) : IValue {
      * Performs the '||' operation.
      */
     private fun binaryLogicalOr(right: IValue) = when (right) {
-        is BoolValue -> boolValue(value || right.value)
+        is BoolValue -> boolValue(data || right.data)
         else -> throw UnknownOperationException("The || operation in bool is not supported for $right")
     }
 
-    override fun stringify() = value.toString()
-    override fun toString() = "BoolValue(value=$value)"
+    override fun stringify() = data.toString()
+    override fun toString() = "BoolValue(value=$data)"
 }

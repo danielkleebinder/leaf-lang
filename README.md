@@ -87,7 +87,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
 ```
 <declarations> ::= <declaration> (NL)* (',' (NL)* <declaration>)*
 <declaration>  ::= <name> (NL)* (':' (NL)* <type>)? ('=' (NL)* <expr>)?
-<assignment>   ::= <name> (<index-suffix>)? '=' <expr>
+<assignment>   ::= <var> ('=' <expr>)?
 ```
 
 ### Expressions & Precedence
@@ -98,27 +98,23 @@ The formal language definition in **Backus-Naur form** looks like the following.
 <ran-expr> ::= <add-expr> ((NL)* ( '..' ) (NL)* <add-expr>)*
 <add-expr> ::= <mul-expr> ((NL)* ( '+' | '-' ) (NL)* <mul-expr>)*
 <mul-expr> ::= <prefix-expr> ((NL)* ( '*' | '/' | '%' ) (NL)* <prefix-expr>)*
+<pre-expr> ::= ('!' | '+' | '-' | '~')? <atom>
 <arr-expr> ::= '[' (NL)* (<expr> ((NL)* ',' (NL)* <expr>)*)? (NL)* ']'
-
-<prefix-expr> ::= ('!' | '+' | '-' | '~')? <postfix-expr>
-<postfix-expr> ::= <atom> (<suffix>)?
 ```
 
-### Suffix
+### Variables
 ```
-<suffix> ::= ('++' | '--' | '?')
-           | <index-suffix>
-           | <call-suffix>
-
-<assign-suffix> ::= '=' (NL)* <expr>
-<index-suffix>  ::= '[' (NL)* <expr> (NL)* ']'
-<call-suffix>   ::= '(' (NL)* (<expr> ((NL)* ',' (NL)* <expr>))? (NL)* ')'
+<var> ::= <name>
+        | <name> '.' <name>
+        | <name> '[' (NL)* <expr> (NL*) ']'
+        | <name> '(' (NL)* (<expr> ((NL)* ',' (NL)* <expr>))? (NL)* ')'
 ```
 
 ### Atom & Delegation
 ```
-<atom> ::= <bool> | <number> | <string> | <name>
+<atom> ::= <bool> | <number> | <string> | <var>
          | '(' <expr> ')'
+         | <assignment>
          | <type-inst>
          | <arr-expr>
          | <if-expr>
@@ -127,8 +123,8 @@ The formal language definition in **Backus-Naur form** looks like the following.
          | <block>
          | <empty>
 
-<type>  ::= <number> | <bool> | <string> | <fun>
 <name>  ::= IDENTIFIER
+<type>  ::= <number> | <bool> | <string> | <fun>
 <empty> ::= ()
 ```
 

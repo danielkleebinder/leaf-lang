@@ -1,9 +1,8 @@
-package org.nyxlang.parser.eval.expression
+package org.nyxlang.parser.eval
 
 import org.nyxlang.lexer.token.RangeToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.parser.eval.IEval
 
 /**
  * Evaluates the range semantics:

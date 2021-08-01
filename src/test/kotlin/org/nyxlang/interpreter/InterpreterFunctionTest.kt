@@ -127,7 +127,7 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldFollowStaticLink2() {
-        assertThrows(DynamicSemanticException::class.java) { execute(readResourceFile("function/fun-static-link-2.test.nyx")) }
+        assertThrows(StaticSemanticException::class.java) { execute(readResourceFile("function/fun-static-link-2.test.nyx")) }
     }
 
     @Test

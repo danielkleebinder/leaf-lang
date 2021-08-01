@@ -15,8 +15,6 @@ import org.nyxlang.lexer.token.keyword.NewKeywordToken
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advance
 import org.nyxlang.parser.ast.*
-import org.nyxlang.parser.eval.expression.ArrayExprEval
-import org.nyxlang.parser.eval.expression.ExprEval
 import org.nyxlang.parser.exception.EvalException
 
 /**
@@ -41,8 +39,8 @@ class AtomEval(private val parser: IParser) : IEval {
             BoolToken::class -> BoolNode((parser.tokenAndAdvance as BoolToken).value)
             NumberToken::class -> NumberNode((parser.tokenAndAdvance as NumberToken).value)
             StringToken::class -> StringNode((parser.tokenAndAdvance as StringToken).value)
-            NameToken::class -> AccessNode((parser.tokenAndAdvance as NameToken).value)
 
+            NameToken::class -> AssignmentEval(parser).eval()
             LeftBracketToken::class -> ArrayExprEval(parser).eval()
             IfKeywordToken::class -> IfEval(parser).eval()
             FunKeywordToken::class -> FunDeclarationEval(parser).eval()

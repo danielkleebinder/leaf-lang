@@ -46,8 +46,9 @@ class FunDeclareStaticVisitor : IStaticVisitor {
             }
 
             // Check if all our checks are syntactically correct
+            var bodyReturnType: String? = null
             if (funDeclareNode.requires != null) analyzer.analyze(funDeclareNode.requires)
-            if (funDeclareNode.body != null) analyzer.analyze(funDeclareNode.body)
+            if (funDeclareNode.body != null) bodyReturnType = analyzer.analyze(funDeclareNode.body).type
 
             // The function returns something, this means the return value placeholder
             // has to be available in the ensures expression
@@ -59,11 +60,15 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                 analyzer.analyze(funDeclareNode.returns)
                 funSymbol.returns = analyzer.currentScope.get(funDeclareNode.returns.type)
                 if (funSymbol.returns == null) {
-                    throw AnalyticalVisitorException("Function return type \"${funDeclareNode.returns} does not exist")
+                    throw AnalyticalVisitorException("Function \"$funName\" return type \"${funDeclareNode.returns} does not exist")
                 }
+            } else if (bodyReturnType != null) {
+
+                // Use type inference if no return type is specified explicitly
+                funSymbol.returns = analyzer.currentScope.get(bodyReturnType)
             }
         }
 
-        return analysisResult("function")
+        return analysisResult("function", true)
     }
 }

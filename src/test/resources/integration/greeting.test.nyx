@@ -11,7 +11,7 @@ fun greeting(str: string, n: number, name: string) : n > 0 -> string {
 }
 
 fun main -> string {
-  var res: string
+  var res: string = ""
   loop var i = 0 : i < 5 : i = i + 1 {
     res = greeting("Hello ", 3, "Daniel")
   }

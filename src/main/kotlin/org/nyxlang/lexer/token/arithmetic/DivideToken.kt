@@ -6,5 +6,5 @@ import org.nyxlang.lexer.token.IToken
  * Identifies number division.
  */
 class DivideToken : IToken {
-    override fun toString() = "DivideToken{/}"
+    override fun toString() = "DivideToken(/)"
 }
