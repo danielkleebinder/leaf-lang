@@ -8,6 +8,7 @@ import org.nyxlang.analyzer.symbol.TypeSymbol
 import org.nyxlang.analyzer.symbol.VarSymbol
 import org.nyxlang.analyzer.withScope
 import org.nyxlang.parser.ast.INode
+import org.nyxlang.parser.ast.Modifier
 import org.nyxlang.parser.ast.TypeDeclareNode
 
 /**
@@ -29,6 +30,11 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
 
         // Each type defines a new static symbol table scope
         analyzer.withScope(typeName) {
+
+            // Defines the object scope
+            it.define(VarSymbol("object", typeSymbol, Modifier.CONSTANT))
+
+            // All fields must be available here
             typeDeclareNode.fields.forEach { field -> analyzer.analyze(field) }
 
             // I have to do that here, otherwise recursive data types would not be
@@ -38,8 +44,8 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
             //     parent: Human
             //   }
             typeSymbol.fields = typeDeclareNode.fields
-                    .flatMap { it.declarations }
-                    .map { VarSymbol(it.identifier, analyzer.currentScope.get(it.typeExpr!!.type)) }
+                    .flatMap { field -> field.declarations }
+                    .map { field -> VarSymbol(field.identifier, analyzer.currentScope.get(field.typeExpr!!.type)) }
         }
 
         return emptyAnalysisResult()
