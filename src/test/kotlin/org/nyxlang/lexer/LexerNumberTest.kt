@@ -1,7 +1,6 @@
 package org.nyxlang.lexer
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.fail
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
 import org.nyxlang.lexer.token.TokenType
@@ -60,9 +59,8 @@ class LexerNumberTest : TestSuit() {
 
     @Test
     fun shouldErrorForMultipleDecimalPoints() {
-//        assertThrows(LexerException::class.java) { tokenize("3.14.15") }
-//        assertThrows(LexerException::class.java) { tokenize("3.14.1.5") }
-//        assertThrows(LexerException::class.java) { tokenize(".314.5") }
-        fail<Unit>("Error count check not implemented yet")
+        assertEquals(TokenType.ERROR, tokenize("3.14.15")[0].kind)
+        assertEquals(TokenType.ERROR, tokenize("3.14.1.5")[0].kind)
+        assertEquals(TokenType.ERROR, tokenize(".314.5")[0].kind)
     }
 }
