@@ -1,20 +1,12 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.ArrowToken
-import org.nyxlang.lexer.token.AssignToken
-import org.nyxlang.lexer.token.ColonToken
-import org.nyxlang.lexer.token.NameToken
-import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
-import org.nyxlang.lexer.token.bracket.LeftParenthesisToken
-import org.nyxlang.lexer.token.bracket.RightCurlyBraceToken
-import org.nyxlang.lexer.token.bracket.RightParenthesisToken
-import org.nyxlang.lexer.token.keyword.FunKeywordToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.DeclarationsNode
 import org.nyxlang.parser.ast.FunDeclareNode
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.TypeNode
-import org.nyxlang.parser.exception.EvalException
 
 /**
  * Evaluates the function declaration semantics:
@@ -48,7 +40,7 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
         var returns: TypeNode? = null
         var body: INode? = null
 
-        funName { name = (parser.tokenAndAdvance as NameToken).value }
+        funName { name = parser.tokenAndAdvance.value as? String }
         funParams { params = DeclarationsEval(parser).eval() }
         funRequires { requires = ExprEval(parser).eval() }
         funEnsures { ensures = ExprEval(parser).eval() }
@@ -69,14 +61,14 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
      */
     private inline fun funName(name: () -> Unit) {
         // Is this even a function declaration?
-        if (FunKeywordToken::class != parser.token::class) {
-            throw EvalException("Function keyword 'fun' expected, but got ${parser.token}")
+        if (TokenType.KEYWORD_FUN != parser.token.kind) {
+            parser.flagError(ErrorCode.MISSING_KEYWORD_FUN)
         }
         parser.advanceCursor()
         parser.skipNewLines()
 
         // Functions do not require a name. Functions without names are anonymous functions.
-        if (NameToken::class == parser.token::class) {
+        if (TokenType.IDENTIFIER == parser.token.kind) {
             name()
             parser.skipNewLines()
         }
@@ -87,18 +79,18 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
      * executes the parameters if everything is fine.
      */
     private inline fun funParams(paramList: () -> Unit) {
-        if (LeftParenthesisToken::class != parser.token::class) return
+        if (TokenType.LEFT_PARENTHESIS != parser.token.kind) return
         parser.advanceCursor()
         parser.skipNewLines()
 
         // Evaluate the param list if there is a non-empty list at all
-        if (RightParenthesisToken::class != parser.token::class) {
+        if (TokenType.RIGHT_PARENTHESIS != parser.token.kind) {
             paramList()
         }
         parser.skipNewLines()
 
-        if (RightParenthesisToken::class != parser.token::class) {
-            throw EvalException("Closing parenthesis is required for parameter list in function definition")
+        if (TokenType.RIGHT_PARENTHESIS != parser.token.kind) {
+            parser.flagError(ErrorCode.MISSING_RIGHT_PARENTHESIS)
         }
         parser.advanceCursor()
     }
@@ -109,12 +101,12 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
      */
     private inline fun funRequires(requires: () -> Unit) {
         // There is no "requires" block defined
-        if (ColonToken::class != parser.token::class) return
+        if (TokenType.COLON != parser.token.kind) return
         parser.advanceCursor()
         parser.skipNewLines()
 
         // Evaluate the block if it is non-empty
-        if (ColonToken::class != parser.token::class) {
+        if (TokenType.COLON != parser.token.kind) {
             requires()
         }
     }
@@ -125,7 +117,7 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
      */
     private inline fun funEnsures(ensures: () -> Unit) {
         // There is no "ensures" block defined
-        if (ColonToken::class != parser.token::class) return
+        if (TokenType.COLON != parser.token.kind) return
         parser.advanceCursor()
         parser.skipNewLines()
 
@@ -138,7 +130,7 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
      */
     private inline fun funReturns(returns: () -> Unit) {
         // There is no return type specified, this means the function does not return anything
-        if (ArrowToken::class != parser.token::class) return
+        if (TokenType.RIGHT_ARROW != parser.token.kind) return
         parser.advanceCursor()
         parser.skipNewLines()
 
@@ -151,22 +143,22 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
      * executes the body if everything is fine.
      */
     private inline fun funBody(body: (assignment: Boolean) -> Unit) {
-        val block = LeftCurlyBraceToken::class == parser.token::class
-        val assignment = AssignToken::class == parser.token::class
+        val block = TokenType.LEFT_CURLY_BRACE == parser.token.kind
+        val assignment = TokenType.ASSIGNMENT == parser.token.kind
 
         if (!block && !assignment) {
-            throw EvalException("Opening curly braces or assignment required to define function body")
+            parser.flagError(ErrorCode.MISSING_FUNCTION_BODY)
         }
         parser.advanceCursor()
         parser.skipNewLines()
 
         // Do we even have a non-empty body?
-        if (RightCurlyBraceToken::class != parser.token::class) {
+        if (TokenType.RIGHT_CURLY_BRACE != parser.token.kind) {
             body(assignment)
         }
 
-        if (block && RightCurlyBraceToken::class != parser.token::class) {
-            throw EvalException("Closing curly braces are required for function body")
+        if (block && TokenType.RIGHT_CURLY_BRACE != parser.token.kind) {
+            parser.flagError(ErrorCode.MISSING_BLOCK_RIGHT_CURLY_BRACE)
         }
 
         if (block) parser.advanceCursor()

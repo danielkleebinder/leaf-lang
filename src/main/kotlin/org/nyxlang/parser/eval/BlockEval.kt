@@ -1,10 +1,9 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
-import org.nyxlang.lexer.token.bracket.RightCurlyBraceToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.BlockNode
-import org.nyxlang.parser.exception.EvalException
 
 /**
  * Evaluates the block semantics:
@@ -14,14 +13,14 @@ import org.nyxlang.parser.exception.EvalException
  */
 class BlockEval(private val parser: IParser) : IEval {
     override fun eval(): BlockNode {
-        if (LeftCurlyBraceToken::class != parser.token::class) throw EvalException("Block statement requires opening curly braces")
+        if (TokenType.LEFT_CURLY_BRACE != parser.token.kind) parser.flagError(ErrorCode.MISSING_BLOCK_LEFT_CURLY_BRACE)
         parser.advanceCursor()
 
         parser.skipNewLines()
         val result = BlockNode(StatementListEval(parser).eval())
         parser.skipNewLines()
 
-        if (RightCurlyBraceToken::class != parser.token::class) throw EvalException("Block statement requires closing curly braces")
+        if (TokenType.RIGHT_CURLY_BRACE != parser.token.kind) parser.flagError(ErrorCode.MISSING_BLOCK_RIGHT_CURLY_BRACE)
         parser.advanceCursor()
 
         return result

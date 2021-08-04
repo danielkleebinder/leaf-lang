@@ -1,64 +1,16 @@
 package org.nyxlang.lexer
 
-import org.nyxlang.lexer.exception.LexerException
-import org.nyxlang.lexer.exception.TokenizerException
-import org.nyxlang.lexer.token.IToken
+import org.nyxlang.RuntimeOptions
+import org.nyxlang.lexer.source.ISource
+import org.nyxlang.lexer.token.Token
+import org.nyxlang.lexer.token.TokenFactory
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.lexer.tokenizer.*
 
+/**
+ * Concrete lexer implementation.
+ */
 class Lexer : ILexer {
-
-    override var programCode: String? = null
-        private set
-
-    override var cursorPosition = 0
-        private set
-
-    override fun tokenize(program: String): Array<IToken> {
-        programCode = program
-        cursorPosition = 0
-
-        val tokens = arrayListOf<IToken>()
-        val errors = arrayListOf<LexerError>()
-
-        while (!isEndOfProgram) {
-            for (tokenizer in tokenizerRegistry) {
-                if (!tokenizer.matches(symbol)) {
-                    continue
-                }
-                try {
-                    tokens.add(tokenizer.tokenize(this))
-                    break
-                } catch (e: TokenizerException) {
-                    errors.add(LexerError(e.message, e.location))
-                }
-            }
-            advanceCursor()
-        }
-        if (errors.size > 0) {
-            throw LexerException("Some syntax errors were detected during lexical analysis", errors.toTypedArray())
-        }
-        return tokens.toTypedArray()
-    }
-
-    override val isEndOfProgram: Boolean
-        get() = programCode == null || cursorPosition >= programCode!!.length
-
-    override fun advanceCursor(by: Int): Int {
-        checkNotNull(programCode) { "No program to advance cursor on" }
-        return by.let { cursorPosition += it; cursorPosition }
-    }
-
-    override val symbol: Char
-        get() {
-            checkNotNull(programCode) { "No program to get symbol from" }
-            return programCode!![cursorPosition]
-        }
-
-    override val peekNextSymbol: Char
-        get() {
-            checkNotNull(programCode) { "No program to get symbol from" }
-            return programCode!![cursorPosition + 1]
-        }
 
     companion object {
         private val tokenizerRegistry = arrayOf(
@@ -66,9 +18,9 @@ class Lexer : ILexer {
                 NameTokenizer(),
                 PlusTokenizer(),
                 MinusTokenizer(),
-                DivideTokenizer(),
-                MultiplyTokenizer(),
-                ModTokenizer(),
+                SlashTokenizer(),
+                TimesTokenizer(),
+                RemainderTokenizer(),
                 ComplementTokenizer(),
                 LogicalTokenizer(),
                 BracketTokenizer(),
@@ -79,5 +31,31 @@ class Lexer : ILexer {
                 NewLineTokenizer(),
                 StringTokenizer()
         )
+    }
+
+    override fun tokenize(source: ISource): Array<Token> {
+        val tokenFactory = TokenFactory(source)
+        val tokens = arrayListOf<Token>()
+
+        while (!source.isEndOfProgram) {
+            var token: Token? = null
+            for (tokenizer in tokenizerRegistry) {
+                if (!tokenizer.matches(source.symbol)) continue
+                token = tokenizer.tokenize(source, tokenFactory)
+                break
+            }
+            if (token == null) {
+
+                // No token matched and I have to skip this character
+                if (RuntimeOptions.debug) println("Skip character \"${source.symbol}\" in lexical analysis (no tokenizer matched)")
+                source.advanceCursor()
+            } else {
+                tokens.add(token)
+            }
+        }
+
+        // Finish with end of program token
+        tokens.add(tokenFactory.newToken(TokenType.END_OF_PROGRAM))
+        return tokens.toTypedArray()
     }
 }

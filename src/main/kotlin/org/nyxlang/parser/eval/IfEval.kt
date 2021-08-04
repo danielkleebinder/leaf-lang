@@ -1,17 +1,14 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.NewLineToken
-import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
-import org.nyxlang.lexer.token.keyword.ElseKeywordToken
-import org.nyxlang.lexer.token.keyword.IfKeywordToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.IfCase
 import org.nyxlang.parser.ast.IfNode
-import org.nyxlang.parser.exception.EvalException
 
 /**
- * Evaluates the if semantics:
+ * Evaluates the 'if' syntax:
  *
  * <if-expr> ::= 'if' ((NL)* <expr> (NL)* <block>)
  *                    ((NL)* <else-if>)*
@@ -35,15 +32,15 @@ class IfEval(private val parser: IParser) : IEval {
         ifHead { condition = expr.eval() }
         cases.add(IfCase(condition, block.eval()))
 
-        var wasNewLine = NewLineToken::class == parser.token::class
+        var wasNewLine = TokenType.NEW_LINE == parser.token.kind
         parser.skipNewLines()
 
         // Evaluate further case blocks
-        while (ElseKeywordToken::class == parser.token::class) {
+        while (TokenType.KEYWORD_ELSE == parser.token.kind) {
             parser.advanceCursor()
             parser.skipNewLines()
 
-            if (IfKeywordToken::class == parser.token::class) {
+            if (TokenType.KEYWORD_IF == parser.token.kind) {
                 parser.advanceCursor()
                 parser.skipNewLines()
 
@@ -52,7 +49,7 @@ class IfEval(private val parser: IParser) : IEval {
             } else {
                 elseCase = block.eval()
             }
-            wasNewLine = NewLineToken::class == parser.token::class
+            wasNewLine = TokenType.NEW_LINE == parser.token.kind
             parser.skipNewLines()
         }
 
@@ -70,12 +67,12 @@ class IfEval(private val parser: IParser) : IEval {
      * executes the body if everything is fine.
      */
     private inline fun ifHead(head: () -> Unit) {
-        if (IfKeywordToken::class != parser.token::class) {
-            throw EvalException("Conditional keyword 'if' expected")
+        if (TokenType.KEYWORD_IF != parser.token.kind) {
+            parser.flagError(ErrorCode.MISSING_KEYWORD_IF)
         }
         parser.advanceCursor()
 
-        if (LeftCurlyBraceToken::class != parser.token::class) {
+        if (TokenType.LEFT_CURLY_BRACE != parser.token.kind) {
             parser.skipNewLines()
             head()
         }

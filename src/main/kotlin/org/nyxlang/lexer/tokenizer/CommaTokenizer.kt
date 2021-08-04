@@ -1,12 +1,16 @@
 package org.nyxlang.lexer.tokenizer
 
-import org.nyxlang.lexer.ILexer
-import org.nyxlang.lexer.token.CommaToken
+import org.nyxlang.lexer.source.ISource
+import org.nyxlang.lexer.source.advance
+import org.nyxlang.lexer.token.ITokenFactory
+import org.nyxlang.lexer.token.TokenType
 
 /**
  * Tokenizes the symbol ','.
  */
 class CommaTokenizer : ITokenizer {
     override fun matches(c: Char) = c == ','
-    override fun tokenize(lexer: ILexer) = CommaToken()
+    override fun tokenize(source: ISource, tokenFactory: ITokenFactory) = source.advance {
+        tokenFactory.newToken(TokenType.COMMA)
+    }
 }

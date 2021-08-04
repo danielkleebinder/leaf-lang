@@ -1,8 +1,8 @@
 package org.nyxlang.lexer.tokenizer
 
-import org.nyxlang.lexer.ILexer
-import org.nyxlang.lexer.exception.TokenizerException
-import org.nyxlang.lexer.token.IToken
+import org.nyxlang.lexer.source.ISource
+import org.nyxlang.lexer.token.ITokenFactory
+import org.nyxlang.lexer.token.Token
 
 /**
  * Generates a token from a given sequence of input characters.
@@ -18,11 +18,10 @@ interface ITokenizer {
     fun matches(c: Char): Boolean
 
     /**
-     * Performs lexical analysis on the next symbols in the input buffer.
+     * Performs lexical analysis on the next symbols from the given source.
      *
-     * @param lexer Lexer.
+     * @param source Source.
      * @return Tokenizer result.
-     * @throws TokenizerException May occur if lexical analysis fails for a certain token.
      */
-    fun tokenize(lexer: ILexer): IToken
+    fun tokenize(source: ISource, tokenFactory: ITokenFactory): Token
 }

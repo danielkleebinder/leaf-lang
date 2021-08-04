@@ -1,32 +1,32 @@
 package org.nyxlang.lexer
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
-import org.nyxlang.lexer.token.NumberToken
-import org.nyxlang.lexer.token.arithmetic.MultiplyToken
-import org.nyxlang.lexer.token.arithmetic.PlusToken
+import org.nyxlang.lexer.token.TokenType
 
 class LexerArithmeticTest : TestSuit() {
+
     @Test
     fun shouldTokenizePlusOperator() {
         val tokens = tokenize("5+3")
-        assertEquals(3, tokens.size)
-        assertSame(NumberToken::class.java, tokens[0].javaClass)
-        assertSame(PlusToken::class.java, tokens[1].javaClass)
-        assertSame(NumberToken::class.java, tokens[2].javaClass)
+        assertEquals(4, tokens.size)
+        assertEquals(TokenType.NUMBER, tokens[0].kind)
+        assertEquals(TokenType.PLUS, tokens[1].kind)
+        assertEquals(TokenType.NUMBER, tokens[2].kind)
+        assertEquals(TokenType.END_OF_PROGRAM, tokens[3].kind)
     }
 
     @Test
     fun shouldTokenizeMultipleOperators() {
         val tokens = tokenize("5+3**10")
-        assertEquals(6, tokens.size)
-        assertSame(NumberToken::class.java, tokens[0].javaClass)
-        assertSame(PlusToken::class.java, tokens[1].javaClass)
-        assertSame(NumberToken::class.java, tokens[2].javaClass)
-        assertSame(MultiplyToken::class.java, tokens[3].javaClass)
-        assertSame(MultiplyToken::class.java, tokens[4].javaClass)
-        assertSame(NumberToken::class.java, tokens[5].javaClass)
+        assertEquals(7, tokens.size)
+        assertEquals(TokenType.NUMBER, tokens[0].kind)
+        assertEquals(TokenType.PLUS, tokens[1].kind)
+        assertEquals(TokenType.NUMBER, tokens[2].kind)
+        assertEquals(TokenType.TIMES, tokens[3].kind)
+        assertEquals(TokenType.TIMES, tokens[4].kind)
+        assertEquals(TokenType.NUMBER, tokens[5].kind)
+        assertEquals(TokenType.END_OF_PROGRAM, tokens[6].kind)
     }
 }

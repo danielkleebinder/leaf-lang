@@ -1,12 +1,12 @@
 package org.nyxlang.interpreter
 
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.nyxlang.TestSuit
 import org.nyxlang.analyzer.exception.StaticSemanticException
-import org.nyxlang.parser.exception.ParserException
 
 class InterpreterCustomTypeTest : TestSuit() {
 
@@ -27,7 +27,8 @@ class InterpreterCustomTypeTest : TestSuit() {
 
     @Test
     fun shouldErrorIfNoTypeName() {
-        assertThrows(ParserException::class.java) { execute("type") }
+//        assertThrows(ParserException::class.java) { execute("type") }
+        Assertions.fail<Unit>("Error count check not implemented yet")
     }
 
     @Test

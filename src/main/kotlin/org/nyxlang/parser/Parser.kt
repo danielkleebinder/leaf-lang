@@ -1,36 +1,27 @@
 package org.nyxlang.parser
 
-import org.nyxlang.lexer.token.CommentToken
-import org.nyxlang.lexer.token.EndOfProgramToken
-import org.nyxlang.lexer.token.IToken
-import org.nyxlang.lexer.token.NewLineToken
+import org.nyxlang.RuntimeOptions
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.error.SyntaxError
+import org.nyxlang.error.fromToken
+import org.nyxlang.lexer.token.Token
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.eval.ProgramEval
-import org.nyxlang.parser.exception.EvalException
-import org.nyxlang.parser.exception.ParserException
 
 class Parser : IParser {
 
-    private var tokens = arrayOf<IToken>()
+    private var tokens = arrayOf<Token>()
     private var cursorPosition = 0
 
-    override fun parse(tokens: Array<IToken>): INode {
+    override fun parse(tokens: Array<Token>): INode {
+        this.cursorPosition = 0
         this.tokens = tokens
-                .filter { CommentToken::class != it::class }
+                .filter { TokenType.COMMENT != it.kind }
                 .toTypedArray()
 
-        this.cursorPosition = 0
-        try {
-            return ProgramEval(this).eval()
-        } catch (e: EvalException) {
-            throw ParserException("Some semantic errors were detected during program parsing", arrayListOf(ParserError(e.message!!)))
-        }
+        return ProgramEval(this).eval()
     }
-
-    /**
-     * Tests if a next token is available.
-     */
-    private fun hasNextToken() = cursorPosition + 1 < tokens.size
 
     override fun advanceCursor(by: Int): Int {
         cursorPosition += by
@@ -38,19 +29,19 @@ class Parser : IParser {
     }
 
     override fun skipNewLines() {
-        while (NewLineToken::class == token::class) {
+        while (TokenType.NEW_LINE == token.kind) {
             advanceCursor()
         }
     }
 
-    override val token: IToken
-        get() = if (cursorPosition >= tokens.size) {
-            EndOfProgramToken()
-        } else tokens[cursorPosition]
+    override fun flagError(errorCode: ErrorCode) {
+        RuntimeOptions.errorHandler.flag(SyntaxError(errorCode, fromToken(token)))
+    }
 
-    override val peekNextToken: IToken
-        get() = if (!hasNextToken()) {
-            EndOfProgramToken()
-        } else tokens[cursorPosition + 1]
+    override val token: Token
+        get() = tokens[cursorPosition]
+
+    override val peekNextToken: Token
+        get() = tokens[cursorPosition + 1]
 
 }

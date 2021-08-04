@@ -1,9 +1,6 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.ComplementToken
-import org.nyxlang.lexer.token.arithmetic.MinusToken
-import org.nyxlang.lexer.token.arithmetic.PlusToken
-import org.nyxlang.lexer.token.logical.LogicalNotToken
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advance
 import org.nyxlang.parser.ast.INode
@@ -20,11 +17,11 @@ class PrefixExprEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
         val postfixExpr = AtomEval(parser)
-        return when (parser.token::class) {
-            PlusToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.POSITIVE) }
-            MinusToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.NEGATE) }
-            LogicalNotToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.LOGICAL_NEGATE) }
-            ComplementToken::class -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.BIT_COMPLEMENT) }
+        return when (parser.token.kind) {
+            TokenType.PLUS -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.POSITIVE) }
+            TokenType.MINUS -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.NEGATE) }
+            TokenType.LOGICAL_NOT -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.LOGICAL_NEGATE) }
+            TokenType.COMPLEMENT -> parser.advance { UnaryOperationNode(eval(), UnaryOperation.BIT_COMPLEMENT) }
             else -> postfixExpr.eval()
         }
     }

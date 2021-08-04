@@ -1,6 +1,7 @@
 package org.nyxlang.parser
 
-import org.nyxlang.lexer.token.IToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.token.Token
 import org.nyxlang.parser.ast.INode
 
 /**
@@ -13,7 +14,7 @@ interface IParser {
     /**
      * Parses the given array of [tokens].
      */
-    fun parse(tokens: Array<IToken>): INode?
+    fun parse(tokens: Array<Token>): INode?
 
     /**
      * Advances the cursor position [by] the given amount.
@@ -26,19 +27,24 @@ interface IParser {
     fun skipNewLines()
 
     /**
+     * Flags the current token with an error.
+     */
+    fun flagError(errorCode: ErrorCode)
+
+    /**
      * The current token.
      */
-    val token: IToken
+    val token: Token
 
     /**
      * Peeks the next token without advancing the cursor.
      */
-    val peekNextToken: IToken
+    val peekNextToken: Token
 
     /**
      * Returns the current token and then advances one step.
      */
-    val tokenAndAdvance: IToken
+    val tokenAndAdvance: Token
         get() {
             val result = token
             advanceCursor()
@@ -50,13 +56,23 @@ interface IParser {
  * Advances the cursor by one and runs the given [body] function. The parameter
  * of the inline function is the new current token.
  */
-inline fun <T> IParser.advance(body: (token: IToken) -> T): T = advanceBy(1, body)
+inline fun <T> IParser.advance(body: (token: Token) -> T): T = advanceBy(1, body)
+
+/**
+ * Advances the cursor by one token and skips all new lines afterwards before executing
+ * the given [func] with the newest token.
+ */
+inline fun <T> IParser.advanceAndSkipNewLines(func: (token: Token) -> T): T {
+    advanceCursor()
+    skipNewLines()
+    return func(token)
+}
 
 /**
  * Advances the cursor [by] the given amount and runs the given [body] function.
  * The parameter of the inline function is the new current token.
  */
-inline fun <T> IParser.advanceBy(by: Int, body: (token: IToken) -> T): T {
+inline fun <T> IParser.advanceBy(by: Int, body: (token: Token) -> T): T {
     advanceCursor(by)
     return body(token)
 }
@@ -65,7 +81,7 @@ inline fun <T> IParser.advanceBy(by: Int, body: (token: IToken) -> T): T {
  * Advances the cursor by one and runs the given [body] function if the given
  * condition is met. The parameter of the inline function is the new current token.
  */
-inline fun <T> IParser.advanceIf(cond: Boolean, body: (token: IToken) -> T): T? {
+inline fun <T> IParser.advanceIf(cond: Boolean, body: (token: Token) -> T): T? {
     if (cond) {
         advanceCursor()
         return body(token)

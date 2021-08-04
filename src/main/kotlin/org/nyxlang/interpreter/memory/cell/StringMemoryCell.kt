@@ -40,10 +40,10 @@ class StringMemoryCell(private var data: String,
         BinaryOperation.PLUS -> binaryPlus(right)
         BinaryOperation.EQUAL -> binaryEqual(right)
         BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
-        BinaryOperation.LESS_THAN -> binaryLessThan(right)
-        BinaryOperation.LESS_THAN_OR_EQUAL -> binaryLessThanOrEqual(right)
-        BinaryOperation.GREATER_THAN -> binaryGreaterThan(right)
-        BinaryOperation.GREATER_THAN_OR_EQUAL -> binaryGreaterThanOrEqual(right)
+        BinaryOperation.LESS -> binaryLessThan(right)
+        BinaryOperation.LESS_EQUALS -> binaryLessThanOrEqual(right)
+        BinaryOperation.GREATER -> binaryGreaterThan(right)
+        BinaryOperation.GREATER_EQUALS -> binaryGreaterThanOrEqual(right)
         else -> throw UnknownOperationException("The operation $op is not supported for data type string")
     }
 

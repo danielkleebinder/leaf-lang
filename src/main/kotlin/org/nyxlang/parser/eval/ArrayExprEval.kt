@@ -1,13 +1,11 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.CommaToken
-import org.nyxlang.lexer.token.bracket.LeftBracketToken
-import org.nyxlang.lexer.token.bracket.RightBracketToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.ArrayNode
 import org.nyxlang.parser.ast.EmptyNode
 import org.nyxlang.parser.ast.INode
-import org.nyxlang.parser.exception.EvalException
 
 /**
  * Evaluates the array semantics:
@@ -25,7 +23,7 @@ class ArrayExprEval(private val parser: IParser) : IEval {
             elements.add(expr.eval())
             parser.skipNewLines()
 
-            while (CommaToken::class == parser.token::class) {
+            while (TokenType.COMMA == parser.token.kind) {
                 parser.advanceCursor()
                 parser.skipNewLines()
 
@@ -45,16 +43,16 @@ class ArrayExprEval(private val parser: IParser) : IEval {
      * [lambda] if the content is non-empty.
      */
     private inline fun enclosingBrackets(lambda: () -> Unit) {
-        if (LeftBracketToken::class != parser.token::class) throw EvalException("Arrays require opening bracket")
+        if (TokenType.LEFT_BRACKET != parser.token.kind) parser.flagError(ErrorCode.MISSING_LEFT_BRACKET)
         parser.advanceCursor()
         parser.skipNewLines()
 
-        if (RightBracketToken::class != parser.token::class) {
+        if (TokenType.RIGHT_BRACKET != parser.token.kind) {
             lambda()
             parser.skipNewLines()
         }
 
-        if (RightBracketToken::class != parser.token::class) throw EvalException("Arrays require closing bracket")
+        if (TokenType.RIGHT_BRACKET != parser.token.kind) parser.flagError(ErrorCode.MISSING_RIGHT_BRACKET)
         parser.advanceCursor()
     }
 }

@@ -1,14 +1,10 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.NameToken
-import org.nyxlang.lexer.token.NewLineToken
-import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
-import org.nyxlang.lexer.token.bracket.RightCurlyBraceToken
-import org.nyxlang.lexer.token.keyword.TypeKeywordToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.DeclarationsNode
 import org.nyxlang.parser.ast.TypeDeclareNode
-import org.nyxlang.parser.exception.EvalException
 
 /**
  * Evaluates the custom type declaration semantics:
@@ -23,16 +19,16 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
         var name = "<anonymous>"
         val fields = arrayListOf<DeclarationsNode>()
 
-        typeName { name = (parser.tokenAndAdvance as NameToken).value }
+        typeName { name = parser.tokenAndAdvance.value as String }
 
-        val wasNewLine = NewLineToken::class == parser.token::class
+        val wasNewLine = TokenType.NEW_LINE == parser.token.kind
         parser.skipNewLines()
 
         // Custom types do not need a body at all
-        if (LeftCurlyBraceToken::class == parser.token::class) {
+        if (TokenType.LEFT_CURLY_BRACE == parser.token.kind) {
             typeBody {
                 val declarations = DeclarationsEval(parser)
-                while (RightCurlyBraceToken::class != parser.token::class) {
+                while (TokenType.RIGHT_CURLY_BRACE != parser.token.kind) {
                     fields.add(declarations.eval())
                     parser.skipNewLines()
                 }
@@ -49,12 +45,11 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
      */
     private inline fun typeName(fn: () -> Unit) {
         // Is this even a type declaration?
-        if (TypeKeywordToken::class != parser.token::class) throw EvalException("Custom type keyword 'type' expected, but got ${parser.token}")
+        if (TokenType.KEYWORD_TYPE != parser.token.kind) parser.flagError(ErrorCode.MISSING_KEYWORD_TYPE)
         parser.advanceCursor()
         parser.skipNewLines()
 
-        if (NameToken::class != parser.token::class) throw EvalException("Custom types require a name but got ${parser.token}")
-
+        if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
         fn()
     }
 
@@ -62,17 +57,17 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
      * Evaluates the custom type body. Throws an exception if semantics are incorrect.
      */
     private inline fun typeBody(fn: () -> Unit) {
-        if (LeftCurlyBraceToken::class != parser.token::class) throw EvalException("Custom types require opening curly brace, but got ${parser.token}")
+        if (TokenType.LEFT_CURLY_BRACE != parser.token.kind) parser.flagError(ErrorCode.MISSING_TYPE_LEFT_CURLY_BRACE)
         parser.advanceCursor()
         parser.skipNewLines()
 
         // Do we have declarations at all?
-        if (RightCurlyBraceToken::class != parser.token::class) {
+        if (TokenType.RIGHT_CURLY_BRACE != parser.token.kind) {
             fn()
             parser.skipNewLines()
         }
 
-        if (RightCurlyBraceToken::class != parser.token::class) throw EvalException("Custom types require closing curly brace, but got ${parser.token}")
+        if (TokenType.RIGHT_CURLY_BRACE != parser.token.kind) parser.flagError(ErrorCode.MISSING_TYPE_RIGHT_CURLY_BRACE)
         parser.advanceCursor()
     }
 }

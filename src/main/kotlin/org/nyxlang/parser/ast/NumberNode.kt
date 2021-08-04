@@ -5,6 +5,4 @@ import java.math.BigDecimal
 /**
  * Single float value.
  */
-class NumberNode(val value: BigDecimal) : INode {
-    override fun toString() = "NumberNode{val=$value}"
-}
+data class NumberNode(val value: BigDecimal) : INode

@@ -1,13 +1,10 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.AssignToken
-import org.nyxlang.lexer.token.ColonToken
-import org.nyxlang.lexer.token.CommaToken
-import org.nyxlang.lexer.token.NameToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.advanceIf
+import org.nyxlang.parser.advanceAndSkipNewLines
 import org.nyxlang.parser.ast.*
-import org.nyxlang.parser.exception.EvalException
 
 /**
  * Evaluates the declaration semantics:
@@ -25,7 +22,7 @@ class DeclarationsEval(private val parser: IParser,
             declarations.add(evalDeclaration())
 
             // There are no more variable declarations, break the loop and return the declaration node
-            if (CommaToken::class != parser.token::class) break
+            if (TokenType.COMMA != parser.token.kind) break
             parser.advanceCursor()
             parser.skipNewLines()
         }
@@ -36,24 +33,23 @@ class DeclarationsEval(private val parser: IParser,
      * Evaluates the declaration statement.
      */
     private fun evalDeclaration(): Declaration {
-        if (NameToken::class != parser.token::class) throw EvalException("Expected identifier, but got ${parser.token}")
+        if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
 
-        val id = (parser.tokenAndAdvance as NameToken).value
+        val id = parser.tokenAndAdvance.value as String
         var typeExpr: TypeNode? = null
         var assignExpr: INode? = null
         parser.skipNewLines()
 
-        parser.advanceIf(ColonToken::class == parser.token::class) {
-            parser.skipNewLines()
-            typeExpr = TypeEval(parser).eval()
+        if (TokenType.COLON == parser.token.kind) {
+            parser.advanceAndSkipNewLines { typeExpr = TypeEval(parser).eval() }
         }
-        parser.advanceIf(AssignToken::class == parser.token::class) {
-            parser.skipNewLines()
-            assignExpr = ExprEval(parser).eval()
+
+        if (TokenType.ASSIGNMENT == parser.token.kind) {
+            parser.advanceAndSkipNewLines { assignExpr = ExprEval(parser).eval() }
         }
 
         if (assignExpr == null && typeExpr == null) {
-            throw EvalException("Variable declaration requires either type or immediate assignment")
+            parser.flagError(ErrorCode.INVALID_VARIABLE_DECLARATION)
         }
 
         return Declaration(id, assignExpr, typeExpr)

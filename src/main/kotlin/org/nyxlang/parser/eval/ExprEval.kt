@@ -1,9 +1,8 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.logical.LogicalAndToken
-import org.nyxlang.lexer.token.logical.LogicalOrToken
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.advance
+import org.nyxlang.parser.advanceAndSkipNewLines
 import org.nyxlang.parser.ast.BinaryOperation
 import org.nyxlang.parser.ast.BinaryOperationNode
 import org.nyxlang.parser.ast.INode
@@ -21,15 +20,9 @@ class ExprEval(private val parser: IParser) : IEval {
 
         var node = equalityExpr.eval()
         while (true) {
-            node = when (parser.token::class) {
-                LogicalAndToken::class -> parser.advance {
-                    parser.skipNewLines()
-                    BinaryOperationNode(node, equalityExpr.eval(), BinaryOperation.LOGICAL_AND)
-                }
-                LogicalOrToken::class -> parser.advance {
-                    parser.skipNewLines()
-                    BinaryOperationNode(node, equalityExpr.eval(), BinaryOperation.LOGICAL_OR)
-                }
+            node = when (parser.token.kind) {
+                TokenType.LOGICAL_AND -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, equalityExpr.eval(), BinaryOperation.LOGICAL_AND) }
+                TokenType.LOGICAL_OR -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, equalityExpr.eval(), BinaryOperation.LOGICAL_OR) }
                 else -> break
             }
         }

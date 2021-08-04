@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
 import org.nyxlang.analyzer.exception.StaticSemanticException
-import org.nyxlang.parser.exception.ParserException
 import java.math.BigDecimal
 
 class InterpreterVarTest : TestSuit() {
@@ -58,7 +57,8 @@ class InterpreterVarTest : TestSuit() {
     fun shouldErrorInvalidConstAssignment() {
 
         // Constants must be initialized on declaration
-        assertThrows(ParserException::class.java) { execute("const a") }
+//        assertThrows(ParserException::class.java) { execute("const a") }
+        fail<Unit>("Error count check not implemented yet")
 
         // Constants cannot be reassigned
         assertThrows(StaticSemanticException::class.java) { execute("const b = 3; b = 7;") }
@@ -68,7 +68,8 @@ class InterpreterVarTest : TestSuit() {
     fun shouldErrorInvalidVarDeclaration() {
 
         // Uninitialized vars must have data type
-        assertThrows(ParserException::class.java) { execute("var a") }
+//        assertThrows(ParserException::class.java) { execute("var a") }
+        fail<Unit>("Error count check not implemented yet")
     }
 
     @Test

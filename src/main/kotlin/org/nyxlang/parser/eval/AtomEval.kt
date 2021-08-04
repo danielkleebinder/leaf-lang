@@ -1,21 +1,12 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.BoolToken
-import org.nyxlang.lexer.token.NameToken
-import org.nyxlang.lexer.token.NumberToken
-import org.nyxlang.lexer.token.StringToken
-import org.nyxlang.lexer.token.bracket.LeftBracketToken
-import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
-import org.nyxlang.lexer.token.bracket.LeftParenthesisToken
-import org.nyxlang.lexer.token.bracket.RightParenthesisToken
-import org.nyxlang.lexer.token.keyword.AsyncKeywordToken
-import org.nyxlang.lexer.token.keyword.FunKeywordToken
-import org.nyxlang.lexer.token.keyword.IfKeywordToken
-import org.nyxlang.lexer.token.keyword.NewKeywordToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.advance
+import org.nyxlang.parser.advanceAndSkipNewLines
 import org.nyxlang.parser.ast.*
-import org.nyxlang.parser.exception.EvalException
+import java.math.BigDecimal
 
 /**
  * Evaluates atoms with the following semantic:
@@ -34,25 +25,24 @@ import org.nyxlang.parser.exception.EvalException
 class AtomEval(private val parser: IParser) : IEval {
 
     override fun eval(): INode {
-        return when (parser.token::class) {
+        return when (parser.token.kind) {
 
-            BoolToken::class -> BoolNode((parser.tokenAndAdvance as BoolToken).value)
-            NumberToken::class -> NumberNode((parser.tokenAndAdvance as NumberToken).value)
-            StringToken::class -> StringNode((parser.tokenAndAdvance as StringToken).value)
+            TokenType.BOOL -> BoolNode(parser.tokenAndAdvance.value as Boolean)
+            TokenType.NUMBER -> NumberNode(BigDecimal.valueOf(parser.tokenAndAdvance.value as Double))
+            TokenType.STRING -> StringNode(parser.tokenAndAdvance.value as String)
 
-            NameToken::class -> AssignmentEval(parser).eval()
-            LeftBracketToken::class -> ArrayExprEval(parser).eval()
-            IfKeywordToken::class -> IfEval(parser).eval()
-            FunKeywordToken::class -> FunDeclarationEval(parser).eval()
-            NewKeywordToken::class -> TypeInstantiationEval(parser).eval()
-            AsyncKeywordToken::class -> parser.advance { AsyncNode(StatementEval(parser).eval()) }
-            LeftCurlyBraceToken::class -> BlockEval(parser).eval()
+            TokenType.IDENTIFIER -> AssignmentEval(parser).eval()
+            TokenType.LEFT_BRACKET -> ArrayExprEval(parser).eval()
+            TokenType.KEYWORD_IF -> IfEval(parser).eval()
+            TokenType.KEYWORD_FUN -> FunDeclarationEval(parser).eval()
+            TokenType.KEYWORD_NEW -> TypeInstantiationEval(parser).eval()
+            TokenType.LEFT_CURLY_BRACE -> BlockEval(parser).eval()
 
-            LeftParenthesisToken::class -> parser.advance {
-                parser.skipNewLines()
+            TokenType.KEYWORD_ASYNC -> parser.advance { AsyncNode(StatementEval(parser).eval()) }
+            TokenType.LEFT_PARENTHESIS -> parser.advanceAndSkipNewLines {
                 val result = ExprEval(parser).eval()
                 parser.skipNewLines()
-                if (RightParenthesisToken::class != parser.token::class) throw EvalException("Closing parenthesis ')' missing and got '${parser.token}'")
+                if (TokenType.RIGHT_PARENTHESIS != parser.token.kind) parser.flagError(ErrorCode.MISSING_RIGHT_PARENTHESIS)
                 parser.advanceCursor()
                 result
             }

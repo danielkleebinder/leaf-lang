@@ -1,5 +1,6 @@
 package org.nyxlang
 
+import org.nyxlang.error.ErrorHandler
 import java.io.PrintWriter
 import java.math.MathContext
 
@@ -28,4 +29,6 @@ object RuntimeOptions {
      * The standard console writer.
      */
     var consoleWriter = PrintWriter(System.out)
+
+    val errorHandler = ErrorHandler()
 }

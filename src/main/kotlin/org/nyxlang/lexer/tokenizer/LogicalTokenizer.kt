@@ -1,10 +1,12 @@
 package org.nyxlang.lexer.tokenizer
 
-import org.nyxlang.lexer.ILexer
-import org.nyxlang.lexer.exception.TokenizerException
-import org.nyxlang.lexer.token.AssignToken
-import org.nyxlang.lexer.token.IToken
-import org.nyxlang.lexer.token.logical.*
+import org.nyxlang.lexer.source.ISource
+import org.nyxlang.lexer.source.advance
+import org.nyxlang.lexer.source.advanceIf
+import org.nyxlang.lexer.token.ITokenFactory
+import org.nyxlang.lexer.token.Token
+import org.nyxlang.lexer.token.TokenType
+import org.nyxlang.error.ErrorCode
 
 /**
  * Tokenizes logical symbols like '<', '<=' or '&&'.
@@ -15,43 +17,21 @@ class LogicalTokenizer : ITokenizer {
             c == '!' || c == '>' || c == '<' ||
             c == '='
 
-    override fun tokenize(lexer: ILexer): IToken {
-        if (lexer.symbol == '&' && lexer.peekNextSymbol == '&') {
-            lexer.advanceCursor()
-            return LogicalAndToken()
+    override fun tokenize(source: ISource, tokenFactory: ITokenFactory): Token {
+        val currentSymbol = source.symbol
+        val nextSymbol = source.peekNextSymbol
+        source.advance {
+            source.advanceIf(currentSymbol == '&' && nextSymbol == '&') { return tokenFactory.newToken(TokenType.LOGICAL_AND) }
+            source.advanceIf(currentSymbol == '|' && nextSymbol == '|') { return tokenFactory.newToken(TokenType.LOGICAL_OR) }
+            source.advanceIf(currentSymbol == '<' && nextSymbol == '=') { return tokenFactory.newToken(TokenType.LESS_EQUALS) }
+            source.advanceIf(currentSymbol == '<' && nextSymbol == '-') { return tokenFactory.newToken(TokenType.LEFT_ARROW) }
+            source.advanceIf(currentSymbol == '>' && nextSymbol == '=') { return tokenFactory.newToken(TokenType.GREATER_EQUALS) }
+            source.advanceIf(currentSymbol == '=' && nextSymbol == '=') { return tokenFactory.newToken(TokenType.EQUALS) }
+            source.advanceIf(currentSymbol == '!' && nextSymbol == '=') { return tokenFactory.newToken(TokenType.NOT_EQUALS) }
+            if (currentSymbol == '<') return tokenFactory.newToken(TokenType.LESS)
+            if (currentSymbol == '>') return tokenFactory.newToken(TokenType.GREATER)
+            if (currentSymbol == '=') return tokenFactory.newToken(TokenType.ASSIGNMENT)
+            return tokenFactory.newToken(TokenType.ERROR, ErrorCode.UNEXPECTED_LOGICAL_TOKEN)
         }
-        if (lexer.symbol == '|' && lexer.peekNextSymbol == '|') {
-            lexer.advanceCursor()
-            return LogicalOrToken()
-        }
-        if (lexer.symbol == '>') {
-            if (lexer.peekNextSymbol == '=') {
-                lexer.advanceCursor()
-                return GreaterThanOrEqualToken()
-            }
-            return GreaterThanToken()
-        }
-        if (lexer.symbol == '<') {
-            if (lexer.peekNextSymbol == '=') {
-                lexer.advanceCursor()
-                return LessThanOrEqualToken()
-            }
-            return LessThanToken()
-        }
-        if (lexer.symbol == '=') {
-            if (lexer.peekNextSymbol == '=') {
-                lexer.advanceCursor()
-                return EqualToken()
-            }
-            return AssignToken()
-        }
-        if (lexer.symbol == '!') {
-            if (lexer.peekNextSymbol == '=') {
-                lexer.advanceCursor()
-                return NotEqualToken()
-            }
-            return LogicalNotToken()
-        }
-        throw TokenizerException("Unknown logical symbol " + lexer.symbol, lexer.cursorPosition)
     }
 }

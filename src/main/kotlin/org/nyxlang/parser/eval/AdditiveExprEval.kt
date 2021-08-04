@@ -1,9 +1,8 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.arithmetic.MinusToken
-import org.nyxlang.lexer.token.arithmetic.PlusToken
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.advance
+import org.nyxlang.parser.advanceAndSkipNewLines
 import org.nyxlang.parser.ast.BinaryOperation
 import org.nyxlang.parser.ast.BinaryOperationNode
 import org.nyxlang.parser.ast.INode
@@ -20,16 +19,9 @@ class AdditiveExprEval(private val parser: IParser) : IEval {
         val multiplicativeExpr = MultiplicativeExprEval(parser)
         var node = multiplicativeExpr.eval()
         while (true) {
-
-            node = when (parser.token::class) {
-                PlusToken::class -> parser.advance {
-                    parser.skipNewLines()
-                    BinaryOperationNode(node, multiplicativeExpr.eval(), BinaryOperation.PLUS)
-                }
-                MinusToken::class -> parser.advance {
-                    parser.skipNewLines()
-                    BinaryOperationNode(node, multiplicativeExpr.eval(), BinaryOperation.MINUS)
-                }
+            node = when (parser.token.kind) {
+                TokenType.PLUS -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, multiplicativeExpr.eval(), BinaryOperation.PLUS) }
+                TokenType.MINUS -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, multiplicativeExpr.eval(), BinaryOperation.MINUS) }
                 else -> break
             }
         }

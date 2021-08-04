@@ -1,15 +1,13 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.ColonToken
-import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
-import org.nyxlang.lexer.token.keyword.LoopKeywordToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.INode
 import org.nyxlang.parser.ast.LoopNode
-import org.nyxlang.parser.exception.EvalException
 
 /**
- * Evaluates the loop semantics:
+ * Evaluates the 'loop' syntax:
  *
  * <loop-stmt> ::= 'loop' ((NL)* <loop-init>)?
  *                        ((NL)* <loop-cond>)?
@@ -47,13 +45,13 @@ class LoopEval(private val parser: IParser) : IEval {
      * Evaluates the loop init expression or throws an exception if semantically incorrect.
      */
     private inline fun loopInit(head: () -> Unit) {
-        if (LoopKeywordToken::class != parser.token::class) {
-            throw EvalException("Loop keyword 'loop' expected")
+        if (TokenType.KEYWORD_LOOP != parser.token.kind) {
+            parser.flagError(ErrorCode.MISSING_KEYWORD_LOOP)
         }
         parser.advanceCursor()
         parser.skipNewLines()
 
-        if (LeftCurlyBraceToken::class != parser.token::class) {
+        if (TokenType.LEFT_CURLY_BRACE != parser.token.kind) {
             head()
         }
     }
@@ -62,9 +60,9 @@ class LoopEval(private val parser: IParser) : IEval {
      * Evaluates the loop condition expression or throws an exception if semantically incorrect.
      */
     private inline fun loopCond(head: () -> Unit) {
-        if (ColonToken::class == parser.token::class) parser.advanceCursor()
+        if (TokenType.COLON == parser.token.kind) parser.advanceCursor()
         parser.skipNewLines()
-        if (LeftCurlyBraceToken::class == parser.token::class) return
+        if (TokenType.LEFT_CURLY_BRACE == parser.token.kind) return
         parser.skipNewLines()
         head()
     }
@@ -73,9 +71,9 @@ class LoopEval(private val parser: IParser) : IEval {
      * Evaluates the loop step expression or throws an exception if semantically incorrect.
      */
     private inline fun loopStep(head: () -> Unit) {
-        if (ColonToken::class == parser.token::class) parser.advanceCursor()
+        if (TokenType.COLON == parser.token.kind) parser.advanceCursor()
         parser.skipNewLines()
-        if (LeftCurlyBraceToken::class == parser.token::class) return
+        if (TokenType.LEFT_CURLY_BRACE == parser.token.kind) return
         parser.skipNewLines()
         head()
     }

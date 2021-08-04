@@ -1,31 +1,31 @@
 package org.nyxlang.lexer
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
-import org.nyxlang.lexer.token.NameToken
-import org.nyxlang.lexer.token.keyword.TypeKeywordToken
+import org.nyxlang.lexer.token.TokenType
 
 class LexerCustomTypeTest : TestSuit() {
 
     @Test
     fun shouldTokenizeCustomTypeOnly() {
         val tokens = tokenize("type User")
-        assertEquals(2, tokens.size)
-        assertSame(TypeKeywordToken::class.java, tokens[0].javaClass)
-        assertSame(NameToken::class.java, tokens[1].javaClass)
+        assertEquals(3, tokens.size)
+        assertEquals(TokenType.KEYWORD_TYPE, tokens[0].kind)
+        assertEquals(TokenType.IDENTIFIER, tokens[1].kind)
+        assertEquals(TokenType.END_OF_PROGRAM, tokens[2].kind)
     }
 
     @Test
     fun shouldTokenizeCustomTypes() {
         val tokens = tokenize("type User; type Item; type Currency")
-        assertEquals(8, tokens.size)
-        assertSame(TypeKeywordToken::class.java, tokens[0].javaClass)
-        assertSame(NameToken::class.java, tokens[1].javaClass)
-        assertSame(TypeKeywordToken::class.java, tokens[3].javaClass)
-        assertSame(NameToken::class.java, tokens[4].javaClass)
-        assertSame(TypeKeywordToken::class.java, tokens[6].javaClass)
-        assertSame(NameToken::class.java, tokens[7].javaClass)
+        assertEquals(9, tokens.size)
+        assertEquals(TokenType.KEYWORD_TYPE, tokens[0].kind)
+        assertEquals(TokenType.IDENTIFIER, tokens[1].kind)
+        assertEquals(TokenType.KEYWORD_TYPE, tokens[3].kind)
+        assertEquals(TokenType.IDENTIFIER, tokens[4].kind)
+        assertEquals(TokenType.KEYWORD_TYPE, tokens[6].kind)
+        assertEquals(TokenType.IDENTIFIER, tokens[7].kind)
+        assertEquals(TokenType.END_OF_PROGRAM, tokens[8].kind)
     }
 }

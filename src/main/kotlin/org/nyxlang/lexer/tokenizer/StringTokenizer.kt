@@ -1,8 +1,10 @@
 package org.nyxlang.lexer.tokenizer
 
-import org.nyxlang.lexer.ILexer
-import org.nyxlang.lexer.token.IToken
-import org.nyxlang.lexer.token.StringToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.source.ISource
+import org.nyxlang.lexer.token.ITokenFactory
+import org.nyxlang.lexer.token.Token
+import org.nyxlang.lexer.token.TokenType
 
 /**
  * Tokenizes a (multi-line) string.
@@ -17,25 +19,30 @@ class StringTokenizer : ITokenizer {
 
     override fun matches(c: Char) = c == '"'
 
-    override fun tokenize(lexer: ILexer): IToken {
+    override fun tokenize(source: ISource, tokenFactory: ITokenFactory): Token {
         var escape = false
         val string = StringBuilder()
 
-        lexer.advanceCursor()
-        while (!lexer.isEndOfProgram && (!matches(lexer.symbol) || escape)) {
+        source.advanceCursor()
+        while (!source.isEndOfProgram && (!matches(source.symbol) || escape)) {
             if (escape) {
-                string.append(escapeCharacters.getOrDefault(lexer.symbol, lexer.symbol))
+                string.append(escapeCharacters.getOrDefault(source.symbol, source.symbol))
                 escape = false
             } else {
-                if (lexer.symbol == '\\') {
+                if (source.symbol == '\\') {
                     escape = true
                 } else {
-                    string.append(lexer.symbol)
+                    string.append(source.symbol)
                 }
             }
-            lexer.advanceCursor()
+            source.advanceCursor()
         }
 
-        return StringToken(string.toString())
+        if (source.symbol != '"') {
+            return tokenFactory.newToken(TokenType.ERROR, ErrorCode.UNEXPECTED_STRING_TOKEN)
+        }
+
+        source.advanceCursor()
+        return tokenFactory.newToken(TokenType.STRING, string.toString())
     }
 }

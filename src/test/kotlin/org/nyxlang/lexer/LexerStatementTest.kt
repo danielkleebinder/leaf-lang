@@ -4,23 +4,23 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertSame
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
-import org.nyxlang.lexer.token.NewLineToken
-import org.nyxlang.lexer.token.StatementSeparatorToken
+import org.nyxlang.lexer.token.TokenType
 
 class LexerStatementTest : TestSuit() {
+
     @Test
     fun shouldSeparateWithSemicolon() {
         val tokens = tokenize("true;true;false")
-        assertEquals(5, tokens.size)
-        assertSame(StatementSeparatorToken::class.java, tokens[1].javaClass)
-        assertSame(StatementSeparatorToken::class.java, tokens[3].javaClass)
+        assertEquals(6, tokens.size)
+        assertSame(TokenType.SEPARATOR, tokens[1].kind)
+        assertSame(TokenType.SEPARATOR, tokens[3].kind)
     }
 
     @Test
     fun shouldSeparateWithNewLine() {
         val tokens = tokenize("true\ntrue\nfalse")
-        assertEquals(5, tokens.size)
-        assertSame(NewLineToken::class.java, tokens[1].javaClass)
-        assertSame(NewLineToken::class.java, tokens[3].javaClass)
+        assertEquals(6, tokens.size)
+        assertSame(TokenType.NEW_LINE, tokens[1].kind)
+        assertSame(TokenType.NEW_LINE, tokens[3].kind)
     }
 }

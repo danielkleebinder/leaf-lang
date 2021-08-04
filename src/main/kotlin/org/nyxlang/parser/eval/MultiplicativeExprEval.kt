@@ -1,10 +1,8 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.arithmetic.DivideToken
-import org.nyxlang.lexer.token.arithmetic.ModToken
-import org.nyxlang.lexer.token.arithmetic.MultiplyToken
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
-import org.nyxlang.parser.advance
+import org.nyxlang.parser.advanceAndSkipNewLines
 import org.nyxlang.parser.ast.BinaryOperation
 import org.nyxlang.parser.ast.BinaryOperationNode
 import org.nyxlang.parser.ast.INode
@@ -21,19 +19,10 @@ class MultiplicativeExprEval(private val parser: IParser) : IEval {
         val prefixExpr = PrefixExprEval(parser)
         var node = prefixExpr.eval()
         while (true) {
-            node = when (parser.token::class) {
-                MultiplyToken::class -> parser.advance {
-                    parser.skipNewLines()
-                    BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.TIMES)
-                }
-                DivideToken::class -> parser.advance {
-                    parser.skipNewLines()
-                    BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.DIV)
-                }
-                ModToken::class -> parser.advance {
-                    parser.skipNewLines()
-                    BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.REM)
-                }
+            node = when (parser.token.kind) {
+                TokenType.TIMES -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.TIMES) }
+                TokenType.DIV -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.DIV) }
+                TokenType.REM -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, prefixExpr.eval(), BinaryOperation.REM) }
                 else -> break
             }
         }

@@ -7,29 +7,28 @@ import org.nyxlang.interpreter.Interpreter
 import org.nyxlang.interpreter.result.unpack
 import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
-import org.nyxlang.lexer.token.IToken
+import org.nyxlang.lexer.source.TextSource
+import org.nyxlang.lexer.token.Token
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.Parser
 import org.nyxlang.parser.ast.INode
 import kotlin.system.measureNanoTime
-
 
 val lexer: ILexer = Lexer()
 val parser: IParser = Parser()
 val analyzer: ISemanticAnalyzer = SemanticAnalyzer()
 val interpreter: IInterpreter = Interpreter()
 
-
 /**
  * Executes the given [programCode] and prints [debug] statements if set to true.
  */
 fun execute(programCode: String) {
     try {
-        var tokens: Array<IToken>
+        var tokens: Array<Token>
         var ast: INode?
         var result: Any?
 
-        val timeLexer = measureNanoTime { tokens = lexer.tokenize(programCode) }
+        val timeLexer = measureNanoTime { tokens = lexer.tokenize(TextSource(programCode)) }
         if (RuntimeOptions.debug) println("Lexical Analysis    : " + tokens.contentToString())
 
         val timeParser = measureNanoTime { ast = parser.parse(tokens) }

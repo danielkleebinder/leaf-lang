@@ -11,6 +11,7 @@ import org.nyxlang.interpreter.memory.IRuntimeStack
 import org.nyxlang.interpreter.result.unpack
 import org.nyxlang.lexer.ILexer
 import org.nyxlang.lexer.Lexer
+import org.nyxlang.lexer.source.TextSource
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.Parser
 import java.io.ByteArrayOutputStream
@@ -50,7 +51,7 @@ open class TestSuit {
     /**
      * Tokenizes the given [programCode].
      */
-    fun tokenize(programCode: String) = lexer.tokenize(programCode)
+    fun tokenize(programCode: String) = lexer.tokenize(TextSource(programCode))
 
     /**
      * Creates an array of big decimal given the [values] of longs. This is
@@ -62,7 +63,7 @@ open class TestSuit {
      * Statically analyzes the given [programCode].
      */
     fun analyze(programCode: String) {
-        val tokens = lexer.tokenize(programCode)
+        val tokens = lexer.tokenize(TextSource(programCode))
         val ast = parser.parse(tokens)
         analyzer.analyze(ast!!)
     }
@@ -71,7 +72,7 @@ open class TestSuit {
      * Executes the given [programCode] by running all stages.
      */
     fun execute(programCode: String): Any? {
-        val tokens = lexer.tokenize(programCode)
+        val tokens = lexer.tokenize(TextSource(programCode))
         val ast = parser.parse(tokens)
         analyzer.analyze(ast!!)
         return interpreter.interpret(ast).unpack()

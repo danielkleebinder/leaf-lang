@@ -1,18 +1,13 @@
 package org.nyxlang.parser.eval
 
-import org.nyxlang.lexer.token.AssignToken
-import org.nyxlang.lexer.token.CommaToken
-import org.nyxlang.lexer.token.NameToken
-import org.nyxlang.lexer.token.bracket.LeftCurlyBraceToken
-import org.nyxlang.lexer.token.bracket.RightCurlyBraceToken
-import org.nyxlang.lexer.token.keyword.NewKeywordToken
+import org.nyxlang.error.ErrorCode
+import org.nyxlang.lexer.token.TokenType
 import org.nyxlang.parser.IParser
 import org.nyxlang.parser.ast.TypeArgument
 import org.nyxlang.parser.ast.TypeInstantiationNode
-import org.nyxlang.parser.exception.EvalException
 
 /**
- * Evaluates the type semantics:
+ * Evaluates the type syntax:
  *
  * <type-inst>  ::= 'new' <name> ('{' (NL)* <inst-body> (NL)* '}')?
  * <inst-body>  ::= (<inst-value> (NL)* (',' (NL)* <inst-value> (NL)*)* )?
@@ -22,17 +17,17 @@ import org.nyxlang.parser.exception.EvalException
 class TypeInstantiationEval(private val parser: IParser) : IEval {
 
     override fun eval(): TypeInstantiationNode {
-        if (NewKeywordToken::class != parser.token::class) throw EvalException("Keyword 'new' expected for instantiation, but got ${parser.token}")
+        if (TokenType.KEYWORD_NEW != parser.token.kind) parser.flagError(ErrorCode.MISSING_KEYWORD_NEW)
         parser.advanceCursor()
 
-        if (NameToken::class != parser.token::class) throw EvalException("Type name required for instantiation, but got ${parser.token}")
-        val typeName = (parser.tokenAndAdvance as NameToken).value
+        if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_TYPE_IDENTIFIER)
+        val typeName = parser.tokenAndAdvance.value as String
         val typeArgs = arrayListOf<TypeArgument>()
 
         instanceBody {
             typeArgs.add(evalTypeArgument())
             parser.skipNewLines()
-            while (CommaToken::class == parser.token::class) {
+            while (TokenType.COMMA == parser.token.kind) {
                 parser.advanceCursor()
                 parser.skipNewLines()
                 typeArgs.add(evalTypeArgument())
@@ -47,16 +42,16 @@ class TypeInstantiationEval(private val parser: IParser) : IEval {
      * Evaluates the instantiation body (if available).
      */
     private inline fun instanceBody(fn: () -> Unit) {
-        if (LeftCurlyBraceToken::class != parser.token::class) return
+        if (TokenType.LEFT_CURLY_BRACE != parser.token.kind) return
         parser.advanceCursor()
         parser.skipNewLines()
 
-        if (RightCurlyBraceToken::class != parser.token::class) {
+        if (TokenType.RIGHT_CURLY_BRACE != parser.token.kind) {
             fn()
             parser.skipNewLines()
         }
 
-        if (RightCurlyBraceToken::class != parser.token::class) throw EvalException("Type instantiation requires closing curly brace, but got ${parser.token}")
+        if (TokenType.RIGHT_CURLY_BRACE != parser.token.kind) parser.flagError(ErrorCode.MISSING_BLOCK_RIGHT_CURLY_BRACE)
         parser.advanceCursor()
     }
 
@@ -65,9 +60,9 @@ class TypeInstantiationEval(private val parser: IParser) : IEval {
      */
     private fun evalTypeArgument(): TypeArgument {
         var name: String? = null
-        if (NameToken::class == parser.token::class &&
-                AssignToken::class == parser.peekNextToken::class) {
-            name = (parser.tokenAndAdvance as NameToken).value
+        if (TokenType.IDENTIFIER == parser.token.kind &&
+                TokenType.ASSIGNMENT == parser.peekNextToken.kind) {
+            name = parser.tokenAndAdvance.value as String
             parser.advanceCursor()
         }
         val valueExpr = ExprEval(parser).eval()
