@@ -8,7 +8,7 @@ import java.io.File
 fun runFile(fileName: String) {
     val file = File(fileName)
     if (!file.exists()) System.err.println("Given file does not exist: $fileName")
-    execute(file.readText())
+    execute(file.readText(), file.name)
 }
 
 /**

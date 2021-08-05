@@ -2,6 +2,7 @@ package org.nyxlang
 
 import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.SemanticAnalyzer
+import org.nyxlang.error.ErrorHandler
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.Interpreter
 import org.nyxlang.interpreter.result.unpack
@@ -20,15 +21,18 @@ val analyzer: ISemanticAnalyzer = SemanticAnalyzer()
 val interpreter: IInterpreter = Interpreter()
 
 /**
- * Executes the given [programCode] and prints [debug] statements if set to true.
+ * Executes the given [programCode] and prints debug statements if activated.
  */
-fun execute(programCode: String) {
+fun execute(programCode: String, fileName: String? = null) {
     try {
+        val source = TextSource(programCode, fileName)
         var tokens: Array<Token>
         var ast: INode?
         var result: Any?
 
-        val timeLexer = measureNanoTime { tokens = lexer.tokenize(TextSource(programCode)) }
+        RuntimeOptions.errorHandler = ErrorHandler(source)
+
+        val timeLexer = measureNanoTime { tokens = lexer.tokenize(source) }
         if (RuntimeOptions.debug) println("Lexical Analysis    : " + tokens.contentToString())
 
         val timeParser = measureNanoTime { ast = parser.parse(tokens) }
@@ -42,6 +46,7 @@ fun execute(programCode: String) {
         if (RuntimeOptions.debug) {
             println("""
                 Performance Statistics:
+                  Errors     : ${RuntimeOptions.errorHandler.errorCount}
                   Lexer      : ${timeLexer / 1_000_000.0} ms
                   Parser     : ${timeParser / 1_000_000.0} ms
                   Analyzer   : ${timeAnalyzer / 1_000_000.0} ms

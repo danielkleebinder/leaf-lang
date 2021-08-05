@@ -12,7 +12,7 @@ import org.nyxlang.lexer.token.TokenType
 class PlusTokenizer : ITokenizer {
     override fun matches(c: Char) = c == '+'
     override fun tokenize(source: ISource, tokenFactory: ITokenFactory) = source.advance {
-        source.advanceIf(source.symbol == '+') { tokenFactory.newToken(TokenType.INCREMENT) }
+        source.advanceIf(source.symbol == '+') { return tokenFactory.newToken(TokenType.INCREMENT) }
         tokenFactory.newToken(TokenType.PLUS)
     }
 }

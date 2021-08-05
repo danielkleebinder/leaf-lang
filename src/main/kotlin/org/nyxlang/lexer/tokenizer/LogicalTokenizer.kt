@@ -31,6 +31,7 @@ class LogicalTokenizer : ITokenizer {
             if (currentSymbol == '<') return tokenFactory.newToken(TokenType.LESS)
             if (currentSymbol == '>') return tokenFactory.newToken(TokenType.GREATER)
             if (currentSymbol == '=') return tokenFactory.newToken(TokenType.ASSIGNMENT)
+            if (currentSymbol == '!') return tokenFactory.newToken(TokenType.LOGICAL_NOT)
             return tokenFactory.newToken(TokenType.ERROR, ErrorCode.UNEXPECTED_LOGICAL_TOKEN)
         }
     }

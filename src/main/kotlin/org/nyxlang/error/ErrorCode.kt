@@ -6,7 +6,7 @@ package org.nyxlang.error
 enum class ErrorCode(val errorText: String) {
 
     // Parser errors
-    INVALID_VARIABLE_DECLARATION("Variable declarations require either a type specification or an immediate assignment"),
+    INVALID_VARIABLE_DECLARATION("Variable declarations require either a type specification ': <type>' or an immediate assignment '= ...'"),
     INVALID_TYPE_DECLARATION("Invalid type used in type declaration"),
     MISSING_IDENTIFIER("Missing identifier <name>"),
     MISSING_KEYWORD_FUN("Missing function keyword 'fun'"),
@@ -15,7 +15,7 @@ enum class ErrorCode(val errorText: String) {
     MISSING_KEYWORD_NEW("Missing type instantiation keyword 'new'"),
     MISSING_KEYWORD_TYPE("Missing custom type keyword 'type'"),
     MISSING_TYPE_IDENTIFIER("Missing type identifier"),
-    MISSING_FUNCTION_BODY("Function body definition either requires block '{...}' or expression '= ...'"),
+    MISSING_FUNCTION_BODY("Function body definition either requires block '{...}' or immediate expression '= ...'"),
     MISSING_LEFT_PARENTHESIS("Missing left parenthesis '('"),
     MISSING_RIGHT_PARENTHESIS("Missing right parenthesis ')'"),
     MISSING_BLOCK_LEFT_CURLY_BRACE("Blocks require an opening curly brace '{'"),

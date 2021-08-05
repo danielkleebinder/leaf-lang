@@ -7,6 +7,7 @@ import org.nyxlang.parser.advance
 import org.nyxlang.parser.advanceAndSkipNewLines
 import org.nyxlang.parser.ast.*
 import java.math.BigDecimal
+import java.math.RoundingMode
 
 /**
  * Evaluates atoms with the following semantic:
@@ -28,7 +29,7 @@ class AtomEval(private val parser: IParser) : IEval {
         return when (parser.token.kind) {
 
             TokenType.BOOL -> BoolNode(parser.tokenAndAdvance.value as Boolean)
-            TokenType.NUMBER -> NumberNode(BigDecimal.valueOf(parser.tokenAndAdvance.value as Double))
+            TokenType.NUMBER -> NumberNode(BigDecimal.valueOf(parser.tokenAndAdvance.value as Double).stripTrailingZeros().setScale(0, RoundingMode.UNNECESSARY))
             TokenType.STRING -> StringNode(parser.tokenAndAdvance.value as String)
 
             TokenType.IDENTIFIER -> AssignmentEval(parser).eval()

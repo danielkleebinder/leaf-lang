@@ -4,7 +4,8 @@ package org.nyxlang.lexer.source
  * A text source is a source for a lexer program that only relies
  * on the given [text] as input.
  */
-class TextSource(private val text: String) : ISource {
+class TextSource(private val text: String,
+                 override val name: String? = null) : ISource {
 
     private var position = 0
     private var column = 0
@@ -19,6 +20,19 @@ class TextSource(private val text: String) : ISource {
         }
         position++
         return position
+    }
+
+    override fun snippet(startIndex: Int, endIndex: Int): String {
+        val startPos = if (startIndex < 0) 0 else startIndex
+        val endPos = if (endIndex >= text.length) text.length - 1 else endIndex
+        return text.substring(startPos, endPos)
+    }
+
+    override fun lineSnippet(startLineIndex: Int, endLineIndex: Int): Array<String> {
+        return text
+                .split("\n")
+                .filterIndexed { index, _ -> index in startLineIndex..endLineIndex }
+                .toTypedArray()
     }
 
     override val cursorPosition: Int

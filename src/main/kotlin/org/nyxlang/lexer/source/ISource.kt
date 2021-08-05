@@ -11,6 +11,36 @@ interface ISource {
     fun advanceCursor(): Int
 
     /**
+     * Returns a string snippet using the given [range].
+     */
+    fun snippet(range: IntRange) = snippet(range.first, range.last)
+
+    /**
+     * Returns a string snippet using the given start and end position.
+     */
+    fun snippet(startIndex: Int, endIndex: Int): String
+
+    /**
+     * Returns the line with the given line number.
+     */
+    fun lineSnippet(line: Int) = lineSnippet(line..line).firstOrNull()
+
+    /**
+     * Returns the lines within the given range.
+     */
+    fun lineSnippet(range: IntRange) = lineSnippet(range.first, range.last)
+
+    /**
+     * Returns the lines within the given start line index and end line index.
+     */
+    fun lineSnippet(startLineIndex: Int, endLineIndex: Int): Array<String>
+
+    /**
+     * The name of the source (if available)
+     */
+    val name: String?
+
+    /**
      * Returns the current cursor position.
      */
     val cursorPosition: Int

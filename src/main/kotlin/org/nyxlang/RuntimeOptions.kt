@@ -1,6 +1,7 @@
 package org.nyxlang
 
 import org.nyxlang.error.ErrorHandler
+import org.nyxlang.error.IErrorHandler
 import java.io.PrintWriter
 import java.math.MathContext
 
@@ -30,5 +31,8 @@ object RuntimeOptions {
      */
     var consoleWriter = PrintWriter(System.out)
 
-    val errorHandler = ErrorHandler()
+    /**
+     * The global error handler used to inform the developer of syntactic or semantic errors.
+     */
+    var errorHandler: IErrorHandler = ErrorHandler()
 }

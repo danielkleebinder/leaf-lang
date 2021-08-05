@@ -1,8 +1,9 @@
 package org.nyxlang.parser
 
 import org.nyxlang.RuntimeOptions
+import org.nyxlang.error.AnalysisError
 import org.nyxlang.error.ErrorCode
-import org.nyxlang.error.SyntaxError
+import org.nyxlang.error.ErrorType
 import org.nyxlang.error.fromToken
 import org.nyxlang.lexer.token.Token
 import org.nyxlang.lexer.token.TokenType
@@ -35,7 +36,7 @@ class Parser : IParser {
     }
 
     override fun flagError(errorCode: ErrorCode) {
-        RuntimeOptions.errorHandler.flag(SyntaxError(errorCode, fromToken(token)))
+        RuntimeOptions.errorHandler.flag(AnalysisError(errorCode, fromToken(token), ErrorType.SYNTAX))
     }
 
     override val token: Token

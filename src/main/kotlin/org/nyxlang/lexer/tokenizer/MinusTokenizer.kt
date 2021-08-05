@@ -12,8 +12,8 @@ import org.nyxlang.lexer.token.TokenType
 class MinusTokenizer : ITokenizer {
     override fun matches(c: Char) = c == '-'
     override fun tokenize(source: ISource, tokenFactory: ITokenFactory) = source.advance {
-        source.advanceIf(source.symbol == '-') { tokenFactory.newToken(TokenType.DECREMENT) }
-        source.advanceIf(source.symbol == '>') { tokenFactory.newToken(TokenType.RIGHT_ARROW) }
+        source.advanceIf(source.symbol == '-') { return tokenFactory.newToken(TokenType.DECREMENT) }
+        source.advanceIf(source.symbol == '>') { return tokenFactory.newToken(TokenType.RIGHT_ARROW) }
         tokenFactory.newToken(TokenType.MINUS)
     }
 }

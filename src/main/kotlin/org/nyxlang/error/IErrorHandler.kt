@@ -11,14 +11,9 @@ interface IErrorHandler {
     val errorCount: Int
 
     /**
-     * Handles the given [syntaxError].
+     * Handles the given [error].
      */
-    fun flag(syntaxError: SyntaxError)
-
-    /**
-     * Handles the given [semanticError].
-     */
-    fun flag(semanticError: SemanticError)
+    fun flag(error: AnalysisError)
 
     /**
      * Resets all errors in this particular handler.

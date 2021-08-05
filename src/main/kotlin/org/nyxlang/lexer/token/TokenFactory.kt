@@ -7,7 +7,7 @@ import org.nyxlang.lexer.source.ISource
  */
 class TokenFactory(private val source: ISource) : ITokenFactory {
     override fun newToken(kind: TokenType, value: Any?): Token {
-        val position = TokenPosition(source.rowPosition, source.columnPosition)
+        val position = TokenPosition(source.rowPosition, source.columnPosition, source.cursorPosition)
         return Token(kind, position, value)
     }
 }
