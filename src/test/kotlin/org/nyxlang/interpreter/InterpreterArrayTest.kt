@@ -67,11 +67,10 @@ class InterpreterArrayTest : TestSuit() {
 
     @Test
     fun shouldErrorOnInvalidDeclaration() {
-//        assertThrows(ParserException::class.java) { execute("[") }
-//        assertThrows(ParserException::class.java) { execute("[1,2,") }
-//        assertThrows(ParserException::class.java) { execute("[[2") }
-//        assertThrows(ParserException::class.java) { execute("[3[") }
-        fail<Unit>("Error count check not implemented yet")
+        assertTrue(withErrors { execute("[") } > 0)
+        assertTrue(withErrors { execute("[1,2,") } > 0)
+        assertTrue(withErrors { execute("[[2") } > 0)
+        assertTrue(withErrors { execute("[3[") } > 0)
     }
 
     @Test

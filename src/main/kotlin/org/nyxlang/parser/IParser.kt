@@ -1,6 +1,7 @@
 package org.nyxlang.parser
 
 import org.nyxlang.error.ErrorCode
+import org.nyxlang.error.IErrorHandler
 import org.nyxlang.lexer.token.Token
 import org.nyxlang.parser.ast.INode
 
@@ -30,6 +31,11 @@ interface IParser {
      * Flags the current token with an error.
      */
     fun flagError(errorCode: ErrorCode)
+
+    /**
+     * The parsers local error handler.
+     */
+    var errorHandler: IErrorHandler?
 
     /**
      * The current token.

@@ -7,7 +7,9 @@ import org.nyxlang.parser.advance
 import org.nyxlang.parser.advanceAndSkipNewLines
 import org.nyxlang.parser.ast.*
 import java.math.BigDecimal
-import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.*
 
 /**
  * Evaluates atoms with the following semantic:
@@ -25,12 +27,17 @@ import java.math.RoundingMode
  */
 class AtomEval(private val parser: IParser) : IEval {
 
+    private val decimalFormat = DecimalFormat("0.#")
+            .also { it.decimalFormatSymbols = DecimalFormatSymbols.getInstance(Locale.ENGLISH) }
+
     override fun eval(): INode {
         return when (parser.token.kind) {
 
             TokenType.BOOL -> BoolNode(parser.tokenAndAdvance.value as Boolean)
-            TokenType.NUMBER -> NumberNode(BigDecimal.valueOf(parser.tokenAndAdvance.value as Double).stripTrailingZeros().setScale(0, RoundingMode.UNNECESSARY))
             TokenType.STRING -> StringNode(parser.tokenAndAdvance.value as String)
+            TokenType.NUMBER -> NumberNode(BigDecimal((parser.tokenAndAdvance.value as Double).toString()
+                    .trimEnd('0')
+                    .trimEnd('.')))
 
             TokenType.IDENTIFIER -> AssignmentEval(parser).eval()
             TokenType.LEFT_BRACKET -> ArrayExprEval(parser).eval()

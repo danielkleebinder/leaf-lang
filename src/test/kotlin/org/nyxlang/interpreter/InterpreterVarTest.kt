@@ -57,8 +57,7 @@ class InterpreterVarTest : TestSuit() {
     fun shouldErrorInvalidConstAssignment() {
 
         // Constants must be initialized on declaration
-//        assertThrows(ParserException::class.java) { execute("const a") }
-        fail<Unit>("Error count check not implemented yet")
+        assertTrue(withErrors { execute("const a") } > 0)
 
         // Constants cannot be reassigned
         assertThrows(StaticSemanticException::class.java) { execute("const b = 3; b = 7;") }
@@ -68,8 +67,7 @@ class InterpreterVarTest : TestSuit() {
     fun shouldErrorInvalidVarDeclaration() {
 
         // Uninitialized vars must have data type
-//        assertThrows(ParserException::class.java) { execute("var a") }
-        fail<Unit>("Error count check not implemented yet")
+        assertTrue(withErrors { execute("var a") } > 0)
     }
 
     @Test

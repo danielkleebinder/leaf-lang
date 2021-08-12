@@ -25,13 +25,14 @@ interface IRuntimeResult {
  * a plain value type.
  */
 fun IRuntimeResult.unpack(): Any? {
-    fun unroll(data: Any?): List<Any>? {
-        if (data is ArrayMemoryCell) return listOf(data.value.flatMap { unroll(it)!! })
+    fun unroll(data: Any?): List<Any> {
+        if (data is ArrayMemoryCell) return listOf(data.value.flatMap { unroll(it) })
         if (data is IMemoryCell) return listOf(data.value)
-        return null
+        return listOf()
     }
 
     val unrolled = unroll(data)
-    if (unrolled?.size == 1) return unrolled[0]
+    if (unrolled.size == 1) return unrolled[0]
+    if (unrolled.isEmpty()) return null
     return unrolled
 }

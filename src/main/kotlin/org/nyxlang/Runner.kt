@@ -30,7 +30,7 @@ fun execute(programCode: String, fileName: String? = null) {
         var ast: INode?
         var result: Any?
 
-        RuntimeOptions.errorHandler = ErrorHandler(source)
+        parser.errorHandler = ErrorHandler(source)
 
         val timeLexer = measureNanoTime { tokens = lexer.tokenize(source) }
         if (RuntimeOptions.debug) println("Lexical Analysis    : " + tokens.contentToString())
@@ -46,7 +46,7 @@ fun execute(programCode: String, fileName: String? = null) {
         if (RuntimeOptions.debug) {
             println("""
                 Performance Statistics:
-                  Errors     : ${RuntimeOptions.errorHandler.errorCount}
+                  Errors     : ${parser.errorHandler?.errorCount}
                   Lexer      : ${timeLexer / 1_000_000.0} ms
                   Parser     : ${timeParser / 1_000_000.0} ms
                   Analyzer   : ${timeAnalyzer / 1_000_000.0} ms

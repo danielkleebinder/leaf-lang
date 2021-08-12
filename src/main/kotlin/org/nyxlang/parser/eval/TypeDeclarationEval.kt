@@ -49,8 +49,11 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
         parser.advanceCursor()
         parser.skipNewLines()
 
-        if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
-        fn()
+        if (TokenType.IDENTIFIER != parser.token.kind) {
+            parser.flagError(ErrorCode.MISSING_IDENTIFIER)
+        } else {
+            fn()
+        }
     }
 
     /**

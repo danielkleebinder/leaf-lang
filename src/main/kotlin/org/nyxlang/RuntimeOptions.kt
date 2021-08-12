@@ -1,7 +1,5 @@
 package org.nyxlang
 
-import org.nyxlang.error.ErrorHandler
-import org.nyxlang.error.IErrorHandler
 import java.io.PrintWriter
 import java.math.MathContext
 
@@ -30,9 +28,4 @@ object RuntimeOptions {
      * The standard console writer.
      */
     var consoleWriter = PrintWriter(System.out)
-
-    /**
-     * The global error handler used to inform the developer of syntactic or semantic errors.
-     */
-    var errorHandler: IErrorHandler = ErrorHandler()
 }

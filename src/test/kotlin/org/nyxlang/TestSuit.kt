@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.nyxlang.analyzer.ISemanticAnalyzer
 import org.nyxlang.analyzer.SemanticAnalyzer
 import org.nyxlang.analyzer.symbol.ISymbolTable
+import org.nyxlang.error.ErrorHandler
+import org.nyxlang.error.IErrorHandler
 import org.nyxlang.interpreter.IInterpreter
 import org.nyxlang.interpreter.Interpreter
 import org.nyxlang.interpreter.memory.IActivationRecord
@@ -24,6 +26,7 @@ import java.math.BigDecimal
  */
 open class TestSuit {
 
+    lateinit var errorHandler: IErrorHandler
     lateinit var lexer: ILexer
     lateinit var parser: IParser
     lateinit var analyzer: ISemanticAnalyzer
@@ -34,8 +37,9 @@ open class TestSuit {
 
     @BeforeEach
     fun beforeEach() {
+        errorHandler = ErrorHandler()
         lexer = Lexer()
-        parser = Parser()
+        parser = Parser(errorHandler)
         analyzer = SemanticAnalyzer()
         interpreter = Interpreter()
         globalSymbolTable = analyzer.currentScope
@@ -99,5 +103,15 @@ open class TestSuit {
             RuntimeOptions.consoleWriter = prev
             return outStream.toString()
         }
+    }
+
+    /**
+     * Resets the error handler, runs the given [fn] and returns the number of errors
+     * that occur in the given block.
+     */
+    inline fun withErrors(fn: () -> Unit): Int {
+        errorHandler.reset()
+        fn()
+        return errorHandler.errorCount.also { errorHandler.reset() }
     }
 }
