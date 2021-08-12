@@ -35,19 +35,20 @@ The formal language definition in **Backus-Naur form** looks like the following.
 
 ### Functions
 ```
-<fun-declaration> ::= 'fun' (NL)* (<name> (NL)*)?
+<fun-declaration> ::= 'fun' (NL)* (<fun-extension> (NL)*)? (<name> (NL)*)?
                        (<fun-params> (NL)*)?
                        (<fun-requires> (NL)*)?
                        (<fun-ensures> (NL)*)?
                        (<fun-returns> (NL)*)?
                        (<fun-body>)
 
-<fun-params>   ::= '(' (NL)* <declarations> (NL)* ')'
-<fun-requires> ::= ':' (NL)* <expr>
-<fun-ensures>  ::= ':' (NL)* <expr>
-<fun-return>   ::= '->' (NL)* <type>
-<fun-body>     ::= <block>
-                 | ('=' (NL)* <statement>)
+<fun-extension> ::= '<' <type> (NL)* (',' (NL)* <type> (NL)*)* '>' (NL)* '.'
+<fun-params>    ::= '(' (NL)* <declarations> (NL)* ')'
+<fun-requires>  ::= ':' (NL)* <expr>
+<fun-ensures>   ::= ':' (NL)* <expr>
+<fun-return>    ::= '->' (NL)* <type>
+<fun-body>      ::= <block>
+                  | ('=' (NL)* <statement>)
 ```
 
 ### Conditionals
@@ -124,7 +125,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
          | <empty>
 
 <name>  ::= IDENTIFIER
-<type>  ::= <number> | <bool> | <string> | <fun>
+<type>  ::= <number> | <bool> | <string> | <array> | <fun> | <name>
 <empty> ::= ()
 ```
 
@@ -216,9 +217,9 @@ type Dog : Feedable, CanTalk {
   age: number
 }
 
-fun (number).feed = fed = true
-fun (Dog, Cat) name() -> string = 'Bello'
-fun (Dog) talk(text: string) = print(name . ' says: ' . text)
+fun { number }.feed = fed = true
+fun { Dog, Cat }.name() -> string = 'Bello'
+fun Dog.talk(text: string) = print(name . ' says: ' . text)
 
 
 

@@ -24,6 +24,9 @@ enum class ErrorCode(val errorText: String) {
     MISSING_TYPE_RIGHT_CURLY_BRACE("Custom types require a closing curly brace '}'"),
     MISSING_LEFT_BRACKET("Missing left bracket '['"),
     MISSING_RIGHT_BRACKET("Missing right bracket ']'"),
+    MISSING_LEFT_TYPE_EXTENSION("Missing left type extension identifier '<'"),
+    MISSING_RIGHT_TYPE_EXTENSION("Missing right type extension identifier '>'"),
+    MISSING_NAVIGATION_OPERATOR("Missing navigation operator '.'"),
 
     // Lexer errors
     UNEXPECTED_BRACKET_TOKEN("Unexpected brace, bracket or parenthesis token"),

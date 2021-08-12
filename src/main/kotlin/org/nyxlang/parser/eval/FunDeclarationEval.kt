@@ -33,12 +33,33 @@ import org.nyxlang.parser.ast.TypeNode
 class FunDeclarationEval(private val parser: IParser) : IEval {
 
     override fun eval(): FunDeclareNode {
+        val extensionOf = arrayListOf<TypeNode>()
         var name: String? = null
         var params: DeclarationsNode? = null
         var requires: INode? = null
         var ensures: INode? = null
         var returns: TypeNode? = null
         var body: INode? = null
+
+        // Is this even a function declaration?
+        if (TokenType.KEYWORD_FUN != parser.token.kind) {
+            parser.flagError(ErrorCode.MISSING_KEYWORD_FUN)
+        }
+        parser.advanceCursor()
+        parser.skipNewLines()
+
+        // Alright, this truly is a function, now do the evaluation
+        funExtensionOf {
+            val typeEval = TypeEval(parser)
+            while (true) {
+                extensionOf.add(typeEval.eval())
+                if (TokenType.COMMA == parser.token.kind) {
+                    parser.advanceCursor()
+                } else {
+                    break
+                }
+            }
+        }
 
         funName { name = parser.tokenAndAdvance.value as? String }
         funParams { params = DeclarationsEval(parser).eval() }
@@ -48,6 +69,7 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
         funBody { body = if (it) StatementEval(parser).eval() else StatementListEval(parser).eval() }
 
         return FunDeclareNode(
+                extensionOf = extensionOf.toList(),
                 name = name,
                 params = params,
                 requires = requires,
@@ -57,21 +79,39 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
     }
 
     /**
-     * Evaluates the function keyword and name. Throws an exception if semantics are incorrect.
+     * Evaluates the type names on which this function is available.
      */
-    private inline fun funName(name: () -> Unit) {
-        // Is this even a function declaration?
-        if (TokenType.KEYWORD_FUN != parser.token.kind) {
-            parser.flagError(ErrorCode.MISSING_KEYWORD_FUN)
+    private inline fun funExtensionOf(fn: () -> Unit) {
+        // Functions must not be part of a type. They can also be used as first-class citizens like lambdas
+        // or as nested functions inside a certain scope (be it the global scope for example).
+        if (TokenType.LESS != parser.token.kind) return
+        parser.advanceCursor()
+        parser.skipNewLines()
+
+        fn()
+
+        if (TokenType.GREATER != parser.token.kind) {
+            parser.flagError(ErrorCode.MISSING_RIGHT_TYPE_EXTENSION)
         }
         parser.advanceCursor()
         parser.skipNewLines()
 
-        // Functions do not require a name. Functions without names are anonymous functions.
-        if (TokenType.IDENTIFIER == parser.token.kind) {
-            name()
-            parser.skipNewLines()
+        if (TokenType.DOT != parser.token.kind) {
+            parser.flagError(ErrorCode.MISSING_NAVIGATION_OPERATOR)
         }
+        parser.advanceCursor()
+        parser.skipNewLines()
+    }
+
+    /**
+     * Evaluates the name of the function. Throws an exception if semantics are incorrect.
+     */
+    private inline fun funName(name: () -> Unit) {
+        // Functions do not require a name. Functions without names are anonymous functions.
+        if (TokenType.IDENTIFIER != parser.token.kind) return
+
+        name()
+        parser.skipNewLines()
     }
 
     /**
