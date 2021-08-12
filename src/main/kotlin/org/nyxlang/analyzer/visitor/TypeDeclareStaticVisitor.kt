@@ -45,7 +45,17 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
             //   }
             typeSymbol.fields = typeDeclareNode.fields
                     .flatMap { field -> field.declarations }
-                    .map { field -> VarSymbol(field.identifier, analyzer.currentScope.get(field.typeExpr!!.type)) }
+                    .map { field ->
+                        val type = if (field.typeExpr != null) {
+                            field.typeExpr.type
+                        } else {
+                            // A field must have either a type expression or an immediate assignment. This
+                            // mus be fulfilled at this point in time due to the field check above.
+                            analyzer.analyze(field.assignmentExpr!!).type
+                        }
+                        VarSymbol(field.identifier, analyzer.currentScope.get(type!!))
+                    }
+                    .toMutableList()
         }
 
         return emptyAnalysisResult()

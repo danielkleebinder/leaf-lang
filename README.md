@@ -212,14 +212,16 @@ use "math"
 trait Feedable
 trait CanTalk
 
+type Cat : CanTalk
 type Dog : Feedable, CanTalk {
   fed: bool, happy: bool
   age: number
 }
 
-fun { number }.feed = fed = true
-fun { Dog, Cat }.name() -> string = 'Bello'
-fun Dog.talk(text: string) = print(name . ' says: ' . text)
+// Types implement functions by specifying extension functions
+fun <Cat>.name() -> string = 'Kitty'
+fun <Dog>.name() -> string = 'Bello'
+fun <Dog, Cat>.talk(text: string) = print(object.name() + ' says: ' . text)
 
 
 

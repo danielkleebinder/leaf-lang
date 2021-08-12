@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.nyxlang.TestSuit
 import org.nyxlang.analyzer.exception.StaticSemanticException
+import java.math.BigDecimal
 
 class InterpreterCustomTypeTest : TestSuit() {
 
@@ -70,5 +71,11 @@ class InterpreterCustomTypeTest : TestSuit() {
 
         execute("const frank = new User { \"Daniel\" }; frank.name = \"Frank\"; const res2 = frank.name")
         assertEquals("Frank", valueOf("res2"))
+    }
+
+    @Test
+    fun shouldUseAssignedFieldValues() {
+        execute("type User { age = 25 }; const peter = new User; const res1 = peter.age")
+        assertEquals(BigDecimal.valueOf(25), valueOf("res1"))
     }
 }

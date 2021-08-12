@@ -5,6 +5,7 @@ import org.nyxlang.analyzer.exception.AnalyticalVisitorException
 import org.nyxlang.analyzer.result.StaticAnalysisResult
 import org.nyxlang.analyzer.result.analysisResult
 import org.nyxlang.analyzer.symbol.FunSymbol
+import org.nyxlang.analyzer.symbol.TypeSymbol
 import org.nyxlang.analyzer.symbol.VarSymbol
 import org.nyxlang.analyzer.withScope
 import org.nyxlang.parser.ast.FunDeclareNode
@@ -28,11 +29,33 @@ class FunDeclareStaticVisitor : IStaticVisitor {
         funDeclareNode.spec = funSymbol
         analyzer.currentScope.define(funSymbol)
 
+        if (funDeclareNode.extensionOf.isNotEmpty() && funName == null) {
+            throw AnalyticalVisitorException("The function tries to extend some types but does not have a unique name")
+        }
+
+        // Check extension type validity (if required) and add this function to the specified types
+        funDeclareNode.extensionOf.forEach { typeNode ->
+
+            // Tests if the specified types to be extended do exist at this point
+            analyzer.analyze(typeNode)
+
+            val typeSymbol = analyzer.currentScope.get(typeNode.type)
+            if (typeSymbol !is TypeSymbol) throw AnalyticalVisitorException("\"$funName\" specifies an invalid type \"${typeNode.type}\" for extension")
+
+            if (typeSymbol.fields.any { field -> field.name == funName }) {
+                throw AnalyticalVisitorException("Type extension not possible since \"${typeSymbol.name}\" already specifies a member with name \"${funName}\"")
+            }
+
+            typeSymbol.fields.add(VarSymbol(funName!!, funSymbol))
+        }
+
         analyzer.withScope(funName) {
+
+            // Check parameter validity and transform them to lexical scoped local variables
             if (funDeclareNode.params != null) {
                 analyzer.analyze(funDeclareNode.params)
                 val funParams = funDeclareNode.params.declarations
-                        .map { VarSymbol(it.identifier, analyzer.currentScope.get(it.typeExpr!!.type)) }
+                        .map { decl -> VarSymbol(decl.identifier, analyzer.currentScope.get(decl.typeExpr!!.type)) }
                 funSymbol.params.addAll(funParams)
             }
 
