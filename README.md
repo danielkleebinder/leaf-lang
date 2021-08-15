@@ -269,3 +269,33 @@ compute(
   fun (a: number, b: number) -> number = a * b,
   fun (a: number, b: number) -> number = a % b)
 ```
+
+### Types
+Besides the standard data types like `number` or `bool`, the language also supports custom data types that can be
+extended with functions. Function definitions are not allowed in the custom type definition body but must be defined
+outside. The following example shows a typical type definition:
+
+```kotlin
+type Dog {
+  name: string
+}
+
+type Human {
+  name: string
+  age: 27
+}
+```
+
+These types can be extended using functions:
+
+```kotlin
+fun <Human, Dog>.sayHi -> string = object.name + " says Hi!"
+```
+
+Extension functions can be applied on multiple types at the same time. Leaf will use dynamic structural typing
+on `object` if for the case above. This function can be executed like:
+
+```kotlin
+const me = new Human { "Daniel" }
+me.sayHi()
+```

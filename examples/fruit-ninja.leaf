@@ -1,0 +1,123 @@
+// FRUIT NINJA
+// Collect all the fruits and level up
+
+// The game field on which the player is playing
+type GameField {
+  width = 20
+  height = 10
+  field = []
+}
+
+// The player and all it's associated information
+type Player {
+  name: string
+  x = 1, y = 1
+  collectedFruits = 0
+}
+
+
+// Tests if the given coordinates are within the defined
+// bounds of the game
+fun <GameField>.isInField(x: number, y: number) -> bool =
+  x >= 1 &&
+  x < object.width - 1 &&
+  y >= 1 &&
+  y < object.height - 1
+
+
+// Initializes the game by setting variables properly
+// and setting up the playing field
+fun <GameField>.init {
+  const width = object.width
+  const height = object.height
+  const total = width * height
+  loop var i = 0 : i < total : i = i + 1 {
+    object.field = object.field + if (i < width) ||
+	   (i % width == 0) ||
+	   (i % width == width - 1) ||
+	   (i > (width * height - width)) {
+	  "#"
+	} else {
+	  " "
+	}
+  }
+}
+
+// Spawns a fruit at a random location on the field
+fun <GameField>.spawnRandomFruit {
+  const fx = randomUInt() % (object.width - 2) + 1
+  const fy = randomUInt() % (object.height - 2) + 1
+  const idx = fy * object.width + fx
+  const gameField = object.field
+  gameField[idx] = "."
+}
+
+
+// Draws the playing field, the fruits and the player
+fun drawGame(field: GameField, player: Player) {
+  var buffer = "", tile: string
+  const playerIndex = player.y * field.width + player.x
+
+  loop var i = 0 : i < ~field.field : i = i + 1 {
+    tile = if i == playerIndex { "o" }
+	       else { field.field[i] }
+	buffer = buffer + tile
+
+	if (i + 1) % field.width == 0 {
+	  buffer = buffer + "\n"
+	}
+  }
+  clear()
+  println(player.name + " collected " + player.collectedFruits + " fruits")
+  println(buffer)
+}
+
+// Performs the game logic which makes the game fun to play ;-)
+fun gameLogic(field: GameField, player: Player) {
+  const playerIndex = player.y * field.width + player.x
+  if field.field[playerIndex] == "." { player.collectedFruits = player.collectedFruits + 1 }
+  field.field[playerIndex] = " "
+}
+
+// Moves the player (if possible) by the given [dx] and [dy]
+// coordinates on the field
+fun <Player>.move(field: GameField, dx: number, dy: number) {
+  if field.isInField(object.x + dx, object.y + dy) {
+    object.x = object.x + dx
+	object.y = object.y + dy
+  }
+}
+
+
+// The main function that runs the game loop
+fun main {
+  println("What's your name?")
+  var playerName: string = readLine()
+
+  if playerName == "" { playerName = "Frank the Farmer" }
+
+  const field = new GameField
+  const player = new Player { name = playerName }
+
+  field.init()
+
+  loop {
+
+    if random() < 0.2 { field.spawnRandomFruit() }
+
+	gameLogic(field, player)
+    drawGame(field, player)
+
+    const in = readLine()
+	if in == "a" { player.move(field, -1, 0) }
+	if in == "d" { player.move(field, +1, 0) }
+	if in == "w" { player.move(field, 0, -1) }
+	if in == "s" { player.move(field, 0, +1) }
+	if in == "#" { break }
+
+  }
+
+  println("Bye and thanks for playing the game <3")
+}
+
+main()

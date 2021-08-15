@@ -38,7 +38,7 @@ class TypeInstantiationVisitor : IVisitor {
 
                     // Look for already interpreted default values like: type Dog { name = "Bello" }
                     if (argumentValue == null && typeCell != null) {
-                        argumentValue = typeCell.members[field.name]
+                        argumentValue = typeCell.members[field.name]?.copy()
                     }
 
                     Pair(field.name, argumentValue)
