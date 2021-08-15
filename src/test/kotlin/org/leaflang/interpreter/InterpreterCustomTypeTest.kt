@@ -78,4 +78,22 @@ class InterpreterCustomTypeTest : TestSuit() {
         execute("type User { age = 25 }; const peter = new User; const res1 = peter.age")
         assertEquals(BigDecimal.valueOf(25), valueOf("res1"))
     }
+
+    @Test
+    fun shouldAccessDeepValue() {
+        execute("""
+            type Human {
+              name: string
+              mom: Human
+              test = [-12]
+            }
+            const mom = new Human { "Anna" }
+            const me = new Human { "Peter", mom }
+            mom.test = mom.test + 72
+            const res1 = me.mom.test[0]
+            const res2 = me.mom.test[1]
+        """.trimIndent())
+        assertEquals(BigDecimal.valueOf(-12), valueOf("res1"))
+        assertEquals(BigDecimal.valueOf(72), valueOf("res2"))
+    }
 }
