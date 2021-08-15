@@ -5,6 +5,8 @@
 [![Build](https://github.com/danielkleebinder/leaf-lang/actions/workflows/main.yml/badge.svg)](https://github.com/danielkleebinder/leaf-lang/actions/workflows/main.yml)
 [![Licence](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/danielkleebinder/leaf-lang/blob/main/LICENSE)
 
+[Leaf programming language website](https://danielkleebinder.github.io/leaf-lang.html)
+
 The Leaf programming language is a statically and strongly typed, lexically scoped and interpreted programming language using
 type inference that allows the developer to implement traits and custom types. It is object oriented, but does not support
 inheritance because typically, it is a common source of maintainability issues.
