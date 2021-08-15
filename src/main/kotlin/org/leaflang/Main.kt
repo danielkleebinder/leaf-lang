@@ -16,9 +16,9 @@ fun runFile(fileName: String) {
  */
 fun runCli() {
     println()
-    println(" > Welcome to the leaflang CLI <")
+    println(" > Welcome to the Leaf programming language CLI <")
     println()
-    println("Use '\\' to write a multi-line program before hitting enter.")
+    println("Use '\\' before hitting enter to write a multi-line program.")
     println("For more information:")
     println("  - https://github.com/danielkleebinder/leaf-lang#the-leaf-programming-language")
     println()
