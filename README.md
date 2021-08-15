@@ -1,4 +1,4 @@
-![Nyx Icon](https://github.com/danielkleebinder/leaf-lang/blob/main/leaf-lang.png?raw=true)
+![Leaf Icon](https://github.com/danielkleebinder/leaf-lang/blob/main/leaf-lang-icon.png?raw=true)
 
 # The Leaf Programming Language
 
@@ -132,9 +132,37 @@ The formal language definition in **Backus-Naur form** looks like the following.
 
 
 ## Turing Completeness
-Turing completeness can be shown by implementing a mapping between the WHILE and the Leaf programming language.
+Turing completeness can be shown by implementing a mapping between the WHILE and the Leaf programming language. The WHILE
+programming language is defined as follows:
 
-Therefore, the proof is done and Turing completeness has been shown.
+```
+C ::= <L> := <E>
+    | 'if' <B> 'then' <C> 'else' <C>
+    | 'while' <B> 'do' <C>
+    | <C>;<C>
+    | skip
+
+B ::= 'true' | 'false' | <E> '=' <E> | <B> '&' <B> | '-' <B>
+E ::= L | n | (E + E)
+```
+
+The (bidirectional) mapping from WHILE to Leaf can be implemented as isomorphism function and looks like the following (WHILE
+on the left hand side and Leaf on the right hand side):
+
+```
+<C> <=> <declaration> | <assignment>
+      | <if-expr>
+      | <loop-stmt>
+      | <statements>
+      | <empty>
+
+<B> <=> 'true' | 'false' | <expr>
+<E> <=> <expr>
+<L> <=> <name>
+```
+
+Therefore, every program written in WHILE can also be expressed in Leaf without loss of semantic meaning. The proof is
+complete and Turing completeness has been shown.
 
 
 ## Example Programs
