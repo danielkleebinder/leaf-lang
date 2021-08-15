@@ -16,5 +16,5 @@ class VarSymbol(name: String,
         this.modifiers.addAll(listOf(*modifiers))
     }
 
-    override fun toString() = "VarSymbol(modifiers=$modifiers, name=$name, type=$type)"
+    override fun toString() = "VarSymbol(modifiers=$modifiers, name=$name)"
 }

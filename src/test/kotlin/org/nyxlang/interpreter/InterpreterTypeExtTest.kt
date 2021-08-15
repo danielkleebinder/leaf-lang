@@ -1,6 +1,7 @@
 package org.nyxlang.interpreter
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.nyxlang.TestSuit
 import org.nyxlang.analyzer.exception.StaticSemanticException
@@ -28,7 +29,7 @@ class InterpreterTypeExtTest : TestSuit() {
             fun <Human>.getFirstname() { return "Daniel" }
             fun <Human>.getLastname() { return "Kleebinder"}
             const me = new Human;
-            const res = me.getFirstname() + me.getLastname()
+            const res = me.getFirstname() + " " + me.getLastname()
         """.trimIndent())
         assertEquals("Daniel Kleebinder", valueOf("res"))
     }
@@ -38,7 +39,7 @@ class InterpreterTypeExtTest : TestSuit() {
         execute("""
             type Pet
             type Human
-            fun <Human, Pet>.name = "That's difficult now..."
+            fun <Human, Pet>.name = "Now, that's difficult..."
             
             const me = new Human
             const pet = new Pet
@@ -46,14 +47,27 @@ class InterpreterTypeExtTest : TestSuit() {
             const res1 = me.name()
             const res2 = pet.name()
         """.trimIndent())
-        assertEquals("That's difficult now...", valueOf("res1"))
-        assertEquals("That's difficult now...", valueOf("res2"))
+        assertEquals("Now, that's difficult...", valueOf("res1"))
+        assertEquals("Now, that's difficult...", valueOf("res2"))
+    }
+
+    @Test
+    fun shouldDeclareExtFunctionWithParams() {
+        execute("""
+            type Human { name: string }
+            fun <Human>.sayHi(to: Human) -> string {
+              return object.name + " says hi to " + to.name
+            }
+            const me = new Human { "Peter Peterson" }
+            const result = me.sayHi(new Human { "Anna Anderson" })
+        """.trimIndent())
+        assertEquals("Peter Peterson says hi to Anna Anderson", valueOf("result"))
     }
 
     @Test
     fun shouldErrorIfNoExtensionsSpecified() {
-        assertTrue(withErrors { execute("fun <>.test = true".trimIndent()) } > 0)
-        assertTrue(withErrors { execute("fun .test = true".trimIndent()) } > 0)
+        assertThrows(StaticSemanticException::class.java) { execute("fun <>.test = true".trimIndent()) }
+        assertThrows(StaticSemanticException::class.java) { execute("fun .test = true".trimIndent()) }
     }
 
     @Test

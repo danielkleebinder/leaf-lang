@@ -26,5 +26,5 @@ class AsyncMemoryCell(override val value: Future<IMemoryCell?>,
     override fun get(index: IMemoryCell) = throw UnknownOperationException("Async values do not support index based access")
 
     override fun stringify() = value.toString()
-    override fun toString() = "AsyncValue(value=$value)"
+    override fun toString() = "AsyncMemoryCell(value=$value)"
 }

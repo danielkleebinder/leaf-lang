@@ -16,5 +16,5 @@ class NativeFunMemoryCell(override val value: NativeFunSymbol,
     override fun binary(right: IMemoryCell, op: BinaryOperation) = throw UnknownOperationException("Native functions do not support binary operations")
     override fun assign(newValue: IMemoryCell) = throw UnknownOperationException("Assignments are not supported on native function values")
     override fun stringify() = value.toString()
-    override fun toString() = "FunNativeValue(definition=$value)"
+    override fun toString() = "NativeFunMemoryCell(definition=$value)"
 }

@@ -101,5 +101,5 @@ class StringMemoryCell(private var data: String,
     }
 
     override fun stringify() = data
-    override fun toString() = "StringValue(value=$data)"
+    override fun toString() = "StringMemoryCell(value=$data)"
 }

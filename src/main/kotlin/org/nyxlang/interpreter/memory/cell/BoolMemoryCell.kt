@@ -80,5 +80,5 @@ class BoolMemoryCell(private var data: Boolean,
     }
 
     override fun stringify() = data.toString()
-    override fun toString() = "BoolValue(value=$data)"
+    override fun toString() = "BoolMemoryCell(value=$data)"
 }

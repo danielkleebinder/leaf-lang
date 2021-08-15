@@ -40,5 +40,5 @@ class FunMemoryCell(override var value: FunSymbol,
     }
 
     override fun stringify() = value.toString()
-    override fun toString() = "FunValue(definition=$value)"
+    override fun toString() = "FunMemoryCell(definition=$value)"
 }

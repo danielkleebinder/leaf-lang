@@ -203,9 +203,9 @@ Therefore, the proof is done and Turing completeness has been shown.
 ## Example Programs
 
 ```kotlin
-program test
+program "test"
 
-use "system.io"
+use "io"
 use "math"
 
 
@@ -218,11 +218,10 @@ type Dog : Feedable, CanTalk {
   age: number
 }
 
-// Types implement functions by specifying extension functions
+// Types implement functions by specifying them as extensions
 fun <Cat>.name() -> string = 'Kitty'
 fun <Dog>.name() -> string = 'Bello'
 fun <Dog, Cat>.talk(text: string) = print(object.name() + ' says: ' . text)
-
 
 
 //

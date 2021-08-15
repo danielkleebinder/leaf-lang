@@ -1,6 +1,7 @@
 package org.nyxlang.interpreter.memory.cell
 
 import org.nyxlang.analyzer.symbol.FunSymbol
+import org.nyxlang.analyzer.symbol.TypeSymbol
 import java.math.BigDecimal
 import java.util.concurrent.Future
 
@@ -29,6 +30,11 @@ fun arrayMemoryCell(value: Array<IMemoryCell?>) = ArrayMemoryCell(value)
  * Creates a function [value].
  */
 fun funMemoryCell(value: FunSymbol) = FunMemoryCell(value)
+
+/**
+ * Creates a custom type [value].
+ */
+fun typeMemoryCell(value: TypeSymbol) = TypeMemoryCell(value)
 
 /**
  * Creates an async [value].

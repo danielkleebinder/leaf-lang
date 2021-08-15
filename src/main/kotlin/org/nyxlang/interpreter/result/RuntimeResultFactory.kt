@@ -1,6 +1,7 @@
 package org.nyxlang.interpreter.result
 
 import org.nyxlang.analyzer.symbol.FunSymbol
+import org.nyxlang.analyzer.symbol.TypeSymbol
 import org.nyxlang.interpreter.memory.cell.*
 import java.math.BigDecimal
 import java.util.concurrent.Future
@@ -35,6 +36,11 @@ fun boolResult(value: Boolean) = dataResult(boolMemoryCell(value))
  * Creates a data runtime result with the given function [value].
  */
 fun funResult(value: FunSymbol) = dataResult(funMemoryCell(value))
+
+/**
+ * Creates a data runtime result with the given type [value].
+ */
+fun typeResult(value: TypeSymbol) = dataResult(typeMemoryCell(value))
 
 /**
  * Creates a data runtime result with the given async [value].

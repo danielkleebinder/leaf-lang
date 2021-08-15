@@ -65,5 +65,5 @@ class ArrayMemoryCell(private var data: Array<IMemoryCell?>,
     }
 
     override fun stringify() = "[" + data.map { it?.stringify() }.joinToString(", ") + "]"
-    override fun toString() = "ArrayValue(value=[${stringify()}])"
+    override fun toString() = "ArrayMemoryCell(value=[${stringify()}])"
 }

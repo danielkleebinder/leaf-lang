@@ -38,5 +38,5 @@ class ObjectMemoryCell(private var data: MutableMap<String, IMemoryCell>,
     override fun unary(op: UnaryOperation) = throw UnknownOperationException("The operation $op is not supported for object data type")
     override fun binary(right: IMemoryCell, op: BinaryOperation) = throw UnknownOperationException("The operation $op is not supported for object data type")
     override fun stringify() = data.toString()
-    override fun toString() = "ObjectValue(value=${stringify()})"
+    override fun toString() = "ObjectMemoryCell(value=${stringify()})"
 }

@@ -10,7 +10,7 @@ import java.math.BigDecimal
  * enable type coercion.
  */
 class NumberMemoryCell(private var data: BigDecimal,
-                       override val members: Map<String, IMemoryCell> = mapOf()) : IMemoryCell {
+                       override val members: MutableMap<String, IMemoryCell> = hashMapOf()) : IMemoryCell {
 
     override val value: BigDecimal
         get() = data
@@ -138,5 +138,5 @@ class NumberMemoryCell(private var data: BigDecimal,
     }
 
     override fun stringify() = data.toString()
-    override fun toString() = "NumberValue(value=$data)"
+    override fun toString() = "NumberMemoryCell(value=$data)"
 }
