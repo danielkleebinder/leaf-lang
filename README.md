@@ -1,15 +1,16 @@
-[![CI](https://github.com/danielkleebinder/nyxlang/actions/workflows/main.yml/badge.svg)](https://github.com/danielkleebinder/nyxlang/actions/workflows/main.yml)
+![Nyx Icon](https://github.com/danielkleebinder/leaf-lang/blob/main/leaf-lang.png?raw=true)
 
-# Nyx Programming Language
+# The Leaf Programming Language
 
-![Nyx Icon](https://github.com/danielkleebinder/nyxlang/blob/main/nyxlang.png?raw=true)
+[![Build](https://github.com/danielkleebinder/leaf-lang/actions/workflows/main.yml/badge.svg)](https://github.com/danielkleebinder/leaf-lang/actions/workflows/main.yml)
+[![Licence](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/danielkleebinder/leaf-lang/blob/main/LICENSE)
 
-The nyx programming language (nyxlang) is a statically and strongly typed, lexically scoped and interpreted programming language using
-type inference that allows the developer to implement traits and custom types. It is object oriented, but does not support inheritance
-since inheritance is a common source of maintainability issues.
-
+The Leaf programming language is a statically and strongly typed, lexically scoped and interpreted programming language using
+type inference that allows the developer to implement traits and custom types. It is object oriented, but does not support
+inheritance because it is a common source of maintainability issues.
 
 (influenced by TypeScript, Kotlin, Go, Eiffel, ML)
+
 
 ## Grammar
 
@@ -131,71 +132,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
 
 
 ## Turing Completeness
-Turing completeness can be proven by showing that a programming language is capable of defining and running µ-recursive
-functions. µ-recursive functions are precisely the subset of functions that can be computed by Turing machines. The
-primitive µ-recursive functions are:
-
-- **Constant function**. A function that takes `k` parameters and returns a constant value `n` (`C(x1, ..., xk) = n`).
-- **Successor function**. A function that returns the successor of a given value (`S(x) = x + 1`)
-- **Projection function**. A function that returns a specific value of the specified ones (`P(i, x1, ..., xk) = xi`)
-
-In addition to the primitive functions, the µ-recursive operators must be supported as well:
-
-- **Composition operator**. Given a function `h(x1, ...xm)` and m k-ary function `g1(x1, ..., xk), ... gm(x1, ..., xk)`, then `h ° (g1, ..., gm) = f` can be shown.
-- **Recursion operator**. Given a function 
-- **Minimization operator**.
-
-It is left to define a mapping from three µ-recursive functions and the three operators to nyxlang to prove
-Turing completeness and therefore interchangeability with any other Turing machine.
-
-### µ-recursive functions in nyxlang
-This section shows that µ-recursive functions can be defined in nyxlang.
-
-#### Constant Function
-A reduction of the constant function is the zero function which always returns `0` instead of `n`. This can be shown
-as follows:
-
-```
-fun c(arr: number[]) -> number = 0
-```
-
-#### Successor Function
-The successor function returns the successor value of the given parameter. Since numbers are sufficient for µ-recursive
-functions, simply increasing the value completes the task.
-
-```
-fun s(x: number) -> number = (x + 1)
-```
-
-#### Projection Function
-The projection function requires that the value of `i` is in the range of the arrays size. This can be assured by using
-the `requires` function property of the programming language.
-
-```
-fun p(i: number, arr: number[]) : (0 <= i && i < arr.size) -> number = arr[i]
-```
-
-### Operators in nyxlang
-This section shows that the previously defined operators can be implemented in nyxlang.
-
-#### Composition Operator
-One can prove the existence of the composition operator without loss of generality by showing that a function `g` can be
-defined that takes a specific number of arguments `K` and another function `h` that takes `M` arguments. Such a definition
-and implementation might look like the following.
-
-Let `K = 2` and let `M = 2`, then we can construct three functions that allow for composition (w.l.o.g):
-
-```
-fun h(a1: number, a2: number, ...) = ...
-fun g(b1: number, b2: number, ...) = ...
-fun f(x1: number, x2: number) = h(g(x1, x2, ...), g(x1, x2, ...))
-```
-
-(the function implementation for `g` and `h` are irrelevant for this proof)
-
-#### Recursion Operator
-
-#### Minimization Operator
+Turing completeness can be shown by implementing a mapping between the WHILE and the Leaf programming language.
 
 Therefore, the proof is done and Turing completeness has been shown.
 

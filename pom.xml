@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.pl</groupId>
-    <artifactId>nyxlang</artifactId>
+    <artifactId>leaflang</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
 
