@@ -7,7 +7,11 @@
 
 The Leaf programming language is a statically and strongly typed, lexically scoped and interpreted programming language using
 type inference that allows the developer to implement traits and custom types. It is object oriented, but does not support
-inheritance because it is a common source of maintainability issues.
+inheritance because typically, it is a common source of maintainability issues.
+
+This programming language was solely written by me for educational purposes only. It should showcase some concepts I
+learned in my Masters computer science courses at TU Vienna. Although I am sure it could technically be used as production
+ready language, I would not recommend it yet ;-)
 
 (influenced by TypeScript, Kotlin, Go, Eiffel, ML)
 
@@ -133,7 +137,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
 
 ## Turing Completeness
 Turing completeness can be shown by implementing a mapping between the WHILE and the Leaf programming language. The WHILE
-programming language is defined as follows:
+programming language is proven to be Turing complete and is defined as follows:
 
 ```
 C ::= <L> := <E>
@@ -170,9 +174,7 @@ complete and Turing completeness has been shown.
 ```kotlin
 program "test"
 
-use "io"
-use "math"
-
+use "io", "math"
 
 trait Feedable
 trait CanTalk
@@ -186,6 +188,7 @@ type Dog : Feedable, CanTalk {
 // Types implement functions by specifying them as extensions
 fun <Cat>.name() -> string = 'Kitty'
 fun <Dog>.name() -> string = 'Bello'
+fun <Dog>.feed() = object.fed = true
 fun <Dog, Cat>.talk(text: string) = print(object.name() + ' says: ' . text)
 
 
@@ -202,12 +205,6 @@ fun <Dog, Cat>.talk(text: string) = print(object.name() + ' says: ' . text)
 fun add(a: number, b: number) : (a > 0 && b > 0) : (_ >= (a + b)) -> number = a + b
 fun sub(a: number, b: number) :: (_ <= (a - b)) -> number = a - b
 
-// Simple function without pre- or postcondition
-fun greeting(msg: string) {
-  // Runs the code block in the interpreters native language
-  native('System.out.println("Hello ' . msg . '")')
-}
-
 // The "main" function is the entry point into the program
 fun main {
 
@@ -218,15 +215,13 @@ fun main {
   const myGreeting = greeting
 
   // var dog = Dog;
-  // var dog = Dog { fed: false };
+  // var dog = Dog { fed = false };
   var dog = Dog { false }
 
   // There is only the "loop" in this programming language. No
   // for, while or do-whiles. You can do everything with this.
-  loop var i = 0 :: ++i {
-    if dog.fed {
-      break
-    }
+  loop var i = 0 :: i = i + 1 {
+    if dog.fed { break }
     dog.feed()
   }
 
@@ -238,13 +233,6 @@ fun main {
   print(dog.fed)       // true
   print(dog == dog)    // true
   print(~(-7+3**2))    // -3
-
-  // Starts the given block in a coroutine
-  async { dog.feed() }
-  async dog.feed()
-  async 25 * 3
-
-  greetings("Peter Parker")
 }
 ```
 
