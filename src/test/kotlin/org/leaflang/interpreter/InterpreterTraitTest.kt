@@ -19,6 +19,7 @@ class InterpreterTraitTest : TestSuit() {
     @Test
     fun shouldErrorWithTraitBlock() {
         assertTrue(withErrors { execute("trait Eats1 {}") } > 0)
+        assertTrue(withErrors { execute("trait Eats2 { a: number }") } > 0)
     }
 
     @Test
@@ -72,5 +73,10 @@ class InterpreterTraitTest : TestSuit() {
         assertThrows(StaticSemanticException::class.java) { execute("trait Eats1; fun <Eats1>.f1 = 10") }
         assertThrows(StaticSemanticException::class.java) { execute("trait Eats2; fun <Eats2>.f1 { true }") }
         assertThrows(StaticSemanticException::class.java) { execute("trait Eats3; fun <Eats3>.f1(a: number) : a > 10 -> bool { return true }") }
+    }
+
+    @Test
+    fun shouldAllowSubtyping(){
+        assertDoesNotThrow { execute("trait Eats1; type Pet1 : Eats1; const bello: Eats1 = new Pet1") }
     }
 }

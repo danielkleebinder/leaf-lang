@@ -22,13 +22,6 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
 
         if (analyzer.currentScope.has(typeName)) throw AnalyticalVisitorException("\"$typeName\" (type) already exists")
 
-        val typeSymbol = TypeSymbol(
-                name = typeName,
-                nestingLevel = analyzer.currentScope.nestingLevel)
-
-        typeDeclareNode.spec = typeSymbol
-        analyzer.currentScope.define(typeSymbol)
-
         // Check if each trait is available in the current scope
         typeDeclareNode.traits
                 .filter { !analyzer.currentScope.has(it) }
@@ -44,6 +37,15 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
                 .groupingBy { it }.eachCount()
                 .filter { it.value > 1 }
                 .forEach { throw AnalyticalVisitorException("Type \"$typeName\" implements trait \"${it.key}\" ${it.value} times, but only once is allowed") }
+
+
+        val typeSymbol = TypeSymbol(
+                name = typeName,
+                traits = typeDeclareNode.traits.mapNotNull { analyzer.currentScope.get(it) as? TraitSymbol },
+                nestingLevel = analyzer.currentScope.nestingLevel)
+
+        typeDeclareNode.spec = typeSymbol
+        analyzer.currentScope.define(typeSymbol)
 
         // Each type defines a new static symbol table scope
         analyzer.withScope(typeName) {

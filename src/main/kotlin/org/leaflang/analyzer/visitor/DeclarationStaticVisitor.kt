@@ -5,6 +5,7 @@ import org.leaflang.analyzer.exception.AnalyticalVisitorException
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.emptyAnalysisResult
 import org.leaflang.analyzer.symbol.Symbol
+import org.leaflang.analyzer.symbol.TypeSymbol
 import org.leaflang.analyzer.symbol.VarSymbol
 import org.leaflang.parser.ast.DeclarationsNode
 import org.leaflang.parser.ast.INode
@@ -43,8 +44,13 @@ class DeclarationStaticVisitor : IStaticVisitor {
                     }
 
                     // Check if types are compatible
-                    if (type != null && assignmentType != null) {
-                        if (type.name != assignmentType.type) {
+                    if ((type != null && assignmentType != null) && (type.name != assignmentType.type)) {
+                        if (assignmentType.type != null) {
+                            val assignmentTypeSymbol = analyzer.currentScope.get(assignmentType.type!!) as? TypeSymbol
+                            if (assignmentTypeSymbol == null || assignmentTypeSymbol.traits.none { trait -> trait.name == type.name }) {
+                                throw AnalyticalVisitorException("Declared type ${type.name} for \"$name\" cannot be used for subtyping with ${assignmentType.type} of assignment")
+                            }
+                        } else {
                             throw AnalyticalVisitorException("Declared type ${type.name} for \"$name\" is not compatible with type ${assignmentType.type} of assignment")
                         }
                     }
