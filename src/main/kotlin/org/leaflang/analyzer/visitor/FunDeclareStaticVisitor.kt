@@ -5,12 +5,13 @@ import org.leaflang.analyzer.exception.AnalyticalVisitorException
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.analysisResult
 import org.leaflang.analyzer.symbol.FunSymbol
+import org.leaflang.analyzer.symbol.TraitSymbol
 import org.leaflang.analyzer.symbol.TypeSymbol
 import org.leaflang.analyzer.symbol.VarSymbol
 import org.leaflang.analyzer.withScope
-import org.leaflang.parser.ast.`fun`.FunDeclareNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.Modifier
+import org.leaflang.parser.ast.`fun`.FunDeclareNode
 
 /**
  * Analyzes a function ('fun') declaration statement.
@@ -30,24 +31,35 @@ class FunDeclareStaticVisitor : IStaticVisitor {
         analyzer.currentScope.define(funSymbol)
 
         if (funDeclareNode.extensionOf.isNotEmpty() && funName == null) {
-            throw AnalyticalVisitorException("The function tries to extend some types but does not have a unique name")
+            throw AnalyticalVisitorException("This function tries to extend some types but does not have a unique name")
         }
+
+        // Abstract function declarations are only allowed on trait types
+        if (funDeclareNode.body == null) {
+            funDeclareNode.extensionOf
+                    .filter { analyzer.currentScope.get(it.type) !is TraitSymbol }
+                    .forEach { throw AnalyticalVisitorException("\"$funName\" is abstract (i.e. has no implementation), but wants to extend the non-trait type \"${it.type}\"") }
+        }
+
+        // Concrete function declarations are only allowed on non-trait types
+        if (funDeclareNode.body != null) {
+            funDeclareNode.extensionOf
+                    .filter { analyzer.currentScope.get(it.type) !is TypeSymbol }
+                    .forEach { throw AnalyticalVisitorException("\"$funName\" is concrete (i.e. has an implementation), but wants to extend the non-concrete type \"${it.type}\"") }
+        }
+
+        // Test for static semantic errors in the list of extensions
+        funDeclareNode.extensionOf.forEach { analyzer.analyze(it) }
 
         // Check extension type validity (if required) and add this function to the specified types
-        funDeclareNode.extensionOf.forEach { typeNode ->
-
-            // Tests if the specified types to be extended do exist at this point
-            analyzer.analyze(typeNode)
-
-            val typeSymbol = analyzer.currentScope.get(typeNode.type)
-            if (typeSymbol !is TypeSymbol) throw AnalyticalVisitorException("\"$funName\" specifies an invalid type \"${typeNode.type}\" for extension")
-
-            if (typeSymbol.fields.any { field -> field.name == funName }) {
-                throw AnalyticalVisitorException("Type extension not possible since \"${typeSymbol.name}\" already specifies a member with name \"${funName}\"")
-            }
-
-            typeSymbol.fields.add(VarSymbol(funName!!, funSymbol))
-        }
+        funDeclareNode.extensionOf
+                .mapNotNull { analyzer.currentScope.get(it.type) as? TypeSymbol }
+                .forEach {
+                    if (it.fields.any { field -> field.name == funName }) {
+                        throw AnalyticalVisitorException("Type extension not possible since \"${it.name}\" already specifies a member with name \"${funName}\"")
+                    }
+                    it.fields.add(VarSymbol(funName!!, funSymbol))
+                }
 
         analyzer.withScope(funName) {
 

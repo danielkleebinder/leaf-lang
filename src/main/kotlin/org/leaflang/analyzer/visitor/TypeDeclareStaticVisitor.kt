@@ -29,11 +29,12 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
         typeDeclareNode.spec = typeSymbol
         analyzer.currentScope.define(typeSymbol)
 
+        // Check if each trait is available in the current scope
         typeDeclareNode.traits
                 .filter { !analyzer.currentScope.has(it) }
                 .forEach { throw AnalyticalVisitorException("Type \"$typeName\" tries to implement trait \"$it\" which does not exist in this scope") }
 
-        // Check if each trait is available in the current scope
+        // Check if each trait really is a trait type
         typeDeclareNode.traits
                 .filter { analyzer.currentScope.has(it) && analyzer.currentScope.get(it) !is TraitSymbol }
                 .forEach { throw AnalyticalVisitorException("Type \"$typeName\" tries to implement \"$it\" which is not a trait") }

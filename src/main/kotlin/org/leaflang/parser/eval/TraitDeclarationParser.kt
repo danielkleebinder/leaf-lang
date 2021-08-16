@@ -28,6 +28,10 @@ class TraitDeclarationParser(private val parser: ILeafParser,
             parser.flagError(ErrorCode.MISSING_IDENTIFIER)
         }
 
+        if (TokenType.LEFT_CURLY_BRACE == parser.token.kind) {
+            parser.flagError(ErrorCode.INVALID_TRAIT_CURLY_BRACE)
+        }
+
         return TraitDeclareNode(name)
     }
 }
