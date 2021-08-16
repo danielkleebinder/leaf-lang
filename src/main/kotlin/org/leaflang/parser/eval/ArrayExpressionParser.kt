@@ -3,7 +3,7 @@ package org.leaflang.parser.eval
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
-import org.leaflang.parser.ast.ArrayNode
+import org.leaflang.parser.ast.value.ArrayNode
 import org.leaflang.parser.ast.EmptyNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.utils.IParserFactory

@@ -4,7 +4,7 @@ import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advance
-import org.leaflang.parser.ast.TypeNode
+import org.leaflang.parser.ast.type.TypeNode
 import org.leaflang.parser.utils.IParserFactory
 
 /**

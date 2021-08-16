@@ -10,6 +10,15 @@ import org.leaflang.native.INativeModule
 import org.leaflang.native.io.IOModule
 import org.leaflang.native.math.MathModule
 import org.leaflang.parser.ast.*
+import org.leaflang.parser.ast.`fun`.FunDeclareNode
+import org.leaflang.parser.ast.access.AccessNode
+import org.leaflang.parser.ast.type.TypeDeclareNode
+import org.leaflang.parser.ast.type.TypeInstantiationNode
+import org.leaflang.parser.ast.type.TypeNode
+import org.leaflang.parser.ast.value.ArrayNode
+import org.leaflang.parser.ast.value.BoolNode
+import org.leaflang.parser.ast.value.NumberNode
+import org.leaflang.parser.ast.value.StringNode
 
 /**
  * Semantic analyzer implementation.

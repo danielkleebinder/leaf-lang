@@ -5,7 +5,7 @@ import org.leaflang.interpreter.exception.VisitorException
 import org.leaflang.interpreter.memory.cell.TypeMemoryCell
 import org.leaflang.interpreter.result.DataRuntimeResult
 import org.leaflang.interpreter.result.funResult
-import org.leaflang.parser.ast.FunDeclareNode
+import org.leaflang.parser.ast.`fun`.FunDeclareNode
 import org.leaflang.parser.ast.INode
 
 /**

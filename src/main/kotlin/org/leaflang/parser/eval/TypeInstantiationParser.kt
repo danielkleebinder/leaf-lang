@@ -3,8 +3,8 @@ package org.leaflang.parser.eval
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
-import org.leaflang.parser.ast.TypeArgument
-import org.leaflang.parser.ast.TypeInstantiationNode
+import org.leaflang.parser.ast.type.TypeArgument
+import org.leaflang.parser.ast.type.TypeInstantiationNode
 import org.leaflang.parser.utils.IParserFactory
 
 /**

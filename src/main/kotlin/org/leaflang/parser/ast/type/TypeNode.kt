@@ -1,4 +1,6 @@
-package org.leaflang.parser.ast
+package org.leaflang.parser.ast.type
+
+import org.leaflang.parser.ast.INode
 
 /**
  * Type attribute value of a language element.

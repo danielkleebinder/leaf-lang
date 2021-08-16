@@ -1,6 +1,9 @@
-package org.leaflang.parser.ast
+package org.leaflang.parser.ast.`fun`
 
 import org.leaflang.analyzer.symbol.FunSymbol
+import org.leaflang.parser.ast.DeclarationsNode
+import org.leaflang.parser.ast.INode
+import org.leaflang.parser.ast.type.TypeNode
 
 /**
  * Node that allows function declaration and definition.

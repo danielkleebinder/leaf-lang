@@ -12,6 +12,10 @@ import org.leaflang.interpreter.result.dataResult
 import org.leaflang.interpreter.result.emptyResult
 import org.leaflang.interpreter.withDynamicScope
 import org.leaflang.parser.ast.*
+import org.leaflang.parser.ast.access.AccessCallNode
+import org.leaflang.parser.ast.access.AccessFieldNode
+import org.leaflang.parser.ast.access.AccessIndexNode
+import org.leaflang.parser.ast.access.AccessNode
 
 /**
  * Interprets the access node recursively.

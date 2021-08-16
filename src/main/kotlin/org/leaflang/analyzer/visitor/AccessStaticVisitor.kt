@@ -7,6 +7,10 @@ import org.leaflang.analyzer.result.analysisResult
 import org.leaflang.analyzer.result.emptyAnalysisResult
 import org.leaflang.analyzer.symbol.*
 import org.leaflang.parser.ast.*
+import org.leaflang.parser.ast.access.AccessCallNode
+import org.leaflang.parser.ast.access.AccessFieldNode
+import org.leaflang.parser.ast.access.AccessIndexNode
+import org.leaflang.parser.ast.access.AccessNode
 
 /**
  * Analyzes access nodes.

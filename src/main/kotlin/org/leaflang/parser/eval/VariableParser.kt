@@ -5,6 +5,10 @@ import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advanceAndSkipNewLines
 import org.leaflang.parser.ast.*
+import org.leaflang.parser.ast.access.AccessCallNode
+import org.leaflang.parser.ast.access.AccessFieldNode
+import org.leaflang.parser.ast.access.AccessIndexNode
+import org.leaflang.parser.ast.access.AccessNode
 import org.leaflang.parser.utils.IParserFactory
 
 /**

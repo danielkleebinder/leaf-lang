@@ -1,5 +1,6 @@
-package org.leaflang.parser.ast
+package org.leaflang.parser.ast.value
 
+import org.leaflang.parser.ast.INode
 import java.math.BigDecimal
 
 /**

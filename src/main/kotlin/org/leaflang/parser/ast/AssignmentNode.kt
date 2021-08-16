@@ -1,5 +1,7 @@
 package org.leaflang.parser.ast
 
+import org.leaflang.parser.ast.access.AccessNode
+
 /**
  * Node that enables assignments.
  */

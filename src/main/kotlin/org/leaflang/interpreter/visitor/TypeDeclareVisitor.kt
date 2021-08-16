@@ -5,7 +5,7 @@ import org.leaflang.interpreter.memory.cell.TypeMemoryCell
 import org.leaflang.interpreter.result.DataRuntimeResult
 import org.leaflang.interpreter.result.typeResult
 import org.leaflang.parser.ast.INode
-import org.leaflang.parser.ast.TypeDeclareNode
+import org.leaflang.parser.ast.type.TypeDeclareNode
 
 /**
  * Interprets a custom type declaration node.

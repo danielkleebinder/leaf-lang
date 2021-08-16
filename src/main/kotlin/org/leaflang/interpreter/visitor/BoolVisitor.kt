@@ -2,7 +2,7 @@ package org.leaflang.interpreter.visitor
 
 import org.leaflang.interpreter.IInterpreter
 import org.leaflang.interpreter.result.boolResult
-import org.leaflang.parser.ast.BoolNode
+import org.leaflang.parser.ast.value.BoolNode
 import org.leaflang.parser.ast.INode
 
 /**

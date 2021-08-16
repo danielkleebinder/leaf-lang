@@ -3,7 +3,7 @@ package org.leaflang.interpreter.visitor
 import org.leaflang.interpreter.IInterpreter
 import org.leaflang.interpreter.result.stringResult
 import org.leaflang.parser.ast.INode
-import org.leaflang.parser.ast.StringNode
+import org.leaflang.parser.ast.value.StringNode
 
 /**
  * Interprets the string node.

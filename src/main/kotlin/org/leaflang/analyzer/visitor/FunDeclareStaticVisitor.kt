@@ -8,7 +8,7 @@ import org.leaflang.analyzer.symbol.FunSymbol
 import org.leaflang.analyzer.symbol.TypeSymbol
 import org.leaflang.analyzer.symbol.VarSymbol
 import org.leaflang.analyzer.withScope
-import org.leaflang.parser.ast.FunDeclareNode
+import org.leaflang.parser.ast.`fun`.FunDeclareNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.Modifier
 

@@ -9,7 +9,7 @@ import org.leaflang.analyzer.symbol.VarSymbol
 import org.leaflang.analyzer.withScope
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.Modifier
-import org.leaflang.parser.ast.TypeDeclareNode
+import org.leaflang.parser.ast.type.TypeDeclareNode
 
 /**
  * Analyzes a custom type ('type') declaration statement.

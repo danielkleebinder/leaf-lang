@@ -6,4 +6,6 @@ package org.leaflang.lexer.token
  */
 data class Token(val kind: TokenType,
                  val position: TokenPosition,
-                 val value: Any? = null)
+                 val value: Any? = null) {
+    override fun toString() = "$kind${if (value != null) "(val=$value)" else ""}"
+}

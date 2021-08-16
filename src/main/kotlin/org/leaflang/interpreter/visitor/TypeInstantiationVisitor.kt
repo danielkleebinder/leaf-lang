@@ -5,7 +5,7 @@ import org.leaflang.interpreter.memory.cell.IMemoryCell
 import org.leaflang.interpreter.result.DataRuntimeResult
 import org.leaflang.interpreter.result.objectResult
 import org.leaflang.parser.ast.INode
-import org.leaflang.parser.ast.TypeInstantiationNode
+import org.leaflang.parser.ast.type.TypeInstantiationNode
 
 /**
  * Interprets the custom type instantiation node.

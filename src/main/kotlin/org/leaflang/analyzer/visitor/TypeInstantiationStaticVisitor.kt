@@ -6,7 +6,7 @@ import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.analysisResult
 import org.leaflang.analyzer.symbol.TypeSymbol
 import org.leaflang.parser.ast.INode
-import org.leaflang.parser.ast.TypeInstantiationNode
+import org.leaflang.parser.ast.type.TypeInstantiationNode
 
 /**
  * Analyzes a type instantiation expression.

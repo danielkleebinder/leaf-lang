@@ -6,6 +6,9 @@ import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advance
 import org.leaflang.parser.advanceAndSkipNewLines
 import org.leaflang.parser.ast.*
+import org.leaflang.parser.ast.value.BoolNode
+import org.leaflang.parser.ast.value.NumberNode
+import org.leaflang.parser.ast.value.StringNode
 import org.leaflang.parser.utils.IParserFactory
 import java.math.BigDecimal
 

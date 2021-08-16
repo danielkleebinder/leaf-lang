@@ -3,7 +3,7 @@ package org.leaflang.analyzer.visitor
 import org.leaflang.analyzer.ISemanticAnalyzer
 import org.leaflang.analyzer.result.analysisResult
 import org.leaflang.parser.ast.INode
-import org.leaflang.parser.ast.TypeNode
+import org.leaflang.parser.ast.type.TypeNode
 
 /**
  * Analyzes the type expression.
