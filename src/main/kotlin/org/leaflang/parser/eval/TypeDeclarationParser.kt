@@ -2,9 +2,10 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.DeclarationsNode
 import org.leaflang.parser.ast.TypeDeclareNode
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the custom type declaration semantics:
@@ -13,9 +14,12 @@ import org.leaflang.parser.ast.TypeDeclareNode
  *                           '{' (NL)* (<declarations> (NL)*)* '}'
  *
  */
-class TypeDeclarationEval(private val parser: IParser) : IEval {
+class TypeDeclarationParser(private val parser: ILeafParser,
+                            private val parserFactory: IParserFactory) : IParser {
 
-    override fun eval(): TypeDeclareNode {
+    private val varDeclarationsParser = parserFactory.varDeclarationsParser
+
+    override fun parse(): TypeDeclareNode {
         var name = "<anonymous>"
         val fields = arrayListOf<DeclarationsNode>()
 
@@ -27,9 +31,8 @@ class TypeDeclarationEval(private val parser: IParser) : IEval {
         // Custom types do not need a body at all
         if (TokenType.LEFT_CURLY_BRACE == parser.token.kind) {
             typeBody {
-                val declarations = DeclarationsEval(parser)
                 while (TokenType.RIGHT_CURLY_BRACE != parser.token.kind) {
-                    fields.add(declarations.eval())
+                    fields.add(varDeclarationsParser.parse())
                     parser.skipNewLines()
                 }
             }

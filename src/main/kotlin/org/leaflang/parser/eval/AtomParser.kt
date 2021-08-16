@@ -2,10 +2,11 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advance
 import org.leaflang.parser.advanceAndSkipNewLines
 import org.leaflang.parser.ast.*
+import org.leaflang.parser.utils.IParserFactory
 import java.math.BigDecimal
 
 /**
@@ -22,9 +23,19 @@ import java.math.BigDecimal
  *          | <empty>
  *
  */
-class AtomEval(private val parser: IParser) : IEval {
+class AtomParser(private val parser: ILeafParser,
+                 private val parserFactory: IParserFactory) : IParser {
 
-    override fun eval(): INode {
+    private val assignmentParser = parserFactory.assignmentParser
+    private val arrayExpressionParser = parserFactory.arrayExpressionParser
+    private val ifParser = parserFactory.ifParser
+    private val funDeclarationParser = parserFactory.funDeclarationParser
+    private val typeInstantiationParser = parserFactory.typeInstantiationParser
+    private val blockParser = parserFactory.blockParser
+    private val statementParser = parserFactory.statementParser
+    private val expressionParser = parserFactory.expressionParser
+
+    override fun parse(): INode {
         return when (parser.token.kind) {
 
             TokenType.BOOL -> BoolNode(parser.tokenAndAdvance.value as Boolean)
@@ -33,16 +44,16 @@ class AtomEval(private val parser: IParser) : IEval {
                     .trimEnd('0')
                     .trimEnd('.')))
 
-            TokenType.IDENTIFIER -> AssignmentEval(parser).eval()
-            TokenType.LEFT_BRACKET -> ArrayExprEval(parser).eval()
-            TokenType.KEYWORD_IF -> IfEval(parser).eval()
-            TokenType.KEYWORD_FUN -> FunDeclarationEval(parser).eval()
-            TokenType.KEYWORD_NEW -> TypeInstantiationEval(parser).eval()
-            TokenType.LEFT_CURLY_BRACE -> BlockEval(parser).eval()
+            TokenType.IDENTIFIER -> assignmentParser.parse()
+            TokenType.LEFT_BRACKET -> arrayExpressionParser.parse()
+            TokenType.KEYWORD_IF -> ifParser.parse()
+            TokenType.KEYWORD_FUN -> funDeclarationParser.parse()
+            TokenType.KEYWORD_NEW -> typeInstantiationParser.parse()
+            TokenType.LEFT_CURLY_BRACE -> blockParser.parse()
 
-            TokenType.KEYWORD_ASYNC -> parser.advance { AsyncNode(StatementEval(parser).eval()) }
+            TokenType.KEYWORD_ASYNC -> parser.advance { AsyncNode(statementParser.parse()) }
             TokenType.LEFT_PARENTHESIS -> parser.advanceAndSkipNewLines {
-                val result = ExprEval(parser).eval()
+                val result = expressionParser.parse()
                 parser.skipNewLines()
                 if (TokenType.RIGHT_PARENTHESIS != parser.token.kind) parser.flagError(ErrorCode.MISSING_RIGHT_PARENTHESIS)
                 parser.advanceCursor()

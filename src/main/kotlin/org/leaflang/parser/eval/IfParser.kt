@@ -2,10 +2,11 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.IfCase
 import org.leaflang.parser.ast.IfNode
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the 'if' syntax:
@@ -18,19 +19,20 @@ import org.leaflang.parser.ast.IfNode
  * <else>    ::= 'else' (NL)*                         <block>
  *
  */
-class IfEval(private val parser: IParser) : IEval {
+class IfParser(private val parser: ILeafParser,
+               private val parserFactory: IParserFactory) : IParser {
 
-    override fun eval(): IfNode {
-        val expr = ExprEval(parser)
-        val block = BlockEval(parser)
+    override fun parse(): IfNode {
+        val expr = parserFactory.expressionParser
+        val block = parserFactory.blockParser
 
         val cases = arrayListOf<IfCase>()
         var condition: INode? = null
         var elseCase: INode? = null
 
         // Evaluate first 'if' ((NL)* <expr> (NL)* <block>) block
-        ifHead { condition = expr.eval() }
-        cases.add(IfCase(condition, block.eval()))
+        ifHead { condition = expr.parse() }
+        cases.add(IfCase(condition, block.parse()))
 
         var wasNewLine = TokenType.NEW_LINE == parser.token.kind
         parser.skipNewLines()
@@ -44,10 +46,10 @@ class IfEval(private val parser: IParser) : IEval {
                 parser.advanceCursor()
                 parser.skipNewLines()
 
-                condition = expr.eval()
-                cases.add(IfCase(condition, block.eval()))
+                condition = expr.parse()
+                cases.add(IfCase(condition, block.parse()))
             } else {
-                elseCase = block.eval()
+                elseCase = block.parse()
             }
             wasNewLine = TokenType.NEW_LINE == parser.token.kind
             parser.skipNewLines()

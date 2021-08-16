@@ -2,9 +2,10 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advanceAndSkipNewLines
 import org.leaflang.parser.ast.*
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the additive semantics:
@@ -15,7 +16,8 @@ import org.leaflang.parser.ast.*
  *         | <name> '(' (NL)* (<expr> ((NL)* ',' (NL)* <expr>))? (NL)* ')'
  *
  */
-class VariableEval(private val parser: IParser) : IEval {
+class VariableParser(private val parser: ILeafParser,
+                     private val parserFactory: IParserFactory) : IParser {
 
     /**
      * Identifiers that are used for accessing children.
@@ -25,8 +27,7 @@ class VariableEval(private val parser: IParser) : IEval {
             TokenType.LEFT_BRACKET,
             TokenType.LEFT_PARENTHESIS)
 
-
-    override fun eval(): AccessNode {
+    override fun parse(): AccessNode {
         if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
 
         val id = parser.tokenAndAdvance.value as String
@@ -56,7 +57,8 @@ class VariableEval(private val parser: IParser) : IEval {
      * Evaluates index based access (e.g. 'foo[10]') or throws an exception if syntactic errors occurred.
      */
     private fun evalIndexAccess(): AccessIndexNode {
-        val indexExpr = ExprEval(parser).eval()
+        val expr = parserFactory.expressionParser
+        val indexExpr = expr.parse()
 
         if (TokenType.RIGHT_BRACKET != parser.token.kind) parser.flagError(ErrorCode.MISSING_RIGHT_BRACKET)
         parser.advanceCursor()
@@ -68,17 +70,17 @@ class VariableEval(private val parser: IParser) : IEval {
      * Evaluates a call (e.g. 'foo()') or throws an exception if syntactic errors occurred.
      */
     private fun evalCallAccess(): AccessCallNode {
+        val expr = parserFactory.expressionParser
         val args = arrayListOf<INode>()
-        val expr = ExprEval(parser)
 
         // Is the argument list non empty?
         if (TokenType.RIGHT_PARENTHESIS != parser.token.kind) {
             parser.skipNewLines()
-            args.add(expr.eval())
+            args.add(expr.parse())
             while (TokenType.COMMA == parser.token.kind) {
                 parser.advanceCursor()
                 parser.skipNewLines()
-                args.add(expr.eval())
+                args.add(expr.parse())
             }
         }
 

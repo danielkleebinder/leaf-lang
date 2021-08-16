@@ -1,10 +1,11 @@
 package org.leaflang.parser.eval
 
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.EmptyNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.StatementListNode
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the statement list semantics:
@@ -12,19 +13,19 @@ import org.leaflang.parser.ast.StatementListNode
  * <statements> ::= <statement> ((';' | (NL)*) <statement>)*
  *
  */
-class StatementListEval(private val parser: IParser) : IEval {
+class StatementListParser(private val parser: ILeafParser,
+                          private val parserFactory: IParserFactory) : IParser {
 
-    override fun eval(): StatementListNode {
-        val statement = StatementEval(parser)
-
+    override fun parse(): StatementListNode {
+        val statementParser = parserFactory.statementParser
         val result = arrayListOf<INode>()
-        result.add(statement.eval())
+        result.add(statementParser.parse())
         while (TokenType.SEPARATOR == parser.token.kind ||
                 TokenType.NEW_LINE == parser.token.kind) {
             parser.advanceCursor()
             parser.skipNewLines()
 
-            val evaluated = statement.eval()
+            val evaluated = statementParser.parse()
             if (EmptyNode::class != evaluated::class) result.add(evaluated)
         }
         return StatementListNode(result)

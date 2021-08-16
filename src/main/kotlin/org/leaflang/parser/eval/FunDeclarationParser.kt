@@ -2,11 +2,12 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.DeclarationsNode
 import org.leaflang.parser.ast.FunDeclareNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.TypeNode
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the function declaration semantics:
@@ -30,9 +31,16 @@ import org.leaflang.parser.ast.TypeNode
  * fun mult(a: number, b: number) :: (_ >= (a * b)) -> number = a * b
  * fun mult(a: number, b: number) :: (_ >= (a * b)) -> number = a * b
  */
-class FunDeclarationEval(private val parser: IParser) : IEval {
+class FunDeclarationParser(private val parser: ILeafParser,
+                           private val parserFactory: IParserFactory) : IParser {
 
-    override fun eval(): FunDeclareNode {
+    override fun parse(): FunDeclareNode {
+        val declarationsParser = parserFactory.varDeclarationsParser
+        val expressionParser = parserFactory.expressionParser
+        val typeParser = parserFactory.typeParser
+        val statementParser = parserFactory.statementParser
+        val statementListParser = parserFactory.statementListParser
+
         val extensionOf = arrayListOf<TypeNode>()
         var name: String? = null
         var params: DeclarationsNode? = null
@@ -50,9 +58,8 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
 
         // Alright, this truly is a function, now do the evaluation
         funExtensionOf {
-            val typeEval = TypeEval(parser)
             while (true) {
-                extensionOf.add(typeEval.eval())
+                extensionOf.add(typeParser.parse())
                 if (TokenType.COMMA == parser.token.kind) {
                     parser.advanceCursor()
                 } else {
@@ -62,11 +69,11 @@ class FunDeclarationEval(private val parser: IParser) : IEval {
         }
 
         funName { name = parser.tokenAndAdvance.value as? String }
-        funParams { params = DeclarationsEval(parser).eval() }
-        funRequires { requires = ExprEval(parser).eval() }
-        funEnsures { ensures = ExprEval(parser).eval() }
-        funReturns { returns = TypeEval(parser).eval() }
-        funBody { body = if (it) StatementEval(parser).eval() else StatementListEval(parser).eval() }
+        funParams { params = declarationsParser.parse() }
+        funRequires { requires = expressionParser.parse() }
+        funEnsures { ensures = expressionParser.parse() }
+        funReturns { returns = typeParser.parse() }
+        funBody { body = if (it) statementParser.parse() else statementListParser.parse() }
 
         return FunDeclareNode(
                 extensionOf = extensionOf.toList(),

@@ -10,7 +10,7 @@ import org.leaflang.parser.ast.INode
  * to build an abstract syntax tree which can be used for further
  * analysis.
  */
-interface IParser {
+interface ILeafParser {
 
     /**
      * Parses the given array of [tokens].
@@ -62,13 +62,13 @@ interface IParser {
  * Advances the cursor by one and runs the given [body] function. The parameter
  * of the inline function is the new current token.
  */
-inline fun <T> IParser.advance(body: (token: Token) -> T): T = advanceBy(1, body)
+inline fun <T> ILeafParser.advance(body: (token: Token) -> T): T = advanceBy(1, body)
 
 /**
  * Advances the cursor by one token and skips all new lines afterwards before executing
  * the given [func] with the newest token.
  */
-inline fun <T> IParser.advanceAndSkipNewLines(func: (token: Token) -> T): T {
+inline fun <T> ILeafParser.advanceAndSkipNewLines(func: (token: Token) -> T): T {
     advanceCursor()
     skipNewLines()
     return func(token)
@@ -78,7 +78,7 @@ inline fun <T> IParser.advanceAndSkipNewLines(func: (token: Token) -> T): T {
  * Advances the cursor [by] the given amount and runs the given [body] function.
  * The parameter of the inline function is the new current token.
  */
-inline fun <T> IParser.advanceBy(by: Int, body: (token: Token) -> T): T {
+inline fun <T> ILeafParser.advanceBy(by: Int, body: (token: Token) -> T): T {
     advanceCursor(by)
     return body(token)
 }
@@ -87,7 +87,7 @@ inline fun <T> IParser.advanceBy(by: Int, body: (token: Token) -> T): T {
  * Advances the cursor by one and runs the given [body] function if the given
  * condition is met. The parameter of the inline function is the new current token.
  */
-inline fun <T> IParser.advanceIf(cond: Boolean, body: (token: Token) -> T): T? {
+inline fun <T> ILeafParser.advanceIf(cond: Boolean, body: (token: Token) -> T): T? {
     if (cond) {
         advanceCursor()
         return body(token)

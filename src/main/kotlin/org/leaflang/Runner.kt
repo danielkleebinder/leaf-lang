@@ -10,13 +10,13 @@ import org.leaflang.lexer.ILexer
 import org.leaflang.lexer.Lexer
 import org.leaflang.lexer.source.TextSource
 import org.leaflang.lexer.token.Token
-import org.leaflang.parser.IParser
-import org.leaflang.parser.Parser
+import org.leaflang.parser.ILeafParser
+import org.leaflang.parser.LeafParser
 import org.leaflang.parser.ast.INode
 import kotlin.system.measureNanoTime
 
 val lexer: ILexer = Lexer()
-val parser: IParser = Parser()
+val parser: ILeafParser = LeafParser()
 val analyzer: ISemanticAnalyzer = SemanticAnalyzer()
 val interpreter: IInterpreter = Interpreter()
 

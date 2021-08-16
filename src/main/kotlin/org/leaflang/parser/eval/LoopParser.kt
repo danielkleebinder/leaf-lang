@@ -2,9 +2,10 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.LoopNode
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the 'loop' syntax:
@@ -20,18 +21,23 @@ import org.leaflang.parser.ast.LoopNode
  * <loop-body> ::= <block>
  *
  */
-class LoopEval(private val parser: IParser) : IEval {
+class LoopParser(private val parser: ILeafParser,
+                 private val parserFactory: IParserFactory) : IParser {
 
-    override fun eval(): LoopNode {
+    override fun parse(): LoopNode {
+        val statementParser = parserFactory.statementParser
+        val expressionParser = parserFactory.expressionParser
+        val blockParser = parserFactory.blockParser
+
         var init: INode? = null
         var cond: INode? = null
         var step: INode? = null
         var body: INode? = null
 
-        loopInit { init = StatementEval(parser).eval() }
-        loopCond { cond = ExprEval(parser).eval() }
-        loopStep { step = StatementEval(parser).eval() }
-        loopBody { body = BlockEval(parser).eval() }
+        loopInit { init = statementParser.parse() }
+        loopCond { cond = expressionParser.parse() }
+        loopStep { step = statementParser.parse() }
+        loopBody { body = blockParser.parse() }
 
         if (init != null && cond == null && step == null) {
             cond = init

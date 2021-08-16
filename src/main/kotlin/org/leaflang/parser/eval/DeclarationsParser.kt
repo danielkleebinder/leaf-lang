@@ -2,9 +2,10 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advanceAndSkipNewLines
 import org.leaflang.parser.ast.*
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the declaration semantics:
@@ -13,10 +14,11 @@ import org.leaflang.parser.ast.*
  * <declaration>  ::= <name> (NL)* (':' (NL)* <type>)? ('=' (NL)* <expr>)?
  *
  */
-class DeclarationsEval(private val parser: IParser,
-                       private vararg val modifiers: Modifier) : IEval {
+class DeclarationsParser(private val parser: ILeafParser,
+                         private val parserFactory: IParserFactory,
+                         private vararg val modifiers: Modifier) : IParser {
 
-    override fun eval(): DeclarationsNode {
+    override fun parse(): DeclarationsNode {
         val declarations = arrayListOf<Declaration>()
         while (true) {
             declarations.add(evalDeclaration())
@@ -33,6 +35,9 @@ class DeclarationsEval(private val parser: IParser,
      * Evaluates the declaration statement.
      */
     private fun evalDeclaration(): Declaration {
+        val typeParser = parserFactory.typeParser
+        val expressionParser = parserFactory.expressionParser
+
         if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
 
         val id = parser.tokenAndAdvance.value as String
@@ -41,11 +46,11 @@ class DeclarationsEval(private val parser: IParser,
         parser.skipNewLines()
 
         if (TokenType.COLON == parser.token.kind) {
-            parser.advanceAndSkipNewLines { typeExpr = TypeEval(parser).eval() }
+            parser.advanceAndSkipNewLines { typeExpr = typeParser.parse() }
         }
 
         if (TokenType.ASSIGNMENT == parser.token.kind) {
-            parser.advanceAndSkipNewLines { assignExpr = ExprEval(parser).eval() }
+            parser.advanceAndSkipNewLines { assignExpr = expressionParser.parse() }
         }
 
         if (assignExpr == null && typeExpr == null) {

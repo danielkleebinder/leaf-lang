@@ -2,9 +2,10 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advance
 import org.leaflang.parser.ast.TypeNode
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the type semantics:
@@ -12,8 +13,9 @@ import org.leaflang.parser.ast.TypeNode
  * <type>  ::= <number> | <bool> | <string> | <fun>
  *
  */
-class TypeEval(private val parser: IParser) : IEval {
-    override fun eval() = when (parser.token.kind) {
+class TypeParser(private val parser: ILeafParser,
+                 private val parserFactory: IParserFactory) : IParser {
+    override fun parse() = when (parser.token.kind) {
         TokenType.KEYWORD_NUMBER -> parser.advance { TypeNode("number") }
         TokenType.KEYWORD_BOOL -> parser.advance { TypeNode("bool") }
         TokenType.KEYWORD_STRING -> parser.advance { TypeNode("string") }
@@ -22,7 +24,10 @@ class TypeEval(private val parser: IParser) : IEval {
         TokenType.IDENTIFIER -> TypeNode(parser.tokenAndAdvance.value as String)
         else -> {
             parser.flagError(ErrorCode.INVALID_TYPE_DECLARATION)
-            TypeNode("<unknown>")
+            var unknownTypeName = "<unknown"
+            if (parser.token.value != null) unknownTypeName += ("::" + parser.token.value)
+            unknownTypeName += ">"
+            TypeNode(unknownTypeName)
         }
     }
 }

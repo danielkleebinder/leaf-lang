@@ -4,9 +4,9 @@ import org.leaflang.error.*
 import org.leaflang.lexer.token.Token
 import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ast.INode
-import org.leaflang.parser.eval.ProgramEval
+import org.leaflang.parser.utils.LazyParserFactory
 
-class Parser(override var errorHandler: IErrorHandler? = null) : IParser {
+class LeafParser(override var errorHandler: IErrorHandler? = null) : ILeafParser {
 
     private var tokens = arrayOf<Token>()
     private var cursorPosition = 0
@@ -17,7 +17,8 @@ class Parser(override var errorHandler: IErrorHandler? = null) : IParser {
                 .filter { TokenType.COMMENT != it.kind }
                 .toTypedArray()
 
-        return ProgramEval(this).eval()
+        val parserFactory = LazyParserFactory(this)
+        return parserFactory.programParser.parse()
     }
 
     override fun advanceCursor(by: Int): Int {

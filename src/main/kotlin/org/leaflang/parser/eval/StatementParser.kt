@@ -1,13 +1,13 @@
 package org.leaflang.parser.eval
 
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advance
 import org.leaflang.parser.advanceAndSkipNewLines
 import org.leaflang.parser.ast.BreakNode
 import org.leaflang.parser.ast.ContinueNode
-import org.leaflang.parser.ast.Modifier
 import org.leaflang.parser.ast.ReturnNode
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the statement semantics:
@@ -23,15 +23,16 @@ import org.leaflang.parser.ast.ReturnNode
  *                | <expr>
  *
  */
-class StatementEval(private val parser: IParser) : IEval {
-    override fun eval() = when (parser.token.kind) {
-        TokenType.KEYWORD_CONST -> parser.advanceAndSkipNewLines { DeclarationsEval(parser, Modifier.CONSTANT).eval() }
-        TokenType.KEYWORD_VAR -> parser.advanceAndSkipNewLines { DeclarationsEval(parser).eval() }
-        TokenType.KEYWORD_RETURN -> parser.advance { ReturnNode(ExprEval(parser).eval()) }
+class StatementParser(private val parser: ILeafParser,
+                      private val parserFactory: IParserFactory) : IParser {
+    override fun parse() = when (parser.token.kind) {
+        TokenType.KEYWORD_CONST -> parser.advanceAndSkipNewLines { parserFactory.constDeclarationsParser.parse() }
+        TokenType.KEYWORD_VAR -> parser.advanceAndSkipNewLines { parserFactory.varDeclarationsParser.parse() }
+        TokenType.KEYWORD_RETURN -> parser.advance { ReturnNode(parserFactory.expressionParser.parse()) }
         TokenType.KEYWORD_BREAK -> parser.advance { BreakNode() }
         TokenType.KEYWORD_CONTINUE -> parser.advance { ContinueNode() }
-        TokenType.KEYWORD_LOOP -> LoopEval(parser).eval()
-        TokenType.KEYWORD_TYPE -> TypeDeclarationEval(parser).eval()
-        else -> ExprEval(parser).eval()
+        TokenType.KEYWORD_LOOP -> parserFactory.loopParser.parse()
+        TokenType.KEYWORD_TYPE -> parserFactory.typeDeclarationParser.parse()
+        else -> parserFactory.expressionParser.parse()
     }
 }

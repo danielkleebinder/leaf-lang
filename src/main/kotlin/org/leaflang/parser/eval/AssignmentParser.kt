@@ -2,9 +2,10 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.AssignmentNode
 import org.leaflang.parser.ast.INode
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the assignment semantics:
@@ -12,18 +13,22 @@ import org.leaflang.parser.ast.INode
  * <assignment> ::= <var> ('=' <expr>)?
  *
  */
-class AssignmentEval(private val parser: IParser) : IEval {
+class AssignmentParser(private val parser: ILeafParser,
+                       private val parserFactory: IParserFactory) : IParser {
 
-    override fun eval(): INode {
+    override fun parse(): INode {
+        val varParser = parserFactory.variableParser
+        val expr = parserFactory.expressionParser
+
         if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
 
-        val variable = VariableEval(parser).eval()
+        val variable = varParser.parse()
 
         if (TokenType.ASSIGNMENT == parser.token.kind) {
             parser.advanceCursor()
             parser.skipNewLines()
 
-            val assignmentExpr = ExprEval(parser).eval()
+            val assignmentExpr = expr.parse()
             return AssignmentNode(variable, assignmentExpr)
         }
         return variable

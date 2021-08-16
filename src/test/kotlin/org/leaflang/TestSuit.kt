@@ -14,8 +14,8 @@ import org.leaflang.interpreter.result.unpack
 import org.leaflang.lexer.ILexer
 import org.leaflang.lexer.Lexer
 import org.leaflang.lexer.source.TextSource
-import org.leaflang.parser.IParser
-import org.leaflang.parser.Parser
+import org.leaflang.parser.ILeafParser
+import org.leaflang.parser.LeafParser
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.PrintWriter
@@ -28,7 +28,7 @@ open class TestSuit {
 
     lateinit var errorHandler: IErrorHandler
     lateinit var lexer: ILexer
-    lateinit var parser: IParser
+    lateinit var parser: ILeafParser
     lateinit var analyzer: ISemanticAnalyzer
     lateinit var interpreter: IInterpreter
     lateinit var globalSymbolTable: ISymbolTable
@@ -39,7 +39,7 @@ open class TestSuit {
     fun beforeEach() {
         errorHandler = ErrorHandler()
         lexer = Lexer()
-        parser = Parser(errorHandler)
+        parser = LeafParser(errorHandler)
         analyzer = SemanticAnalyzer()
         interpreter = Interpreter()
         globalSymbolTable = analyzer.currentScope

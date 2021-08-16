@@ -2,10 +2,11 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.ArrayNode
 import org.leaflang.parser.ast.EmptyNode
 import org.leaflang.parser.ast.INode
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the array semantics:
@@ -13,21 +14,22 @@ import org.leaflang.parser.ast.INode
  * <arr-expr> ::= '[' (NL)* (<expr> ((NL)* ',' (NL)* <expr>)*)? (NL)* ']'
  *
  */
-class ArrayExprEval(private val parser: IParser) : IEval {
+class ArrayExpressionParser(private val parser: ILeafParser,
+                            private val parserFactory: IParserFactory) : IParser {
 
-    override fun eval(): ArrayNode {
-        val expr = ExprEval(parser)
+    override fun parse(): ArrayNode {
+        val expr = parserFactory.expressionParser
         val elements = arrayListOf<INode>()
 
         enclosingBrackets {
-            elements.add(expr.eval())
+            elements.add(expr.parse())
             parser.skipNewLines()
 
             while (TokenType.COMMA == parser.token.kind) {
                 parser.advanceCursor()
                 parser.skipNewLines()
 
-                val exprValue = expr.eval()
+                val exprValue = expr.parse()
                 if (EmptyNode::class != exprValue::class) {
                     elements.add(exprValue)
                 }

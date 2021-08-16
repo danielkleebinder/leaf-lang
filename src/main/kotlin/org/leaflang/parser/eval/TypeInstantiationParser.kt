@@ -2,9 +2,10 @@ package org.leaflang.parser.eval
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.parser.IParser
+import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.TypeArgument
 import org.leaflang.parser.ast.TypeInstantiationNode
+import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the type syntax:
@@ -14,9 +15,10 @@ import org.leaflang.parser.ast.TypeInstantiationNode
  * <inst-value> ::= (<name> '=')? <expr>
  *
  */
-class TypeInstantiationEval(private val parser: IParser) : IEval {
+class TypeInstantiationParser(private val parser: ILeafParser,
+                              private val parserFactory: IParserFactory) : IParser {
 
-    override fun eval(): TypeInstantiationNode {
+    override fun parse(): TypeInstantiationNode {
         if (TokenType.KEYWORD_NEW != parser.token.kind) parser.flagError(ErrorCode.MISSING_KEYWORD_NEW)
         parser.advanceCursor()
 
@@ -65,7 +67,7 @@ class TypeInstantiationEval(private val parser: IParser) : IEval {
             name = parser.tokenAndAdvance.value as String
             parser.advanceCursor()
         }
-        val valueExpr = ExprEval(parser).eval()
+        val valueExpr = parserFactory.expressionParser.parse()
         return TypeArgument(name, valueExpr)
     }
 }
