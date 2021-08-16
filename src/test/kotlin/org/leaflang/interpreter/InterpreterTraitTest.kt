@@ -76,7 +76,9 @@ class InterpreterTraitTest : TestSuit() {
     }
 
     @Test
-    fun shouldAllowSubtyping(){
-        assertDoesNotThrow { execute("trait Eats1; type Pet1 : Eats1; const bello: Eats1 = new Pet1") }
+    fun shouldErrorIfTraitIsBeingInstantiated() {
+        assertThrows(StaticSemanticException::class.java) { execute("trait Eats1; new Eats1") }
+        assertThrows(StaticSemanticException::class.java) { execute("trait Drinks2; new Drinks2") }
+        assertThrows(StaticSemanticException::class.java) { execute("trait Eatable; trait Feedable; const a = new Feedable") }
     }
 }
