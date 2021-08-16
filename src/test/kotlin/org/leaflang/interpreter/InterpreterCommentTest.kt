@@ -47,4 +47,25 @@ class InterpreterCommentTest : TestSuit() {
         assertTrue(globalActivationRecord.has("d"))
         assertEquals(BigDecimal.valueOf(4), valueOf("d"))
     }
+
+    @Test
+    fun shouldSkipBlockComment() {
+        val programCode = """
+            /* var a = 1
+            var b = 2
+            */
+            var c = 3
+            /* comment
+              var d = 4 */
+            var e = 5
+        """.trimIndent()
+        execute(programCode)
+
+        assertFalse(globalActivationRecord.has("a"))
+        assertFalse(globalActivationRecord.has("b"))
+        assertEquals(BigDecimal.valueOf(3), valueOf("c"))
+
+        assertFalse(globalActivationRecord.has("d"))
+        assertEquals(BigDecimal.valueOf(5), valueOf("e"))
+    }
 }

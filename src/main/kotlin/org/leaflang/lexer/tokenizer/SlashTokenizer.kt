@@ -12,6 +12,7 @@ class SlashTokenizer : ITokenizer {
     override fun matches(c: Char) = c == '/'
     override fun tokenize(source: ISource, tokenFactory: ITokenFactory): Token {
         source.advanceCursor()
+
         if (source.symbol == '/') {
             source.advanceCursor()
             val comment = StringBuilder()
@@ -21,6 +22,22 @@ class SlashTokenizer : ITokenizer {
             }
             return tokenFactory.newToken(TokenType.COMMENT, comment.toString().trim())
         }
+
+        if (source.symbol == '*') {
+            source.advanceCursor()
+            val comment = StringBuilder()
+            while (!source.isEndOfProgram) {
+                if (source.symbol == '*' && source.peekNextSymbol == '/') {
+                    source.advanceCursor()
+                    source.advanceCursor()
+                    break
+                }
+                comment.append(source.symbol)
+                source.advanceCursor()
+            }
+            return tokenFactory.newToken(TokenType.COMMENT, comment.toString().trim())
+        }
+
         return tokenFactory.newToken(TokenType.DIV)
     }
 }

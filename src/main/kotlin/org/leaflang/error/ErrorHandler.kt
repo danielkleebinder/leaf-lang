@@ -1,6 +1,7 @@
 package org.leaflang.error
 
 import org.leaflang.lexer.source.ISource
+import kotlin.math.max
 
 /**
  * Concrete error handler implementation.
@@ -27,9 +28,12 @@ class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
 
         if (source != null) {
             val codeSnippet = source.lineSnippet(errorRow)
-            val rowNr = (errorRow + 1).toString().padStart(3, '0')
-            System.err.println("$rowNr $codeSnippet")
-            System.err.println("".padStart(rowNr.length + errorColumn, ' ') + "^^^")
+            val nr = (errorRow + 1).toString().padStart(3, '0')
+            val errorPadStart = max(errorColumn - 1, 0)
+            System.err.println("    |")
+            System.err.println("$nr | $codeSnippet")
+            System.err.println("    |" + "".padStart(errorPadStart, ' ') + "^^^")
+            System.err.println("    |")
         } else {
             System.err.println("No source available for more detailed error information")
         }
