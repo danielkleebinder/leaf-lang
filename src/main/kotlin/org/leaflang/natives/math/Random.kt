@@ -1,4 +1,4 @@
-package org.leaflang.native.math
+package org.leaflang.natives.math
 
 import org.leaflang.interpreter.memory.cell.IMemoryCell
 import org.leaflang.interpreter.memory.cell.boolMemoryCell

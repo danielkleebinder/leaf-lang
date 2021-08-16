@@ -4,20 +4,22 @@ import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.DeclarationsNode
-import org.leaflang.parser.ast.`fun`.FunDeclareNode
 import org.leaflang.parser.ast.INode
+import org.leaflang.parser.ast.`fun`.FunDeclareNode
 import org.leaflang.parser.ast.type.TypeNode
 import org.leaflang.parser.utils.IParserFactory
 
 /**
  * Evaluates the function declaration semantics:
  *
- * <fun-declaration> ::= 'fun' (NL)* (<name> (NL)*)?
- *                         (<fun-params> (NL)*)?
+ * <fun-declaration> ::= 'fun' (NL)* (<fun-extension> (NL)*)? (<name> (NL)*)?
+ *                        (<fun-params> (NL)*)?
+ *                        (<fun-requires> (NL)*)?
  *                        (<fun-ensures> (NL)*)?
  *                        (<fun-returns> (NL)*)?
- *                        (<fun-body>)
+ *                        (<fun-body>)?
  *
+ * <fun-extension> ::= '<' <type> (NL)* (',' (NL)* <type> (NL)*)* '>' (NL)* '.'
  * <fun-params>   ::= '(' (NL)* <declarations> (NL)* ')'
  * <fun-requires> ::= ':' (NL)* <expr>
  * <fun-ensures>  ::= ':' (NL)* <expr>
@@ -30,6 +32,7 @@ import org.leaflang.parser.utils.IParserFactory
  * fun mult(x: number, y: number) : (x > y) : (x * y) -> number { x * y}
  * fun mult(a: number, b: number) :: (_ >= (a * b)) -> number = a * b
  * fun mult(a: number, b: number) :: (_ >= (a * b)) -> number = a * b
+ *
  */
 class FunDeclarationParser(private val parser: ILeafParser,
                            private val parserFactory: IParserFactory) : IParser {
@@ -73,7 +76,15 @@ class FunDeclarationParser(private val parser: ILeafParser,
         funRequires { requires = expressionParser.parse() }
         funEnsures { ensures = expressionParser.parse() }
         funReturns { returns = typeParser.parse() }
-        funBody { body = if (it) statementParser.parse() else statementListParser.parse() }
+
+        // One of those two body types has to execute...
+        funAssignmentBody { body = statementParser.parse() }
+        funBlockBody { body = statementListParser.parse() }
+
+        // ... otherwise extension traits are required
+        if (body == null && extensionOf.isEmpty()) {
+            parser.flagError(ErrorCode.MISSING_FUNCTION_BODY)
+        }
 
         return FunDeclareNode(
                 extensionOf = extensionOf.toList(),
@@ -186,28 +197,31 @@ class FunDeclarationParser(private val parser: ILeafParser,
     }
 
     /**
-     * Evaluates the function body semantics and throws exceptions if semantics are incorrect or
-     * executes the body if everything is fine.
+     * Evaluates the function body assignment ('fun test = 3') syntax.
      */
-    private inline fun funBody(body: (assignment: Boolean) -> Unit) {
-        val block = TokenType.LEFT_CURLY_BRACE == parser.token.kind
-        val assignment = TokenType.ASSIGNMENT == parser.token.kind
+    private inline fun funAssignmentBody(fn: () -> Unit) {
+        if (TokenType.ASSIGNMENT != parser.token.kind) return
+        parser.advanceCursor()
+        parser.skipNewLines()
+        fn()
+    }
 
-        if (!block && !assignment) {
-            parser.flagError(ErrorCode.MISSING_FUNCTION_BODY)
-        }
+    /**
+     * Evaluates the function block body ('fun test { ... }') syntax.
+     */
+    private inline fun funBlockBody(fn: () -> Unit) {
+        if (TokenType.LEFT_CURLY_BRACE != parser.token.kind) return
         parser.advanceCursor()
         parser.skipNewLines()
 
         // Do we even have a non-empty body?
         if (TokenType.RIGHT_CURLY_BRACE != parser.token.kind) {
-            body(assignment)
+            fn()
         }
 
-        if (block && TokenType.RIGHT_CURLY_BRACE != parser.token.kind) {
+        if (TokenType.RIGHT_CURLY_BRACE != parser.token.kind) {
             parser.flagError(ErrorCode.MISSING_BLOCK_RIGHT_CURLY_BRACE)
         }
-
-        if (block) parser.advanceCursor()
+        parser.advanceCursor()
     }
 }

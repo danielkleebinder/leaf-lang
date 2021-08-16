@@ -1,10 +1,10 @@
-package org.leaflang.native.io
+package org.leaflang.natives.io
 
 import org.leaflang.interpreter.memory.cell.IMemoryCell
 import org.leaflang.interpreter.memory.cell.arrayMemoryCell
 import org.leaflang.interpreter.memory.cell.boolMemoryCell
 import org.leaflang.interpreter.memory.cell.stringMemoryCell
-import org.leaflang.native.exception.NativeException
+import org.leaflang.natives.NativeException
 import java.io.File
 
 /**

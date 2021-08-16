@@ -1,11 +1,11 @@
-package org.leaflang.native.math
+package org.leaflang.natives.math
 
 import org.leaflang.RuntimeOptions
 import org.leaflang.interpreter.memory.cell.IMemoryCell
 import org.leaflang.interpreter.memory.cell.NumberMemoryCell
 import org.leaflang.interpreter.memory.cell.arrayMemoryCell
 import org.leaflang.interpreter.memory.cell.numberMemoryCell
-import org.leaflang.native.exception.NativeException
+import org.leaflang.natives.NativeException
 import java.math.RoundingMode
 
 

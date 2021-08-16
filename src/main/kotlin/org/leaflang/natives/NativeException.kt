@@ -1,4 +1,4 @@
-package org.leaflang.native.exception
+package org.leaflang.natives
 
 /**
  * Might occur during native function execution.

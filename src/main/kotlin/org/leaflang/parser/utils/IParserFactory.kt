@@ -25,6 +25,7 @@ interface IParserFactory {
     val relationExpressionParser: RelationExpressionParser
     val statementParser: StatementParser
     val statementListParser: StatementListParser
+    val traitDeclarationParser: TraitDeclarationParser
     val typeDeclarationParser: TypeDeclarationParser
     val typeParser: TypeParser
     val typeInstantiationParser: TypeInstantiationParser

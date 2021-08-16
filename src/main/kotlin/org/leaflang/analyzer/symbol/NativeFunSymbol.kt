@@ -1,6 +1,6 @@
 package org.leaflang.analyzer.symbol
 
-import org.leaflang.native.NativeFunction
+import org.leaflang.natives.NativeFunction
 
 /**
  * Built in function symbols represent native functions.

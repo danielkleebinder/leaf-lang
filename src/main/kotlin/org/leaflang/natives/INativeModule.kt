@@ -1,4 +1,4 @@
-package org.leaflang.native
+package org.leaflang.natives
 
 import org.leaflang.analyzer.symbol.NativeFunSymbol
 

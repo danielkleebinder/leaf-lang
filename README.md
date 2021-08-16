@@ -34,6 +34,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
                | 'return' ((NL)* <expr>)?
                | 'break'
                | 'continue'
+               | <trait-declaration>
                | <type-declaration>
                | <assignment>
                | <loop-stmt>
@@ -47,7 +48,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
                        (<fun-requires> (NL)*)?
                        (<fun-ensures> (NL)*)?
                        (<fun-returns> (NL)*)?
-                       (<fun-body>)
+                       (<fun-body>)?
 
 <fun-extension> ::= '<' <type> (NL)* (',' (NL)* <type> (NL)*)* '>' (NL)* '.'
 <fun-params>    ::= '(' (NL)* <declarations> (NL)* ')'
@@ -83,8 +84,13 @@ The formal language definition in **Backus-Naur form** looks like the following.
 
 ### Custom Types
 ```
-<type-declaration>   ::= 'type' (NL)* <name> (NL)*
-                            '{' (NL)* (<declarations> (NL)*)* '}'
+<trait-declaration> ::= 'trait' (NL)* <name> (NL)*
+<type-declaration>  ::= 'type' (NL)* <name> (NL)*
+                        (<trait-list>)?
+                        (<type-body>)?
+
+<trait-list> ::= ':' (NL)* <name> (NL)* (',' (NL)* <name> (NL)*)* 
+<type-body>  ::= '{' (NL)* (<declarations> (NL)*)* '}'
 
 <type-inst>  ::= 'new' <name> ('{' (NL)* <inst-body> (NL)* '}')?
 <inst-body>  ::= (<inst-value> (NL)* (',' (NL)* <inst-value> (NL)*)* )?

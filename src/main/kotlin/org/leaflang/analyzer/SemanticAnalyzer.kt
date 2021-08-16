@@ -6,12 +6,13 @@ import org.leaflang.analyzer.result.emptyAnalysisResult
 import org.leaflang.analyzer.symbol.ISymbolTable
 import org.leaflang.analyzer.symbol.SymbolTable
 import org.leaflang.analyzer.visitor.*
-import org.leaflang.native.INativeModule
-import org.leaflang.native.io.IOModule
-import org.leaflang.native.math.MathModule
+import org.leaflang.natives.INativeModule
+import org.leaflang.natives.io.IOModule
+import org.leaflang.natives.math.MathModule
 import org.leaflang.parser.ast.*
 import org.leaflang.parser.ast.`fun`.FunDeclareNode
 import org.leaflang.parser.ast.access.AccessNode
+import org.leaflang.parser.ast.type.TraitDeclareNode
 import org.leaflang.parser.ast.type.TypeDeclareNode
 import org.leaflang.parser.ast.type.TypeInstantiationNode
 import org.leaflang.parser.ast.type.TypeNode
@@ -43,6 +44,7 @@ class SemanticAnalyzer : ISemanticAnalyzer {
             Pair(NumberNode::class, NumberStaticVisitor()),
             Pair(StringNode::class, StringStaticVisitor()),
             Pair(TypeNode::class, TypeStaticVisitor()),
+            Pair(TraitDeclareNode::class, TraitDeclareStaticVisitor()),
             Pair(TypeDeclareNode::class, TypeDeclareStaticVisitor()),
             Pair(TypeInstantiationNode::class, TypeInstantiationStaticVisitor()))
 

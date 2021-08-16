@@ -9,9 +9,9 @@ import org.leaflang.interpreter.result.IRuntimeResult
 import org.leaflang.interpreter.result.emptyResult
 import org.leaflang.interpreter.memory.cell.NativeFunMemoryCell
 import org.leaflang.interpreter.visitor.*
-import org.leaflang.native.INativeModule
-import org.leaflang.native.io.IOModule
-import org.leaflang.native.math.MathModule
+import org.leaflang.natives.INativeModule
+import org.leaflang.natives.io.IOModule
+import org.leaflang.natives.math.MathModule
 import org.leaflang.parser.ast.*
 import org.leaflang.parser.ast.`fun`.FunDeclareNode
 import org.leaflang.parser.ast.access.AccessNode

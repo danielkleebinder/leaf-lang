@@ -1,7 +1,7 @@
-package org.leaflang.native.math
+package org.leaflang.natives.math
 
-import org.leaflang.native.INativeModule
-import org.leaflang.native.nativeFunSymbol
+import org.leaflang.natives.INativeModule
+import org.leaflang.natives.nativeFunSymbol
 
 /**
  * The module that deals with math related stuff.

@@ -1,7 +1,6 @@
 package org.leaflang.interpreter
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.leaflang.TestSuit
 import org.leaflang.analyzer.exception.StaticSemanticException
@@ -67,7 +66,7 @@ class InterpreterTypeExtTest : TestSuit() {
     @Test
     fun shouldErrorIfNoExtensionsSpecified() {
         assertThrows(StaticSemanticException::class.java) { execute("fun <>.test = true".trimIndent()) }
-        assertThrows(StaticSemanticException::class.java) { execute("fun .test = true".trimIndent()) }
+        assertTrue(withErrors { execute("fun .test = true") } > 0)
     }
 
     @Test

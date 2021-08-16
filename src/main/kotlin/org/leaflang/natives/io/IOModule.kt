@@ -1,8 +1,8 @@
-package org.leaflang.native.io
+package org.leaflang.natives.io
 
-import org.leaflang.native.INativeModule
-import org.leaflang.native.NativeParam
-import org.leaflang.native.nativeFunSymbol
+import org.leaflang.natives.INativeModule
+import org.leaflang.natives.NativeParam
+import org.leaflang.natives.nativeFunSymbol
 
 /**
  * The module that deals with standard input and output.

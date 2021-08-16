@@ -10,8 +10,11 @@ import org.leaflang.parser.utils.IParserFactory
 /**
  * Evaluates the custom type declaration semantics:
  *
- * <type-declaration> ::= 'type' (NL)* <name> (NL)*
- *                           '{' (NL)* (<declarations> (NL)*)* '}'
+ * <type-declaration>  ::= 'type' (NL)* <name> (NL)*
+ *                         (<trait-list>)?
+ *                         (<type-body>)?
+ *
+ * <trait-list> ::= ':' (NL)* <name> (NL)* (',' (NL)* <name> (NL)*)*
  *
  */
 class TypeDeclarationParser(private val parser: ILeafParser,
@@ -21,9 +24,24 @@ class TypeDeclarationParser(private val parser: ILeafParser,
 
     override fun parse(): TypeDeclareNode {
         var name = "<anonymous>"
+        val traits = arrayListOf<String>()
         val fields = arrayListOf<DeclarationsNode>()
 
         typeName { name = parser.tokenAndAdvance.value as String }
+        typeTraits {
+            traits.add(parser.tokenAndAdvance.value as String)
+            while (TokenType.COMMA == parser.token.kind) {
+                parser.advanceCursor()
+                parser.skipNewLines()
+
+                if (TokenType.IDENTIFIER != parser.token.kind) {
+                    parser.flagError(ErrorCode.MISSING_TRAIT_IDENTIFIER)
+                    break
+                } else {
+                    traits.add(parser.tokenAndAdvance.value as String)
+                }
+            }
+        }
 
         val wasNewLine = TokenType.NEW_LINE == parser.token.kind
         parser.skipNewLines()
@@ -40,7 +58,10 @@ class TypeDeclarationParser(private val parser: ILeafParser,
             parser.advanceCursor(-1)
         }
 
-        return TypeDeclareNode(name, fields.toList())
+        return TypeDeclareNode(
+                name = name,
+                traits = traits.toList(),
+                fields = fields.toList())
     }
 
     /**
@@ -57,6 +78,19 @@ class TypeDeclarationParser(private val parser: ILeafParser,
         } else {
             fn()
         }
+    }
+
+    /**
+     * Evaluates the list of traits implemented by this type (if available).
+     */
+    private inline fun typeTraits(fn: () -> Unit) {
+        if (TokenType.COLON != parser.token.kind) return
+        parser.advanceCursor()
+        parser.skipNewLines()
+
+        // The first thing after the colon has to be an identifier
+        if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_TRAIT_IDENTIFIER)
+        fn()
     }
 
     /**

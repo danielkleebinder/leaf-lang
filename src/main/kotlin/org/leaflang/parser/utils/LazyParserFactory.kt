@@ -27,6 +27,7 @@ class LazyParserFactory(private val leafParser: ILeafParser) : IParserFactory {
 
     // Type related stuff
     override val typeParser by lazy { TypeParser(leafParser, this) }
+    override val traitDeclarationParser by lazy { TraitDeclarationParser(leafParser, this) }
     override val typeDeclarationParser by lazy { TypeDeclarationParser(leafParser, this) }
     override val typeInstantiationParser by lazy { TypeInstantiationParser(leafParser, this) }
 

@@ -1,4 +1,4 @@
-package org.leaflang.native.io
+package org.leaflang.natives.io
 
 import org.leaflang.RuntimeOptions
 import org.leaflang.interpreter.memory.cell.IMemoryCell
