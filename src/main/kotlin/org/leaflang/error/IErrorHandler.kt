@@ -13,7 +13,13 @@ interface IErrorHandler {
     /**
      * Handles the given [error].
      */
-    fun flag(error: AnalysisError)
+    fun handle(error: AnalysisError)
+
+    /**
+     * The given [error] is so critical that the program translation, analysis
+     * or interpretation has to be aborted right now.
+     */
+    fun abort(error: AnalysisError)
 
     /**
      * Resets all errors in this particular handler.

@@ -2,6 +2,7 @@ package org.leaflang.error
 
 import org.leaflang.lexer.source.ISource
 import kotlin.math.max
+import kotlin.system.exitProcess
 
 /**
  * Concrete error handler implementation.
@@ -13,7 +14,7 @@ class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
     override val errorCount: Int
         get() = errors
 
-    override fun flag(error: AnalysisError) {
+    override fun handle(error: AnalysisError) {
         errors++
 
         val errorType = error.errorType.descriptor
@@ -38,6 +39,13 @@ class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
             System.err.println("No source available for more detailed error information")
         }
         System.err.println()
+    }
+
+    override fun abort(error: AnalysisError) {
+        handle(error)
+        System.err.println("The error above was critical and the program execution had to be stopped!")
+        System.err.println()
+        exitProcess(error.errorCode.ordinal)
     }
 
     override fun reset() {

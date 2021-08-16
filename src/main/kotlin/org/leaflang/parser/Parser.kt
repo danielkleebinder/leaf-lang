@@ -32,7 +32,7 @@ class Parser(override var errorHandler: IErrorHandler? = null) : IParser {
     }
 
     override fun flagError(errorCode: ErrorCode) {
-        errorHandler?.flag(AnalysisError(errorCode, fromToken(token), ErrorType.SYNTAX))
+        errorHandler?.handle(AnalysisError(errorCode, fromToken(token), ErrorType.SYNTAX))
     }
 
     override val token: Token
