@@ -59,38 +59,38 @@ interface ILeafParser {
 }
 
 /**
- * Advances the cursor by one and runs the given [body] function. The parameter
+ * Advances the cursor by one and runs the given [fn] function. The parameter
  * of the inline function is the new current token.
  */
-inline fun <T> ILeafParser.advance(body: (token: Token) -> T): T = advanceBy(1, body)
+inline fun <T> ILeafParser.advance(fn: (token: Token) -> T): T = advanceBy(1, fn)
 
 /**
  * Advances the cursor by one token and skips all new lines afterwards before executing
- * the given [func] with the newest token.
+ * the given [fn] with the newest token.
  */
-inline fun <T> ILeafParser.advanceAndSkipNewLines(func: (token: Token) -> T): T {
+inline fun <T> ILeafParser.advanceAndSkipNewLines(fn: (token: Token) -> T): T {
     advanceCursor()
     skipNewLines()
-    return func(token)
+    return fn(token)
 }
 
 /**
- * Advances the cursor [by] the given amount and runs the given [body] function.
+ * Advances the cursor [by] the given amount and runs the given [fn] function.
  * The parameter of the inline function is the new current token.
  */
-inline fun <T> ILeafParser.advanceBy(by: Int, body: (token: Token) -> T): T {
+inline fun <T> ILeafParser.advanceBy(by: Int, fn: (token: Token) -> T): T {
     advanceCursor(by)
-    return body(token)
+    return fn(token)
 }
 
 /**
- * Advances the cursor by one and runs the given [body] function if the given
+ * Advances the cursor by one and runs the given [fn] function if the given
  * condition is met. The parameter of the inline function is the new current token.
  */
-inline fun <T> ILeafParser.advanceIf(cond: Boolean, body: (token: Token) -> T): T? {
+inline fun <T> ILeafParser.advanceIf(cond: Boolean, fn: (token: Token) -> T): T? {
     if (cond) {
         advanceCursor()
-        return body(token)
+        return fn(token)
     }
     return null
 }

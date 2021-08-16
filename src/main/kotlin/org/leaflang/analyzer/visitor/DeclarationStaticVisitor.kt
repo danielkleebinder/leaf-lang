@@ -28,7 +28,7 @@ class DeclarationStaticVisitor : IStaticVisitor {
                     var type: Symbol? = null
                     if (it.typeExpr != null) {
                         type = analyzer.currentScope.get(it.typeExpr.type)
-                        if (type == null) throw AnalyticalVisitorException("Type \"${it.typeExpr.type}\" is unknown")
+                        if (type == null) throw AnalyticalVisitorException("Type \"${it.typeExpr.type}\" was not found")
                     }
 
                     // Test if the assignment expression is valid

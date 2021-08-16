@@ -27,6 +27,7 @@ class VariableParser(private val parser: ILeafParser,
             TokenType.LEFT_BRACKET,
             TokenType.LEFT_PARENTHESIS)
 
+
     override fun parse(): AccessNode {
         if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
 
@@ -38,6 +39,7 @@ class VariableParser(private val parser: ILeafParser,
                 TokenType.DOT -> parser.advanceAndSkipNewLines { children.add(evalFieldAccess()) }
                 TokenType.LEFT_BRACKET -> parser.advanceAndSkipNewLines { children.add(evalIndexAccess()) }
                 TokenType.LEFT_PARENTHESIS -> parser.advanceAndSkipNewLines { children.add(evalCallAccess()) }
+                else -> parser.flagError(ErrorCode.INVALID_ACCESS)
             }
         }
 
@@ -45,7 +47,7 @@ class VariableParser(private val parser: ILeafParser,
     }
 
     /**
-     * Evaluates member field access (e.g. 'foo.bar') or throws an exception if syntactic errors occurred.
+     * Evaluates member field access (e.g. 'foo.bar') and flag errors.
      */
     private fun evalFieldAccess(): AccessFieldNode {
         if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
@@ -54,7 +56,7 @@ class VariableParser(private val parser: ILeafParser,
     }
 
     /**
-     * Evaluates index based access (e.g. 'foo[10]') or throws an exception if syntactic errors occurred.
+     * Evaluates index based access (e.g. 'foo[10]') and flag errors.
      */
     private fun evalIndexAccess(): AccessIndexNode {
         val expr = parserFactory.expressionParser
@@ -67,7 +69,7 @@ class VariableParser(private val parser: ILeafParser,
     }
 
     /**
-     * Evaluates a call (e.g. 'foo()') or throws an exception if syntactic errors occurred.
+     * Evaluates a call (e.g. 'foo()') and flag errors.
      */
     private fun evalCallAccess(): AccessCallNode {
         val expr = parserFactory.expressionParser

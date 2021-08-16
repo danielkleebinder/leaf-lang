@@ -19,7 +19,7 @@ class TypeInstantiationStaticVisitor : IStaticVisitor {
         val args = typeInstantiationNode.args
 
         // Do some availability checks
-        if (symbol == null) throw AnalyticalVisitorException("Type \"$typeName\" is unknown")
+        if (symbol == null) throw AnalyticalVisitorException("Type \"$typeName\" was not found")
         if (symbol !is TypeSymbol) throw AnalyticalVisitorException("\"$typeName\" is not a type")
 
         val typeFields = symbol.fields

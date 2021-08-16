@@ -72,20 +72,20 @@ interface ISource {
 }
 
 /**
- * Advances the cursor by one and call the given lambda [func] afterwards.
+ * Advances the cursor by one and call the given lambda [fn] afterwards.
  */
-inline fun <T> ISource.advance(func: (symbol: Char?) -> T): T {
+inline fun <T> ISource.advance(fn: (symbol: Char?) -> T): T {
     advanceCursor()
-    return func(if (isEndOfProgram) null else symbol)
+    return fn(if (isEndOfProgram) null else symbol)
 }
 
 /**
  * Advances the cursor by one if (and only if) the given condition is fulfilled.
  */
-inline fun <T> ISource.advanceIf(cond: Boolean, func: (symbol: Char?) -> T): T? {
+inline fun <T> ISource.advanceIf(cond: Boolean, fn: (symbol: Char?) -> T): T? {
     if (cond) {
         advanceCursor()
-        return func(if (isEndOfProgram) null else symbol)
+        return fn(if (isEndOfProgram) null else symbol)
     }
     return null
 }

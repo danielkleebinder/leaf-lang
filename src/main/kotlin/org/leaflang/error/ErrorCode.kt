@@ -8,6 +8,7 @@ enum class ErrorCode(val errorText: String) {
     // Parser errors
     INVALID_VARIABLE_DECLARATION("Variable declarations require either a type specification ': <type>' or an immediate assignment '= ...'"),
     INVALID_TYPE_DECLARATION("Invalid type used in type declaration"),
+    INVALID_ACCESS("Invalid member access found"),
     MISSING_IDENTIFIER("Missing identifier <name>"),
     MISSING_KEYWORD_FUN("Missing function keyword 'fun'"),
     MISSING_KEYWORD_IF("Missing conditional keyword 'if'"),

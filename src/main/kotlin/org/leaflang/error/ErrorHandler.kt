@@ -30,10 +30,13 @@ class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
         if (source != null) {
             val codeSnippet = source.lineSnippet(errorRow)
             val nr = (errorRow + 1).toString().padStart(3, '0')
+
             val errorPadStart = max(errorColumn - 1, 0)
+            val errorCursor = "".padStart(errorPadStart, ' ') + "^^^"
+
             System.err.println("    |")
             System.err.println("$nr | $codeSnippet")
-            System.err.println("    |" + "".padStart(errorPadStart, ' ') + "^^^")
+            System.err.println("    | $errorCursor")
             System.err.println("    |")
         } else {
             System.err.println("No source available for more detailed error information")
