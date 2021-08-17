@@ -249,4 +249,16 @@ class InterpreterFunctionTest : TestSuit() {
         execute(readResourceFile("function/fun-lambda-2.test.leaf"))
         assertEquals(BigDecimal.valueOf(250), valueOf("res"))
     }
+
+    @Test
+    fun shouldAllowChainedCalls1() {
+        execute(readResourceFile("function/fun-chain-1.test.leaf"))
+        assertEquals(BigDecimal.valueOf(1), valueOf("res"))
+    }
+
+    @Test
+    fun shouldAllowChainedCalls2() {
+        execute(readResourceFile("function/fun-chain-2.test.leaf"))
+        assertEquals(BigDecimal.valueOf(1), valueOf("res"))
+    }
 }

@@ -34,8 +34,8 @@ import org.leaflang.parser.utils.IParserFactory
  * fun mult(a: number, b: number) :: (_ >= (a * b)) -> number = a * b
  *
  */
-class FunDeclarationParser(private val parser: ILeafParser,
-                           private val parserFactory: IParserFactory) : IParser {
+class FunDeclareParser(private val parser: ILeafParser,
+                       private val parserFactory: IParserFactory) : IParser {
 
     override fun parse(): FunDeclareNode {
         val declarationsParser = parserFactory.varDeclarationsParser

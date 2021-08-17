@@ -17,8 +17,8 @@ import org.leaflang.parser.utils.IParserFactory
  * <trait-list> ::= ':' (NL)* <name> (NL)* (',' (NL)* <name> (NL)*)*
  *
  */
-class TypeDeclarationParser(private val parser: ILeafParser,
-                            private val parserFactory: IParserFactory) : IParser {
+class TypeDeclareParser(private val parser: ILeafParser,
+                        private val parserFactory: IParserFactory) : IParser {
 
     private val varDeclarationsParser = parserFactory.varDeclarationsParser
 

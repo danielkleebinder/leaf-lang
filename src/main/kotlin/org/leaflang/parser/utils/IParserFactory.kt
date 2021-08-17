@@ -15,7 +15,7 @@ interface IParserFactory {
     val constDeclarationsParser: DeclarationsParser
     val equalityExpressionParser: EqualityExpressionParser
     val expressionParser: ExpressionParser
-    val funDeclarationParser: FunDeclarationParser
+    val funDeclareParser: FunDeclareParser
     val ifParser: IfParser
     val loopParser: LoopParser
     val multiplicativeExpressionParser: MultiplicativeExpressionParser
@@ -25,8 +25,8 @@ interface IParserFactory {
     val relationExpressionParser: RelationExpressionParser
     val statementParser: StatementParser
     val statementListParser: StatementListParser
-    val traitDeclarationParser: TraitDeclarationParser
-    val typeDeclarationParser: TypeDeclarationParser
+    val traitDeclareParser: TraitDeclareParser
+    val typeDeclareParser: TypeDeclareParser
     val typeParser: TypeParser
     val typeInstantiationParser: TypeInstantiationParser
     val variableParser: VariableParser

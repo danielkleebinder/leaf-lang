@@ -12,8 +12,8 @@ import org.leaflang.parser.utils.IParserFactory
  * <trait-declaration> ::= 'trait' (NL)* <name> (NL)*
  *
  */
-class TraitDeclarationParser(private val parser: ILeafParser,
-                             private val parserFactory: IParserFactory) : IParser {
+class TraitDeclareParser(private val parser: ILeafParser,
+                         private val parserFactory: IParserFactory) : IParser {
 
     override fun parse(): TraitDeclareNode {
         // Is this even a trait declaration?

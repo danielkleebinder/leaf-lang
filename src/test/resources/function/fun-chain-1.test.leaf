@@ -1,0 +1,7 @@
+type Stream {
+  n = 0
+}
+fun <Stream>.test1 = object
+fun <Stream>.test2 = object.n + 1
+const stream = new Stream
+const res = stream.test1().test2()

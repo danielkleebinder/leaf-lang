@@ -32,7 +32,7 @@ class AtomParser(private val parser: ILeafParser,
     private val assignmentParser = parserFactory.assignmentParser
     private val arrayExpressionParser = parserFactory.arrayExpressionParser
     private val ifParser = parserFactory.ifParser
-    private val funDeclarationParser = parserFactory.funDeclarationParser
+    private val funDeclarationParser = parserFactory.funDeclareParser
     private val typeInstantiationParser = parserFactory.typeInstantiationParser
     private val blockParser = parserFactory.blockParser
     private val statementParser = parserFactory.statementParser

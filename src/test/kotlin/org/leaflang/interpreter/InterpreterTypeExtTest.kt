@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.leaflang.TestSuit
 import org.leaflang.analyzer.exception.StaticSemanticException
+import java.math.BigDecimal
 
 /**
  * Tests certain type extension mechanisms.
@@ -73,5 +74,23 @@ class InterpreterTypeExtTest : TestSuit() {
     fun shouldErrorOnInvalidExtTypes() {
         assertThrows(StaticSemanticException::class.java) { execute("fun <UnknownTypooo>.test = true") }
         assertThrows(StaticSemanticException::class.java) { execute("fun <string, UnknownTypooo>.test { return true }") }
+    }
+
+    @Test
+    fun shouldTypeInferObjectVariable() {
+        assertDoesNotThrow {
+            execute("""
+            type Stream { data: array, other: Stream }
+            fun <Stream>.test -> number {
+              const i = 1
+              const t1 = object.data[0]
+              const t2 = object.other.data[i]
+              return t1 + t2
+            }
+            const stream = new Stream { [10, 20], new Stream { [20, 30] } }
+            const res = stream.test()
+        """.trimIndent())
+        }
+        assertEquals(BigDecimal.valueOf(40), valueOf("res"))
     }
 }

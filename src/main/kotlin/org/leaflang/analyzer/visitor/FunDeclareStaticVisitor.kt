@@ -4,10 +4,7 @@ import org.leaflang.analyzer.ISemanticAnalyzer
 import org.leaflang.analyzer.exception.AnalyticalVisitorException
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.analysisResult
-import org.leaflang.analyzer.symbol.FunSymbol
-import org.leaflang.analyzer.symbol.TraitSymbol
-import org.leaflang.analyzer.symbol.TypeSymbol
-import org.leaflang.analyzer.symbol.VarSymbol
+import org.leaflang.analyzer.symbol.*
 import org.leaflang.analyzer.withScope
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.Modifier
@@ -71,8 +68,15 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                 funSymbol.params.addAll(funParams)
             }
 
-            // Define the "object" context
-            it.define(VarSymbol("object", modifiers = arrayOf(Modifier.CONSTANT)))
+            // Define the "object" context by creating a new composed type of all
+            // extension types. This allows for static type checking.
+            val objectType = composeType(*funDeclareNode.extensionOf
+                    .mapNotNull { analyzer.currentScope.get(it.type) as? TypeSymbol }
+                    .toTypedArray())
+
+            // The objects composed type is available only in this scope
+            it.define(objectType)
+            it.define(VarSymbol(name = "object", modifiers = arrayOf(Modifier.CONSTANT), type = objectType))
 
             // Requires without parameters does not make sense
             if ((funDeclareNode.params == null || funDeclareNode.params.declarations.isEmpty()) && funDeclareNode.requires != null) {

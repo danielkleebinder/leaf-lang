@@ -96,4 +96,18 @@ class InterpreterCustomTypeTest : TestSuit() {
         assertEquals(BigDecimal.valueOf(-12), valueOf("res1"))
         assertEquals(BigDecimal.valueOf(72), valueOf("res2"))
     }
+
+    @Test
+    fun shouldAccessLocalFields() {
+        execute("""
+            type Player {
+              x = 10
+              y = 20
+              pos = object.x * object.y
+            }
+            const me = new Player
+            const res = me.pos
+        """.trimIndent())
+        assertEquals(BigDecimal.valueOf(200), valueOf("res"))
+    }
 }

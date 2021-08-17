@@ -32,8 +32,8 @@ class StatementParser(private val parser: ILeafParser,
         TokenType.KEYWORD_BREAK -> parser.advance { BreakNode() }
         TokenType.KEYWORD_CONTINUE -> parser.advance { ContinueNode() }
         TokenType.KEYWORD_LOOP -> parserFactory.loopParser.parse()
-        TokenType.KEYWORD_TRAIT -> parserFactory.traitDeclarationParser.parse()
-        TokenType.KEYWORD_TYPE -> parserFactory.typeDeclarationParser.parse()
+        TokenType.KEYWORD_TRAIT -> parserFactory.traitDeclareParser.parse()
+        TokenType.KEYWORD_TYPE -> parserFactory.typeDeclareParser.parse()
         else -> parserFactory.expressionParser.parse()
     }
 }

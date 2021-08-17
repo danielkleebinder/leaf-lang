@@ -27,8 +27,8 @@ class LazyParserFactory(private val leafParser: ILeafParser) : IParserFactory {
 
     // Type related stuff
     override val typeParser by lazy { TypeParser(leafParser, this) }
-    override val traitDeclarationParser by lazy { TraitDeclarationParser(leafParser, this) }
-    override val typeDeclarationParser by lazy { TypeDeclarationParser(leafParser, this) }
+    override val traitDeclareParser by lazy { TraitDeclareParser(leafParser, this) }
+    override val typeDeclareParser by lazy { TypeDeclareParser(leafParser, this) }
     override val typeInstantiationParser by lazy { TypeInstantiationParser(leafParser, this) }
 
     // Other stuff like control structures and assignments
@@ -37,7 +37,7 @@ class LazyParserFactory(private val leafParser: ILeafParser) : IParserFactory {
     override val blockParser by lazy { BlockParser(leafParser, this) }
     override val varDeclarationsParser by lazy { DeclarationsParser(leafParser, this) }
     override val constDeclarationsParser by lazy { DeclarationsParser(leafParser, this, Modifier.CONSTANT) }
-    override val funDeclarationParser by lazy { FunDeclarationParser(leafParser, this) }
+    override val funDeclareParser by lazy { FunDeclareParser(leafParser, this) }
     override val ifParser by lazy { IfParser(leafParser, this) }
     override val loopParser by lazy { LoopParser(leafParser, this) }
     override val variableParser by lazy { VariableParser(leafParser, this) }

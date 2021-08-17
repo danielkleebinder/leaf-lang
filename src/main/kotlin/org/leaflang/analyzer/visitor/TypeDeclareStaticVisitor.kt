@@ -53,8 +53,6 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
             // Defines the object scope
             it.define(VarSymbol("object", typeSymbol, Modifier.CONSTANT))
 
-            // All fields must be available here
-            typeDeclareNode.fields.forEach { field -> analyzer.analyze(field) }
 
             // I have to do that here, otherwise recursive data types would not be
             // possible to define. Example:
@@ -62,19 +60,19 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
             //     name: string
             //     parent: Human
             //   }
-            typeSymbol.fields = typeDeclareNode.fields
+            typeDeclareNode.fields
                     .flatMap { field -> field.declarations }
-                    .map { field ->
-                        val type = if (field.typeExpr != null) {
-                            field.typeExpr.type
-                        } else {
-                            // A field must have either a type expression or an immediate assignment. This
-                            // mus be fulfilled at this point in time due to the field check above.
-                            analyzer.analyze(field.assignmentExpr!!).type
+                    .onEach { field ->
+                        val type = when {
+                            field.typeExpr != null -> field.typeExpr.type
+                            field.assignmentExpr != null -> analyzer.analyze(field.assignmentExpr).type
+                            else -> throw AnalyticalVisitorException("\"$typeName.${field.identifier}\" has no type")
                         }
-                        VarSymbol(field.identifier, analyzer.currentScope.get(type!!))
+                        typeSymbol.fields.add(VarSymbol(field.identifier, analyzer.currentScope.get(type!!)))
                     }
-                    .toMutableList()
+
+            // All fields must be valid now
+            typeDeclareNode.fields.forEach { field -> analyzer.analyze(field) }
         }
 
         return emptyAnalysisResult()
