@@ -4,7 +4,7 @@ import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advanceAndSkipNewLines
-import org.leaflang.parser.ast.*
+import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.access.AccessCallNode
 import org.leaflang.parser.ast.access.AccessFieldNode
 import org.leaflang.parser.ast.access.AccessIndexNode
@@ -15,9 +15,9 @@ import org.leaflang.parser.utils.IParserFactory
  * Evaluates the additive semantics:
  *
  * <var> ::= <name>
- *         | <name> '.' <name>
- *         | <name> '[' (NL)* <expr> (NL*) ']'
- *         | <name> '(' (NL)* (<expr> ((NL)* ',' (NL)* <expr>))? (NL)* ')'
+ *         | <name> (NL)* '.' (NL)* <name>
+ *         | <name> (NL)* '[' (NL)* <expr> (NL*) ']'
+ *         | <name> (NL)* '(' (NL)* (<expr> ((NL)* ',' (NL)* <expr>))? (NL)* ')'
  *
  */
 class VariableParser(private val parser: ILeafParser,
@@ -38,6 +38,9 @@ class VariableParser(private val parser: ILeafParser,
         val id = parser.tokenAndAdvance.value as String
         val children = arrayListOf<INode>()
 
+        var wasNewLine = TokenType.NEW_LINE == parser.token.kind
+        parser.skipNewLines()
+
         while (childIdentifier.contains(parser.token.kind)) {
             when (parser.token.kind) {
                 TokenType.DOT -> parser.advanceAndSkipNewLines { children.add(evalFieldAccess()) }
@@ -45,7 +48,15 @@ class VariableParser(private val parser: ILeafParser,
                 TokenType.LEFT_PARENTHESIS -> parser.advanceAndSkipNewLines { children.add(evalCallAccess()) }
                 else -> parser.flagError(ErrorCode.INVALID_ACCESS)
             }
+            wasNewLine = TokenType.NEW_LINE == parser.token.kind
+            parser.skipNewLines()
         }
+
+        // This is a little bit tricky since I have to look "over" all
+        // the new lines and check if the else keyword was found. If I
+        // do not find an else keyword I have to undo the new line skipping.
+        // Otherwise statements could not be separated properly.
+        if (wasNewLine) parser.advanceCursor(-1)
 
         return AccessNode(id, children.toList())
     }

@@ -110,4 +110,10 @@ class InterpreterCustomTypeTest : TestSuit() {
         """.trimIndent())
         assertEquals(BigDecimal.valueOf(200), valueOf("res"))
     }
+
+    @Test
+    fun shouldErrorForSameFieldName() {
+        assertThrows(StaticSemanticException::class.java) { execute("type X{a=0, a=1}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X{x=10, y=20, pos=3, x=5}") }
+    }
 }

@@ -25,8 +25,6 @@ class AccessStaticVisitor : IStaticVisitor {
                 ?: throw AnalyticalVisitorException("Symbol with name \"${name}\" not defined")
 
         for (child in accessNode.children) {
-            println("HERE: call $child")
-            println("      on   $symbol")
             if (symbol == null) throw AnalyticalVisitorException("Cannot perform operation \"$child\" because symbol does not exist")
             symbol = when (child::class) {
                 AccessCallNode::class -> analyzeCallAccess(symbol, child as AccessCallNode, analyzer)
@@ -51,17 +49,29 @@ class AccessStaticVisitor : IStaticVisitor {
         val fieldName = node.name
         val symbolName = symbol.name
 
-        println(symbol)
-        if (symbol !is ITypedSymbol || symbol.type == null) return null
-        val typeSymbol = analyzer.currentScope.get(symbol.type!!.name)
-        println(symbol.type)
+        var typeSymbol: Symbol? = null
+        if (symbol is ITypedSymbol && symbol.type != null) {
+            typeSymbol = analyzer.currentScope.get(symbol.type!!.name)
+        } else if (symbol is TypeSymbol) {
+            typeSymbol = symbol
+        }
 
         if (typeSymbol !is TypeSymbol) {
             throw AnalyticalVisitorException("\"$symbolName\" is not a custom type and cannot be dereferenced by \"$fieldName\"")
         }
 
-        return typeSymbol.fields.find { it.name == fieldName }
-                ?: throw AnalyticalVisitorException("Field with name \"$fieldName\" does not exist on \"$symbolName\"")
+        // Check if a function with this name exists
+        val functionSymbol = typeSymbol.functions.find { it.name == fieldName }
+        if (functionSymbol != null) {
+            return functionSymbol
+        }
+
+        // Check if a field with this name exists
+        val fieldSymbol = typeSymbol.fields.find { it.name == fieldName }
+        if (fieldSymbol != null) {
+            return fieldSymbol
+        }
+        throw AnalyticalVisitorException("Field with name \"$fieldName\" does not exist on \"$symbolName\"")
     }
 
     /**

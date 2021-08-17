@@ -31,4 +31,4 @@ const joined = join(["Daniel", "Peter", "John"], ",")
 const splitted = split(joined, ",")
 
 // Print the results in a single array
-[joined, splitted]
+const res = [joined, splitted]

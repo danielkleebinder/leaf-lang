@@ -44,7 +44,7 @@ class TypeDeclareParser(private val parser: ILeafParser,
         }
 
         val wasNewLine = TokenType.NEW_LINE == parser.token.kind
-        parser.skipNewLines()
+        if (wasNewLine) parser.skipNewLines()
 
         // Custom types do not need a body at all
         if (TokenType.LEFT_CURLY_BRACE == parser.token.kind) {

@@ -13,7 +13,7 @@ class FunSymbol(name: String?,
                 var body: INode?,
                 nestingLevel: Int = 0) : Symbol(name ?: "<anonymous>", nestingLevel) {
 
-    override fun toString() = "FunSymbol(name=$name, params=$params, returns=$returns)"
+    override fun toString() = "FunSymbol(name=$name, params=$params)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

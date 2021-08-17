@@ -19,10 +19,11 @@ class TypeInstantiationVisitor : IVisitor {
 
         val activationRecord = interpreter.activationRecord!!
         val typeCell = activationRecord[typeName]
+        val fields = mutableMapOf<String, IMemoryCell>()
 
-        // Set parameters should be interpreted and applied to the type instance
-        val fields = typeSpec.fields
-                .mapIndexed { index, field ->
+        // Init parameters should be interpreted and applied to the type instance
+        typeSpec.fields
+                .forEachIndexed { index, field ->
                     var argumentValue: IMemoryCell? = null
 
                     // Look for named arguments like: new Dog { name = "Bello" }
@@ -41,12 +42,27 @@ class TypeInstantiationVisitor : IVisitor {
                         argumentValue = typeCell.members[field.name]?.copy()
                     }
 
-                    Pair(field.name, argumentValue)
+                    if (argumentValue != null) {
+                        fields[field.name] = argumentValue
+                    }
                 }
-                .filter { it.second != null }
-                .map { Pair(it.first, it.second!!) }
-                .toMap()
-                .toMutableMap()
+
+        // Add defined extension functions as member to this type instance
+        typeSpec.functions
+                .forEach { function ->
+                    var funValue: IMemoryCell? = null
+
+                    // Look if this function even has an implementation
+                    if (typeCell != null) {
+                        funValue = typeCell.members[function.name]?.copy()
+                    }
+
+                    if (funValue != null) {
+                        fields[function.name] = funValue
+                    }
+                }
+
+        println("HERE: ${typeSpec.functions} vs ${typeCell?.members}")
 
         return objectResult(fields)
     }

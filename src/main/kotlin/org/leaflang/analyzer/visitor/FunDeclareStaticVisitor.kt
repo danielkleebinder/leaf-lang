@@ -16,17 +16,9 @@ import org.leaflang.parser.ast.`fun`.FunDeclareNode
 class FunDeclareStaticVisitor : IStaticVisitor {
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode): StaticAnalysisResult {
         val funDeclareNode = node as FunDeclareNode
-
         val funName = funDeclareNode.name
-        val funSymbol = FunSymbol(
-                name = funName,
-                requires = funDeclareNode.requires,
-                ensures = funDeclareNode.ensures,
-                body = funDeclareNode.body)
 
-        funDeclareNode.spec = funSymbol
-        analyzer.currentScope.define(funSymbol)
-
+        // Invalid function declaration semantic (should already be checked in the parser though)
         if (funDeclareNode.extensionOf.isNotEmpty() && funName == null) {
             throw AnalyticalVisitorException("This function tries to extend some types but does not have a unique name")
         }
@@ -48,14 +40,27 @@ class FunDeclareStaticVisitor : IStaticVisitor {
         // Test for static semantic errors in the list of extensions
         funDeclareNode.extensionOf.forEach { analyzer.analyze(it) }
 
+        val funSymbol = FunSymbol(
+                name = funName,
+                requires = funDeclareNode.requires,
+                ensures = funDeclareNode.ensures,
+                body = funDeclareNode.body)
+
+        funDeclareNode.spec = funSymbol
+
+        // An extension function is not available from outside the extension type scope
+        if (funDeclareNode.extensionOf.isEmpty()) {
+            analyzer.currentScope.define(funSymbol)
+        }
+
         // Check extension type validity (if required) and add this function to the specified types
         funDeclareNode.extensionOf
                 .mapNotNull { analyzer.currentScope.get(it.type) as? TypeSymbol }
                 .forEach {
-                    if (it.fields.any { field -> field.name == funName }) {
-                        throw AnalyticalVisitorException("Type extension not possible since \"${it.name}\" already specifies a member with name \"${funName}\"")
+                    if (it.hasField(funName)) {
+                        throw AnalyticalVisitorException("Function extension not possible, \"${it.name}.${funName}\" already exists")
                     }
-                    it.fields.add(VarSymbol(funName!!, funSymbol))
+                    it.functions.add(funSymbol)
                 }
 
         analyzer.withScope(funName) {

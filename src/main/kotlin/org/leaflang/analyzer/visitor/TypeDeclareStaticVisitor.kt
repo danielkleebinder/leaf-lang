@@ -53,7 +53,6 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
             // Defines the object scope
             it.define(VarSymbol("object", typeSymbol, Modifier.CONSTANT))
 
-
             // I have to do that here, otherwise recursive data types would not be
             // possible to define. Example:
             //   type Human {
@@ -63,6 +62,9 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
             typeDeclareNode.fields
                     .flatMap { field -> field.declarations }
                     .onEach { field ->
+                        if (typeSymbol.hasField(field.identifier)) {
+                            throw AnalyticalVisitorException("\"$typeName.${field.identifier}\" already exists")
+                        }
                         val type = when {
                             field.typeExpr != null -> field.typeExpr.type
                             field.assignmentExpr != null -> analyzer.analyze(field.assignmentExpr).type

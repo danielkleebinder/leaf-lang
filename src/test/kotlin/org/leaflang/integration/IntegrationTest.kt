@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.leaflang.TestSuit
+import org.leaflang.interpreter.memory.cell.IMemoryCell
 import java.math.BigDecimal
 
 /**
@@ -25,7 +26,11 @@ class IntegrationTest : TestSuit() {
 
     @Test
     fun shouldSplitAndJoinString() {
-        val res = execute(readResourceFile("integration/string-utils.test.leaf"))
-        assertArrayEquals(arrayOf("Daniel,Peter,John", listOf("Daniel", "Peter", "John")), (res as List<*>).toTypedArray())
+        execute(readResourceFile("integration/string-utils.test.leaf"))
+
+        val result = valueOf("res") as Array<IMemoryCell>
+        assertEquals(2, result.size)
+        assertEquals("Daniel,Peter,John", result[0].value as String)
+        assertArrayEquals(arrayOf("Daniel", "Peter", "John"), (result[1].value as Array<IMemoryCell>).map { it.value }.toTypedArray())
     }
 }

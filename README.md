@@ -119,9 +119,9 @@ The formal language definition in **Backus-Naur form** looks like the following.
 ### Variables
 ```
 <var> ::= <name>
-        | <name> '.' <name>
-        | <name> '[' (NL)* <expr> (NL*) ']'
-        | <name> '(' (NL)* (<expr> ((NL)* ',' (NL)* <expr>))? (NL)* ')'
+        | <name> (NL)* '.' (NL)* <name>
+        | <name> (NL)* '[' (NL)* <expr> (NL*) ']'
+        | <name> (NL)* '(' (NL)* (<expr> ((NL)* ',' (NL)* <expr>))? (NL)* ')'
 ```
 
 ### Atom & Delegation

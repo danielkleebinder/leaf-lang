@@ -93,4 +93,17 @@ class InterpreterTypeExtTest : TestSuit() {
         }
         assertEquals(BigDecimal.valueOf(40), valueOf("res"))
     }
+
+    @Test
+    fun shouldOverloadFunction() {
+        assertDoesNotThrow {
+            execute("""
+                type Stream
+                fun <Stream>.max = max(1,2)
+                const stream = new Stream
+                const res = stream.max()
+            """.trimIndent())
+        }
+        assertEquals(BigDecimal.valueOf(2), valueOf("res"))
+    }
 }
