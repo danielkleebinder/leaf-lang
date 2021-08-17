@@ -1,0 +1,95 @@
+// STREAM API
+// The standard data stream API of the Leaf programming language
+
+
+// A simple stream holding any kind of data
+type Stream {
+  data: array
+}
+
+
+// Filters the stream using the given [fn]. If the [fn] returns
+// true, the value will be in the new stream, otherwise it is
+// omitted.
+fun <Stream>.filter(fn: fun) -> Stream {
+  var result = []
+  loop var i = 0 : i < ~object.data : i = i + 1 {
+    const val = object.data[i]
+    if !fn(val) { continue }
+    result = result + val
+  }
+  return new Stream { result }
+}
+
+// Call the given [fn] with each element in order and returns
+// the stream itself.
+fun <Stream>.onEach(fn: fun) -> Stream {
+  loop var i = 0 : i < ~object.data : i = i + 1 {
+    const val = object.data[i]
+    fn(val)
+  }
+  return object
+}
+
+// Call the given [fn] with each element in order.
+fun <Stream>.forEach(fn: fun) {
+  object.onEach(fn)
+}
+
+fun <Stream>.map(fn: fun) -> Stream {
+  var result = []
+  loop var i = 0 : i < ~object.data : i = i + 1 {
+    result = result + fn(object.data[i])
+  }
+  return new Stream { result }
+}
+
+fun <Stream>.any(fn: fun) -> bool {
+  loop var i = 0 : i < ~object.data : i = i + 1 {
+    if fn(object.data[i]) { return true }
+  }
+  return false
+}
+
+fun <Stream>.all(fn: fun) -> bool {
+  loop var i = 0 : i < ~object.data : i = i + 1 {
+    if !fn(object.data[i]) { return false }
+  }
+  return true
+}
+
+fun <Stream>.none(fn: fun) = !object.any(fn)
+
+fun <Stream>.reverse -> Stream {
+  var result = []
+  loop var i = 0 : i < ~object.data : i = i + 1 {
+    result = object.data[i] + result
+  }
+  return new Stream { result }
+}
+
+fun <Stream>.slice(startIndex: number, endIndex: number) -> Stream {
+  var result = []
+  loop var i = startIndex : i < endIndex : i = i + 1 {
+    result = result + object.data[i]
+  }
+  return new Stream { result }
+}
+
+fun <Stream>.count = ~object.data
+
+fun <Stream>.min = min(object.data)
+fun <Stream>.max = max(object.data)
+
+fun <Stream>.ifEmpty(fn: fun) = if object.count() <= 0 { fn() }
+fun <Stream>.ifNotEmpty(fn: fun) = if object.count() > 0 { fn() }
+
+
+
+const stream = new Stream { [1,2,3,4] }
+stream
+  .filter(fun (data: number) = data > 1)
+  .onEach(fun (data: number) = println(data))
+  .reverse()
+  .slice(1, 3)
+  .count()

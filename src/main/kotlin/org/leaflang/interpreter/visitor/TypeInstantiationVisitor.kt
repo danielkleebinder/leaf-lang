@@ -62,8 +62,6 @@ class TypeInstantiationVisitor : IVisitor {
                     }
                 }
 
-        println("HERE: ${typeSpec.functions} vs ${typeCell?.members}")
-
         return objectResult(fields)
     }
 }
