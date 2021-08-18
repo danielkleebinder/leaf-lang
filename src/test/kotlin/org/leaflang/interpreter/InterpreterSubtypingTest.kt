@@ -65,4 +65,30 @@ class InterpreterSubtypingTest : TestSuit() {
         assertEquals("Animal is drinking...", valueOf("res1"))
         assertEquals("Human is drinking...", valueOf("res2"))
     }
+
+    @Test
+    fun shouldNotAllowDifferentSignature() {
+        assertThrows(StaticSemanticException::class.java) {
+            execute("""
+                trait Liquid
+                trait Drinks
+                fun <Drinks>.drink()
+                
+                type Animal : Drinks
+                fun <Animal>.drink(liquid: Liquid) = "Animal is drinking " + liquid
+            """.trimIndent())
+        }
+    }
+
+    @Test
+    fun shouldAllowSubtypeFunctionParameters() {
+        execute("""
+                trait Animal
+                type Cat : Animal
+                fun feed(animal: Animal) = "Yummy, that was delicious"
+                var cat = new Cat
+                const res = feed(cat)
+            """.trimIndent())
+        assertEquals("Yummy, that was delicious", valueOf("res"))
+    }
 }

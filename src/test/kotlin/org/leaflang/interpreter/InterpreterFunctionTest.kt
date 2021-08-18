@@ -120,6 +120,19 @@ class InterpreterFunctionTest : TestSuit() {
     }
 
     @Test
+    fun shouldAllowChildAccessForEnsuresVariable() {
+        execute("""
+            type Dog { hungry = true }
+            fun feed(dog: Dog) : dog.hungry : !(_.hungry) -> Dog {
+              dog.hungry = false
+              return dog
+            }
+            const dog = new Dog
+            feed(dog)
+        """.trimIndent())
+    }
+
+    @Test
     fun shouldFollowStaticLink1() {
         execute(readResourceFile("function/fun-static-link-1.test.leaf"))
         assertEquals(true, valueOf("res"))

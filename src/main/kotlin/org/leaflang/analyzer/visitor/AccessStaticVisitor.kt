@@ -116,7 +116,8 @@ class AccessStaticVisitor : IStaticVisitor {
                     val expectedType = it.first.type?.name
                     val actualType = analyzer.analyze(it.second).type
                     if (expectedType != null && actualType != null) {
-                        if (expectedType != actualType) {
+                        val actualTypeSymbol = analyzer.currentScope.get(actualType)
+                        if (actualTypeSymbol == null || !actualTypeSymbol.isSubtypeOf(expectedType)) {
                             throw AnalyticalVisitorException("Expected type \"$expectedType\" for parameter \"${it.first.name}\" but got \"${actualType}\"")
                         }
                     }

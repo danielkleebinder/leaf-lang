@@ -105,11 +105,23 @@ class FunDeclareStaticVisitor : IStaticVisitor {
             // Check if all our checks are syntactically correct
             var bodyReturnType: String? = null
             if (funDeclareNode.requires != null) analyzer.analyze(funDeclareNode.requires)
-            if (funDeclareNode.body != null) bodyReturnType = analyzer.analyze(funDeclareNode.body).type
+
+            // Check if the body has some return statement and define the "_" variable
+            // for the ensures clause using the body return type
+            if (funDeclareNode.body != null) {
+                bodyReturnType = analyzer.analyze(funDeclareNode.body).type
+                if (bodyReturnType != null) {
+                    val bodyReturnSymbol = analyzer.currentScope.get(bodyReturnType)
+                    analyzer.currentScope.define(VarSymbol("_", bodyReturnSymbol, Modifier.CONSTANT))
+                }
+            }
 
             // The function returns something, this means the return value placeholder
             // has to be available in the ensures expression
-            if (funDeclareNode.returns != null) analyzer.currentScope.define(VarSymbol("_"))
+            if (funDeclareNode.returns != null) {
+                val returnsTypeSymbol = analyzer.currentScope.get(funDeclareNode.returns.type)
+                analyzer.currentScope.define(VarSymbol("_", returnsTypeSymbol, Modifier.CONSTANT))
+            }
             if (funDeclareNode.ensures != null) analyzer.analyze(funDeclareNode.ensures)
 
             // Check if the return type is a valid type

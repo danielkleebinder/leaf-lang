@@ -8,12 +8,11 @@
 [Leaf programming language website](https://danielkleebinder.github.io/leaf-lang.html)
 
 The Leaf programming language is a statically and strongly typed, lexically scoped and interpreted programming language using
-type inference that allows the developer to implement traits and custom types. It is object oriented, but does not support
-inheritance because typically, it is a common source of maintainability issues.
+type inference that allows the developer to implement traits and custom types. It is object oriented (i.e. supports subtyping and
+polymorphism), but does not support inheritance because typically, it is a common source of maintainability issues.
 
-This programming language was solely written by me for educational purposes only. It should showcase some concepts I
-learned in my Masters computer science courses at TU Vienna. Although I am sure it could technically be used as production
-ready language, I would not recommend it yet ;-)
+This programming language was written for educational purposes only. It showcases some concepts I
+learned in my Masters computer science courses at TU Vienna.
 
 (influenced by TypeScript, Kotlin, Go, Eiffel, ML)
 
