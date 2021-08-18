@@ -30,11 +30,6 @@ fun <Stream>.onEach(fn: fun) -> Stream {
   return object
 }
 
-// Call the given [fn] with each element in order.
-fun <Stream>.forEach(fn: fun) {
-  object.onEach(fn)
-}
-
 // Maps the stream of data to a different kind of data using
 // the given [fn] transform function.
 fun <Stream>.map(fn: fun) -> Stream {
@@ -81,6 +76,9 @@ fun <Stream>.slice(startIndex: number, endIndex: number) -> Stream {
   return new Stream { result }
 }
 
+// Call the given [fn] with each element in order.
+fun <Stream>.forEach(fn: fun) = object.onEach(fn)
+
 fun <Stream>.count = ~object.data
 
 fun <Stream>.min = min(object.data)
@@ -100,7 +98,28 @@ stream
 
 
 
+fun assertEqualsNum(expected: number, actual: number) : (expected == actual) = true
+fun assertEquals(expected: string, actual: string) : (expected == actual) = true
+fun assertEquals(expected: bool, actual: bool) : (expected == actual) = true
 
+fun assertNotEquals(expected: number, actual: number) : (expected != actual) = true
+fun assertNotEquals(expected: string, actual: string) : (expected != actual) = true
+fun assertNotEquals(expected: bool, actual: bool) : (expected != actual) = true
+
+fun assertTrue(predicate: bool) : (predicate) = true
+fun assertFalse(predicate: bool) : (!predicate) = true
+
+
+
+fun shouldFilterStream {
+  const stream = new Stream { [1,2,3,4] }
+  const result = stream.filter(fun (data: number) = data > 1)
+  const expect = [2,3,4]
+  println(result)
+  result.forEach(fun (n: number) = assertEqualsNum(n, expect[0]))
+}
+
+shouldFilterStream()
 
 
 

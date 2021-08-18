@@ -9,6 +9,7 @@ import org.leaflang.analyzer.visitor.*
 import org.leaflang.natives.INativeModule
 import org.leaflang.natives.io.IOModule
 import org.leaflang.natives.math.MathModule
+import org.leaflang.natives.system.SystemModule
 import org.leaflang.parser.ast.*
 import org.leaflang.parser.ast.`fun`.FunDeclareNode
 import org.leaflang.parser.ast.access.AccessNode
@@ -54,6 +55,7 @@ class SemanticAnalyzer : ISemanticAnalyzer {
     init {
         registerModule(currentScope, IOModule())
         registerModule(currentScope, MathModule())
+        registerModule(currentScope, SystemModule())
     }
 
     override fun enterScope(name: String?) {

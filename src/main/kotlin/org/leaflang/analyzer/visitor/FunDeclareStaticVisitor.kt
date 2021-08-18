@@ -119,7 +119,7 @@ class FunDeclareStaticVisitor : IStaticVisitor {
             // Define the "object" context by creating a new composed type of all
             // extension types. This allows for static type checking.
             val objectType = composeType(*funDeclareNode.extensionOf
-                    .mapNotNull { analyzer.currentScope.get(it.type) as? TypeSymbol }
+                    .mapNotNull { extType -> analyzer.currentScope.get(extType.type) as? TypeSymbol }
                     .toTypedArray())
 
             // The objects composed type is available only in this scope

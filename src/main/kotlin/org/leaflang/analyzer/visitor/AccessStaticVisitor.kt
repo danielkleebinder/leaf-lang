@@ -34,10 +34,10 @@ class AccessStaticVisitor : IStaticVisitor {
             }
         }
 
-
         if (symbol is BuiltInSymbol) return analysisResult(symbol.name, true)
         if (symbol is VarSymbol && symbol.type != null) return analysisResult(symbol.type!!.name, symbol.modifiers.contains(Modifier.CONSTANT))
         if (symbol is FunSymbol || symbol is NativeFunSymbol) return analysisResult("function")
+        if (symbol is TypeSymbol) return analysisResult(symbol.name)
 
         return emptyAnalysisResult()
     }
@@ -123,7 +123,6 @@ class AccessStaticVisitor : IStaticVisitor {
                     }
                 }
 
-        if (returns != null) return analyzer.currentScope.get(returns.name)
-        return null
+        return returns
     }
 }

@@ -207,7 +207,8 @@ fun <Cat, Dog>.eat {
 // The first statement after the parameter list and after the ':' symbol
 // is the precondition that the parameters have to fulfill. The statement
 // after that is the postcondition. The '_' is a reserved token and
-// represents 
+// represents the returned value.
+//
 fun feed(eater: Eats) : eater.hungry() : !(_.hungry()) -> Eats {
   eater.eat()
   return eater

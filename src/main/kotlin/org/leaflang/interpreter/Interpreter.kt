@@ -3,15 +3,16 @@ package org.leaflang.interpreter
 import org.leaflang.RuntimeOptions
 import org.leaflang.interpreter.exception.DynamicSemanticException
 import org.leaflang.interpreter.memory.ActivationRecord
-import org.leaflang.interpreter.memory.RuntimeStack
 import org.leaflang.interpreter.memory.IActivationRecord
+import org.leaflang.interpreter.memory.RuntimeStack
+import org.leaflang.interpreter.memory.cell.NativeFunMemoryCell
 import org.leaflang.interpreter.result.IRuntimeResult
 import org.leaflang.interpreter.result.emptyResult
-import org.leaflang.interpreter.memory.cell.NativeFunMemoryCell
 import org.leaflang.interpreter.visitor.*
 import org.leaflang.natives.INativeModule
 import org.leaflang.natives.io.IOModule
 import org.leaflang.natives.math.MathModule
+import org.leaflang.natives.system.SystemModule
 import org.leaflang.parser.ast.*
 import org.leaflang.parser.ast.`fun`.FunDeclareNode
 import org.leaflang.parser.ast.access.AccessNode
@@ -63,6 +64,7 @@ class Interpreter : IInterpreter {
         val globalActivationRecord = ActivationRecord(name = "global")
         registerModule(globalActivationRecord, IOModule())
         registerModule(globalActivationRecord, MathModule())
+        registerModule(globalActivationRecord, SystemModule())
         runtimeStack.push(globalActivationRecord)
     }
 
