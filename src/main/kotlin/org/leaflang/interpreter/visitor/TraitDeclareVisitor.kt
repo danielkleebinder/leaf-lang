@@ -1,36 +1,25 @@
 package org.leaflang.interpreter.visitor
 
 import org.leaflang.interpreter.IInterpreter
-import org.leaflang.interpreter.memory.cell.TypeMemoryCell
-import org.leaflang.interpreter.result.DataRuntimeResult
-import org.leaflang.interpreter.result.typeResult
+import org.leaflang.interpreter.memory.cell.traitMemoryCell
+import org.leaflang.interpreter.result.EmptyRuntimeResult
+import org.leaflang.interpreter.result.emptyResult
 import org.leaflang.parser.ast.INode
-import org.leaflang.parser.ast.type.TypeDeclareNode
+import org.leaflang.parser.ast.type.TraitDeclareNode
 
 /**
  * Interprets a trait declaration node.
  */
 class TraitDeclareVisitor : IVisitor {
-    override fun visit(interpreter: IInterpreter, node: INode): DataRuntimeResult {
-        val typeDeclareNode = node as TypeDeclareNode
-        val typeName = typeDeclareNode.name
-        val typeSpec = typeDeclareNode.spec
-        val result = typeResult(typeSpec!!)
-        val typeCell = result.data as TypeMemoryCell
+    override fun visit(interpreter: IInterpreter, node: INode): EmptyRuntimeResult {
+        val traitNode = node as TraitDeclareNode
+        val traitName = traitNode.name
+        val traitCell = traitMemoryCell()
 
-        // Add all fields with default values to the type memory cell
-        typeDeclareNode.fields
-                .flatMap { field -> field.declarations }
-                .forEach {
-                    val name = it.identifier
-                    val value = interpreter.interpret(it.assignmentExpr)
-                    if (value.hasData()) typeCell.members[name] = value.data!!
-                }
-
-        // Define the type in the current activation record
+        // Define the trait in the current activation record
         val activationRecord = interpreter.activationRecord!!
-        activationRecord.define(typeName, result.data)
+        activationRecord.define(traitName, traitCell)
 
-        return result
+        return emptyResult()
     }
 }

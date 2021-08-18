@@ -49,6 +49,15 @@ class TypeInstantiationStaticVisitor : IStaticVisitor {
                     }
                 }
 
+        val notImplementedTraitFunctions = symbol.traits
+                .flatMap { trait -> trait.functions.map { Pair(trait.name, it.name) } }
+                .filter { traitFun -> symbol.functions.none { typeFun -> typeFun.name == traitFun.second } }
+
+        if (notImplementedTraitFunctions.isNotEmpty()) {
+            val funList = notImplementedTraitFunctions.joinToString(", ") { "\"${it.first}.${it.second}\"" }
+            throw AnalyticalVisitorException("Type \"$typeName\" does not implement $funList yet")
+        }
+
         typeInstantiationNode.spec = symbol
         return analysisResult(symbol.name)
     }

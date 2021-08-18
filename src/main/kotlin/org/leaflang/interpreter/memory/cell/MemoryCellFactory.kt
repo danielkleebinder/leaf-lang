@@ -37,6 +37,11 @@ fun funMemoryCell(value: FunSymbol) = FunMemoryCell(value)
 fun typeMemoryCell(value: TypeSymbol) = TypeMemoryCell(value)
 
 /**
+ * Creates a trait [value]
+ */
+fun traitMemoryCell(value: MutableMap<String, IMemoryCell> = mutableMapOf()) = TraitMemoryCell(value)
+
+/**
  * Creates an async [value].
  */
 fun asyncMemoryCell(value: Future<IMemoryCell?>) = AsyncMemoryCell(value)
@@ -44,4 +49,4 @@ fun asyncMemoryCell(value: Future<IMemoryCell?>) = AsyncMemoryCell(value)
 /**
  * Creates an object [value].
  */
-fun objectMemoryCell(value: MutableMap<String, IMemoryCell>) = ObjectMemoryCell(value)
+fun objectMemoryCell(value: MutableMap<String, IMemoryCell> = mutableMapOf()) = ObjectMemoryCell(value)

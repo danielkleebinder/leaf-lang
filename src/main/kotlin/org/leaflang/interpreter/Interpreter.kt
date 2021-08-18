@@ -15,6 +15,7 @@ import org.leaflang.natives.math.MathModule
 import org.leaflang.parser.ast.*
 import org.leaflang.parser.ast.`fun`.FunDeclareNode
 import org.leaflang.parser.ast.access.AccessNode
+import org.leaflang.parser.ast.type.TraitDeclareNode
 import org.leaflang.parser.ast.type.TypeDeclareNode
 import org.leaflang.parser.ast.type.TypeInstantiationNode
 import org.leaflang.parser.ast.type.TypeNode
@@ -50,6 +51,7 @@ class Interpreter : IInterpreter {
             Pair(DeclarationsNode::class, VarDeclareVisitor()),
             Pair(FunDeclareNode::class, FunDeclareVisitor()),
             Pair(TypeNode::class, TypeVisitor()),
+            Pair(TraitDeclareNode::class, TraitDeclareVisitor()),
             Pair(TypeDeclareNode::class, TypeDeclareVisitor()),
             Pair(TypeInstantiationNode::class, TypeInstantiationVisitor()),
             Pair(AsyncNode::class, AsyncVisitor()))

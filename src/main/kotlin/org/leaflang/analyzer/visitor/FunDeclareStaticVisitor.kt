@@ -63,6 +63,15 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                     it.functions.add(funSymbol)
                 }
 
+        funDeclareNode.extensionOf
+                .mapNotNull { analyzer.currentScope.get(it.type) as? TraitSymbol }
+                .forEach {
+                    if (it.hasFunction(funName)) {
+                        throw AnalyticalVisitorException("Function extension not possible, \"${it.name}.${funName}\" already exists")
+                    }
+                    it.functions.add(funSymbol)
+                }
+
         analyzer.withScope(funName) {
 
             // Check parameter validity and transform them to lexical scoped local variables

@@ -1,7 +1,6 @@
 package org.leaflang.interpreter
 
-import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.leaflang.TestSuit
@@ -27,6 +26,21 @@ class InterpreterTraitTest : TestSuit() {
         assertDoesNotThrow { execute("trait Eats1; fun <Eats1>.eat()") }
         assertDoesNotThrow { execute("trait Eats2; fun <Eats2>.eat(a: number) {}") }
         assertDoesNotThrow { execute("trait Eats3; trait Drinks3; fun <Drinks3, Eats3>.eat {}") }
+    }
+
+    @Test
+    fun shouldImplementAbstractFunction() {
+        execute("""
+            trait Named;
+            fun <Named>.name();
+            
+            type Pet : Named;
+            fun <Pet>.name = "Bello";
+
+            const pet = new Pet
+            const res = pet.name()
+        """.trimIndent())
+        assertEquals("Bello", valueOf("res"))
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.leaflang.interpreter
 
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.leaflang.TestSuit
@@ -15,8 +16,53 @@ class InterpreterSubtypingTest : TestSuit() {
 
     @Test
     fun shouldNotAllowSubtypingForDifferentTypes() {
-        Assertions.assertThrows(StaticSemanticException::class.java) { execute("type Human1; type Pet1; const a: Human1 = new Pet1") }
-        Assertions.assertThrows(StaticSemanticException::class.java) { execute("type Human2; const a: string = new Human2") }
-        Assertions.assertThrows(StaticSemanticException::class.java) { execute("trait Eats3; type Human3; const a: Eats3 = new Human3") }
+        assertThrows(StaticSemanticException::class.java) { execute("type Human1; type Pet1; const a: Human1 = new Pet1") }
+        assertThrows(StaticSemanticException::class.java) { execute("type Human2; const a: string = new Human2") }
+        assertThrows(StaticSemanticException::class.java) { execute("trait Eats3; type Human3; const a: Eats3 = new Human3") }
+    }
+
+    @Test
+    fun shouldAllowSubtypeReassignment() {
+        assertDoesNotThrow {
+            execute("""
+                trait Drinks
+                fun <Drinks>.drink()
+                
+                type Animal : Drinks
+                fun <Animal>.drink = "Animal is drinking..."
+                
+                type Human : Drinks
+                fun <Human>.drink = "Human is drinking..."
+                
+                var drinker: Drinks = new Animal
+                drinker = new Human
+            """.trimIndent())
+        }
+    }
+
+    @Test
+    fun shouldAllowPolymorphicCalls() {
+        assertDoesNotThrow {
+            execute("""
+                trait Drinks
+                fun <Drinks>.drink()
+                
+                type Animal : Drinks
+                fun <Animal>.drink = "Animal is drinking..."
+                
+                type Human : Drinks
+                fun <Human>.drink = "Human is drinking..."
+                
+                var drinker: Drinks
+
+                drinker = new Animal
+                const res1 = drinker.drink()
+                
+                drinker = new Human
+                const res2 = drinker.drink()
+            """.trimIndent())
+        }
+        assertEquals("Animal is drinking...", valueOf("res1"))
+        assertEquals("Human is drinking...", valueOf("res2"))
     }
 }

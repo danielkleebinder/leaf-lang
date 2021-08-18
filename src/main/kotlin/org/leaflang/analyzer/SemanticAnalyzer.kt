@@ -74,7 +74,6 @@ class SemanticAnalyzer : ISemanticAnalyzer {
                     ?.analyze(this, ast)
                     ?: emptyAnalysisResult()
         } catch (e: Exception) {
-            println(e.stackTraceToString())
             throw StaticSemanticException(e.message!!, e)
         }
     }

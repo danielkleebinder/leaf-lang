@@ -32,31 +32,31 @@ class InterpreterCustomTypeTest : TestSuit() {
 
     @Test
     fun shouldErrorForTooManyArgs() {
-        assertThrows(StaticSemanticException::class.java) { execute("type User; new User {name=\"Daniel\"}") }
-        assertThrows(StaticSemanticException::class.java) { execute("type User { name: string }; new User {\"Daniel\", 777}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type User1; new User1 {name=\"Daniel\"}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type User2 { name: string }; new User2 {\"Daniel\", 777}") }
     }
 
     @Test
     fun shouldErrorIfFieldDoesNotExist() {
-        assertThrows(StaticSemanticException::class.java) { execute("type User { name: string }; new User {nam=\"Daniel\"}") }
-        assertThrows(StaticSemanticException::class.java) { execute("type User { name: string }; new User {namr=\"Daniel\"}") }
-        assertThrows(StaticSemanticException::class.java) { execute("type User { age: number }; new User {name=\"Daniel\"}") }
-        assertThrows(StaticSemanticException::class.java) { execute("type User { name: string, age: number }; new User {named=\"Daniel\", 10}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type User1 { name: string }; new User1 {nam=\"Daniel\"}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type User2 { name: string }; new User2 {namr=\"Daniel\"}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type User3 { age: number }; new User3 {name=\"Daniel\"}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type User4 { name: string, age: number }; new User4 {named=\"Daniel\", 10}") }
     }
 
     @Test
     fun shouldErrorForInvalidFieldType() {
-        assertThrows(StaticSemanticException::class.java) { execute("type X{a:string}; new X{10}") }
-        assertThrows(StaticSemanticException::class.java) { execute("type X{a:number}; new X{\"Hey\"}") }
-        assertThrows(StaticSemanticException::class.java) { execute("type X{a:number,b:string}; new X{10,20}") }
-        assertThrows(StaticSemanticException::class.java) { execute("type X{a:string}; new X{a=10}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X1{a:string}; new X1{10}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X2{a:number}; new X2{\"Hey\"}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X3{a:number,b:string}; new X3{10,20}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X4{a:string}; new X4{a=10}") }
     }
 
     @Test
     fun shouldErrorForFieldRedeclaration() {
-        assertThrows(StaticSemanticException::class.java) { execute("type X{a:string,a:string}") }
-        assertThrows(StaticSemanticException::class.java) { execute("type X{a:string,a:number}") }
-        assertThrows(StaticSemanticException::class.java) { execute("type X{a:string,b:number,a:string}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X1{a:string,a:string}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X2{a:string,a:number}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X3{a:string,b:number,a:string}") }
     }
 
     @Test
@@ -113,7 +113,7 @@ class InterpreterCustomTypeTest : TestSuit() {
 
     @Test
     fun shouldErrorForSameFieldName() {
-        assertThrows(StaticSemanticException::class.java) { execute("type X{a=0, a=1}") }
-        assertThrows(StaticSemanticException::class.java) { execute("type X{x=10, y=20, pos=3, x=5}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X1{a=0, a=1}") }
+        assertThrows(StaticSemanticException::class.java) { execute("type X2{x=10, y=20, pos=3, x=5}") }
     }
 }

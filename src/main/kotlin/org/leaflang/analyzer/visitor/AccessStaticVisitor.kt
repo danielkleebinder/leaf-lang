@@ -56,21 +56,24 @@ class AccessStaticVisitor : IStaticVisitor {
             typeSymbol = symbol
         }
 
-        if (typeSymbol !is TypeSymbol) {
-            throw AnalyticalVisitorException("\"$symbolName\" is not a custom type and cannot be dereferenced by \"$fieldName\"")
+        val functions: List<FunSymbol> = when (typeSymbol) {
+            is TypeSymbol -> typeSymbol.functions
+            is TraitSymbol -> typeSymbol.functions
+            else -> listOf()
+        }
+
+        val fields: List<VarSymbol> = when (typeSymbol) {
+            is TypeSymbol -> typeSymbol.fields
+            else -> listOf()
         }
 
         // Check if a function with this name exists
-        val functionSymbol = typeSymbol.functions.find { it.name == fieldName }
-        if (functionSymbol != null) {
-            return functionSymbol
-        }
+        val functionSymbol = functions.find { it.name == fieldName }
+        if (functionSymbol != null) return functionSymbol
 
         // Check if a field with this name exists
-        val fieldSymbol = typeSymbol.fields.find { it.name == fieldName }
-        if (fieldSymbol != null) {
-            return fieldSymbol
-        }
+        val fieldSymbol = fields.find { it.name == fieldName }
+        if (fieldSymbol != null) return fieldSymbol
         throw AnalyticalVisitorException("Field with name \"$fieldName\" does not exist on \"$symbolName\"")
     }
 

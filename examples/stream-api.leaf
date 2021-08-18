@@ -25,8 +25,7 @@ fun <Stream>.filter(fn: fun) -> Stream {
 // the stream itself.
 fun <Stream>.onEach(fn: fun) -> Stream {
   loop var i = 0 : i < ~object.data : i = i + 1 {
-    const val = object.data[i]
-    fn(val)
+    fn(object.data[i])
   }
   return object
 }
@@ -36,6 +35,8 @@ fun <Stream>.forEach(fn: fun) {
   object.onEach(fn)
 }
 
+// Maps the stream of data to a different kind of data using
+// the given [fn] transform function.
 fun <Stream>.map(fn: fun) -> Stream {
   var result = []
   loop var i = 0 : i < ~object.data : i = i + 1 {
@@ -44,6 +45,8 @@ fun <Stream>.map(fn: fun) -> Stream {
   return new Stream { result }
 }
 
+// Returns true if at least one of the elements in the stream
+// meets the requirements of [fn].
 fun <Stream>.any(fn: fun) -> bool {
   loop var i = 0 : i < ~object.data : i = i + 1 {
     if fn(object.data[i]) { return true }
@@ -51,6 +54,8 @@ fun <Stream>.any(fn: fun) -> bool {
   return false
 }
 
+// Returns true if all of the elements in the stream meet the
+// requirements of [fn].
 fun <Stream>.all(fn: fun) -> bool {
   loop var i = 0 : i < ~object.data : i = i + 1 {
     if !fn(object.data[i]) { return false }
@@ -85,11 +90,18 @@ fun <Stream>.ifEmpty(fn: fun) = if object.count() <= 0 { fn() }
 fun <Stream>.ifNotEmpty(fn: fun) = if object.count() > 0 { fn() }
 
 
-
 const stream = new Stream { [1,2,3,4] }
 stream
   .filter(fun (data: number) = data > 1)
-  .onEach(fun (data: number) = println(data))
+  .onEach(fun (data: number) = println("Element value: " + data))
   .reverse()
   .slice(1, 3)
   .count()
+
+
+
+
+
+
+
+

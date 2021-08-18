@@ -2,6 +2,7 @@ package org.leaflang.interpreter.visitor
 
 import org.leaflang.interpreter.IInterpreter
 import org.leaflang.interpreter.exception.VisitorException
+import org.leaflang.interpreter.memory.cell.TraitMemoryCell
 import org.leaflang.interpreter.memory.cell.TypeMemoryCell
 import org.leaflang.interpreter.result.DataRuntimeResult
 import org.leaflang.interpreter.result.funResult
@@ -25,10 +26,9 @@ class FunDeclareVisitor : IVisitor {
             val typeCell = activationRecord[it.type]
                     ?: throw VisitorException("Type \"${it.type}\" not available for extension")
 
-            // Currently only supported for custom types
-            if (typeCell is TypeMemoryCell) {
-                typeCell.members[funName] = result.data
-            }
+            // Currently only supported for custom types and traits
+            if (typeCell is TypeMemoryCell) typeCell.members[funName] = result.data
+            if (typeCell is TraitMemoryCell) typeCell.members[funName] = result.data
         }
 
         // Store the function as local variable for later

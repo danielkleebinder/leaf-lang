@@ -26,37 +26,35 @@ class DeclarationStaticVisitor : IStaticVisitor {
                     }
 
                     // Check if the type exists that is declared
-                    var type: Symbol? = null
+                    var declTypeSymbol: Symbol? = null
                     if (it.typeExpr != null) {
-                        type = analyzer.currentScope.get(it.typeExpr.type)
-                        if (type == null) throw AnalyticalVisitorException("Type \"${it.typeExpr.type}\" was not found")
+                        declTypeSymbol = analyzer.currentScope.get(it.typeExpr.type)
+                        if (declTypeSymbol == null) throw AnalyticalVisitorException("Type \"${it.typeExpr.type}\" was not found")
                     }
 
                     // Test if the assignment expression is valid
-                    var assignmentType: StaticAnalysisResult? = null
+                    var assignResult: StaticAnalysisResult? = null
                     if (it.assignmentExpr != null) {
-                        assignmentType = analyzer.analyze(it.assignmentExpr)
+                        assignResult = analyzer.analyze(it.assignmentExpr)
 
                         // Use type inference here
-                        if (type == null && assignmentType.type != null) {
-                            type = Symbol(assignmentType.type!!, analyzer.currentScope.nestingLevel)
+                        if (declTypeSymbol == null && assignResult.type != null) {
+                            declTypeSymbol = Symbol(assignResult.type!!, analyzer.currentScope.nestingLevel)
                         }
                     }
 
-                    // Check if types are compatible
-                    if ((type != null && assignmentType != null) && (type.name != assignmentType.type)) {
-                        if (assignmentType.type != null) {
-                            val assignmentTypeSymbol = analyzer.currentScope.get(assignmentType.type!!) as? TypeSymbol
-                            if (assignmentTypeSymbol == null || assignmentTypeSymbol.traits.none { trait -> trait.name == type.name }) {
-                                throw AnalyticalVisitorException("Declared type ${type.name} for \"$name\" cannot be used for subtyping with ${assignmentType.type} of assignment")
-                            }
-                        } else {
-                            throw AnalyticalVisitorException("Declared type ${type.name} for \"$name\" is not compatible with type ${assignmentType.type} of assignment")
+                    // Check if types are compatible (i.e. apply subtyping)
+                    if ((declTypeSymbol != null && assignResult?.type != null) && (declTypeSymbol.name != assignResult.type)) {
+                        val declType = declTypeSymbol.name
+                        val assignType = assignResult.type
+                        val assignTypeSymbol = analyzer.currentScope.get(assignType!!) as? TypeSymbol
+                        if (assignTypeSymbol == null || !assignTypeSymbol.isSubtypeOf(declType)) {
+                            throw AnalyticalVisitorException("Cannot assign type \"$assignType\" to \"$declType\"")
                         }
                     }
 
                     // Register in symbol table
-                    analyzer.currentScope.define(VarSymbol(name, type, *declarationsNode.modifiers.toTypedArray()))
+                    analyzer.currentScope.define(VarSymbol(name, declTypeSymbol, *declarationsNode.modifiers.toTypedArray()))
                 }
 
         return emptyAnalysisResult()

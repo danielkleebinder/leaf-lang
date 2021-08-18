@@ -8,10 +8,12 @@ import org.leaflang.parser.ast.UnaryOperation
  * Array values are used to perform certain operations and
  * enable type coercion.
  */
-class ObjectMemoryCell(private var data: MutableMap<String, IMemoryCell>,
-                       override val members: Map<String, IMemoryCell> = data) : IMemoryCell {
+class ObjectMemoryCell(private var data: MutableMap<String, IMemoryCell>) : IMemoryCell {
 
     override val value: MutableMap<String, IMemoryCell>
+        get() = data
+
+    override val members: MutableMap<String, IMemoryCell>
         get() = data
 
     override fun assign(newValue: IMemoryCell) {

@@ -17,6 +17,11 @@ class TypeSymbol(name: String,
                 functions.any { it.name == fieldName }
     }
 
+    /**
+     * Checks if this type is a subtype of the trait with the given [name].
+     */
+    fun isSubtypeOf(name: String) = this.name == name || traits.any { it.name == name }
+
     override fun toString() = "TypeSymbol(name=$name, fields=$fields, functions=$functions)"
 }
 

@@ -4,6 +4,7 @@ import org.leaflang.analyzer.ISemanticAnalyzer
 import org.leaflang.analyzer.exception.AnalyticalVisitorException
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.emptyAnalysisResult
+import org.leaflang.analyzer.symbol.TypeSymbol
 import org.leaflang.parser.ast.AssignmentNode
 import org.leaflang.parser.ast.INode
 
@@ -17,9 +18,13 @@ class AssignmentStaticVisitor : IStaticVisitor {
         val assignResult = analyzer.analyze(assignmentNode.assignmentExpr)
         if (accessResult.constant) throw AnalyticalVisitorException("Cannot assign a constant value")
 
-        if (accessResult.type != null && assignResult.type != null) {
-            if (accessResult.type != assignResult.type) {
-                throw AnalyticalVisitorException("Cannot assign type \"${assignResult.type}\" to \"${accessResult.type}\"")
+        // Check if types are compatible (i.e. apply subtyping)
+        if ((accessResult.type != null && assignResult.type != null) && (accessResult.type != assignResult.type)) {
+            val declType = accessResult.type
+            val assignType = assignResult.type
+            val assignTypeSymbol = analyzer.currentScope.get(assignType) as? TypeSymbol
+            if (assignTypeSymbol == null || !assignTypeSymbol.isSubtypeOf(declType)) {
+                throw AnalyticalVisitorException("Cannot assign type \"$assignType\" to \"$declType\"")
             }
         }
         return emptyAnalysisResult()
