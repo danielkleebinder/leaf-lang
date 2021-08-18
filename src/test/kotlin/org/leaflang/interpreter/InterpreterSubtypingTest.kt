@@ -78,6 +78,15 @@ class InterpreterSubtypingTest : TestSuit() {
                 fun <Animal>.drink(liquid: Liquid) = "Animal is drinking " + liquid
             """.trimIndent())
         }
+        assertThrows(StaticSemanticException::class.java) {
+            execute("""
+                trait Drinks2
+                fun <Drinks2>.drink(n: number)
+                
+                type Animal2 : Drinks2
+                fun <Animal2>.drink(n: string) = "Animal is drinking " + n
+            """.trimIndent())
+        }
     }
 
     @Test

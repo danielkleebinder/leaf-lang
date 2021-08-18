@@ -179,25 +179,25 @@ complete and Turing completeness has been shown.
 ## Example Programs
 
 ```kotlin
-program "test"
+trait Eats
+fun <Eats>.eat()
+fun <Eats>.hungry()
 
-use "io", "math"
+trait Talks
+fun <Talks>.talk()
 
-trait Feedable
-trait CanTalk
-
-type Cat : CanTalk
-type Dog : Feedable, CanTalk {
-  fed: bool, happy: bool
-  age: number
-}
+type Dog : Eats, Talks { fed: bool }
+type Cat : Eats, Talks { fed: bool }
 
 // Types implement functions by specifying them as extensions
-fun <Cat>.name() -> string = 'Kitty'
-fun <Dog>.name() -> string = 'Bello'
-fun <Dog>.feed() = object.fed = true
-fun <Dog, Cat>.talk(text: string) = print(object.name() + ' says: ' . text)
+fun <Dog>.talk = println("Wuff wuff")
+fun <Cat>.talk = println("Miau Purrrr...")
 
+fun <Cat, Dog>.hungry = !object.fed
+fun <Cat, Dog>.eat {
+  object.fed = true
+  println("That was delicious")
+}
 
 //
 // The programming language also supports pre- and postconditions
@@ -207,40 +207,33 @@ fun <Dog, Cat>.talk(text: string) = print(object.name() + ' says: ' . text)
 // The first statement after the parameter list and after the ':' symbol
 // is the precondition that the parameters have to fulfill. The statement
 // after that is the postcondition. The '_' is a reserved token and
-// represents the functions result.
-//
-fun add(a: number, b: number) : (a > 0 && b > 0) : (_ >= (a + b)) -> number = a + b
-fun sub(a: number, b: number) :: (_ <= (a - b)) -> number = a - b
+// represents 
+fun feed(eater: Eats) : eater.hungry() : !(_.hungry()) -> Eats {
+  eater.eat()
+  return eater
+}
 
-// The "main" function is the entry point into the program
 fun main {
-
   // Constants must be initialized on declaration and cannot
   // be modified at a later stage.
   const pi: number = 3.141592654;
   const square = fun (x: number) -> number = x * x
-  const myGreeting = greeting
-
-  // var dog = Dog;
-  // var dog = Dog { fed = false };
-  var dog = Dog { false }
-
-  // There is only the "loop" in this programming language. No
-  // for, while or do-whiles. You can do everything with this.
-  loop var i = 0 :: i = i + 1 {
-    if dog.fed { break }
-    dog.feed()
+  const pet = new Dog { false }
+  
+  loop pet.hungry() {
+    feed(pet)
   }
-
-  loop !dog.fed {
-    dog.feed()
+  
+  const num = 77
+  if square(num) < 10 {
+    println("Square root of " + num + " is less than 10")
   }
-
-  // Use the print function from io
-  print(dog.fed)       // true
-  print(dog == dog)    // true
-  print(~(-7+3**2))    // -3
+  
+  println(pet)
+  println(~(-7+3*9))    // -21
 }
+
+main()
 ```
 
 ### Recursion

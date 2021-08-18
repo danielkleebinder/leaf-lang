@@ -60,6 +60,40 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                     if (it.hasField(funName)) {
                         throw AnalyticalVisitorException("Function extension not possible, \"${it.name}.${funName}\" already exists")
                     }
+
+                    // The function has to have to same signature as in the trait definition
+                    val fromTrait = it.traits.find { trait -> trait.hasFunction(funName) }
+                    if (fromTrait != null) {
+                        val traitFun = fromTrait.functions.find { traitFun -> traitFun.name == funName }
+                        val traitFunParams = traitFun!!.params
+                        val implFunParamsCount = funDeclareNode.params?.declarations?.size ?: 0
+                        if (traitFunParams.size != implFunParamsCount) {
+                            val traitFunName = "${fromTrait.name}.${traitFun.name}"
+                            val typeFunName = "${it.name}.$funName"
+                            throw AnalyticalVisitorException("Trait function \"$traitFunName\" expects ${traitFunParams.size} parameters but \"$typeFunName\" specifies $implFunParamsCount")
+                        }
+
+                        funDeclareNode.params?.declarations
+                                ?.zip(traitFunParams)
+                                ?.map { params ->
+                                    val expectedParam = params.second
+                                    val actualParam = params.first
+                                    val expectedType = expectedParam.type?.name
+                                    val actualType = when {
+                                        actualParam.typeExpr != null -> analyzer.analyze(actualParam.typeExpr).type
+                                        actualParam.assignmentExpr != null -> analyzer.analyze(actualParam.assignmentExpr).type
+                                        else -> null
+                                    }
+                                    Pair(expectedType, actualType)
+                                }
+                                ?.filter { params -> params.first != params.second }
+                                ?.forEach { params ->
+                                    val traitFunName = "${fromTrait.name}.${traitFun.name}"
+                                    val typeFunName = "${it.name}.$funName"
+                                    throw AnalyticalVisitorException("Trait function \"$traitFunName\" expects \"${params.first}\" parameter type but \"$typeFunName\" specifies \"${params.second}\"")
+                                }
+                    }
+
                     it.functions.add(funSymbol)
                 }
 
