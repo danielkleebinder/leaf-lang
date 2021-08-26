@@ -1,126 +1,175 @@
-// STREAM API
-// The standard data stream API of the Leaf programming language
+/******************************************************************/
+/*                                                                */
+/*                                                                */
+/*                        S T R E A M   A P I                     */
+/*                                                                */
+/*                                                                */
+/* The standard data streaming API of the Leaf programming        */
+/* language. It allows first level functional programming on a    */
+/* set of data (typically from an array).                         */
+/*                                                                */
+/******************************************************************/
 
 
-// A simple stream holding any kind of data
-type Stream {
-  data: array
+
+
+/// Concrete stream implementation
+type Stream { data: array }
+
+
+
+/// CONVERSIONS
+
+// Creates a new stream using the given [data] array
+fun streamOf(data: array) = new Stream { data }
+
+// Converts the stream back to an array
+fun <Stream>.toArray = object.data
+
+
+
+/// ITERATION WITHOUT MODIFICATION
+
+// Call the given [fn] with each element in order and returns
+// the stream itself.
+fun <Stream>.onEachIndexed(fn: fun) -> Stream {
+  const arr = object.data
+  loop var i = 0 : i < ~arr : i = i + 1 {
+    fn(arr[i], i)
+  }
+  return object
 }
+fun <Stream>.onEach(fn: fun) = object.onEachIndexed(fun (value: any, i: number) = fn(value))
 
+
+// Call the given [fn] with each element in order.
+fun <Stream>.forEachIndexed(fn: fun) = object.onEachIndexed(fn)
+fun <Stream>.forEach(fn: fun) = object.onEach(fn)
+
+
+
+/// FILTER OPERATION
 
 // Filters the stream using the given [fn]. If the [fn] returns
 // true, the value will be in the new stream, otherwise it is
 // omitted.
-fun <Stream>.filter(fn: fun) -> Stream {
+fun <Stream>.filterIndexed(fn: fun) -> Stream {
+  const arr = object.data
   var result = []
-  loop var i = 0 : i < ~object.data : i = i + 1 {
-    const val = object.data[i]
-    if !fn(val) { continue }
-    result = result + val
-  }
+  object.onEachIndexed(fun (value: any, i: number) {
+    if !fn(arr[i], i) { continue }
+    result = result + arr[i]
+  })
   return new Stream { result }
 }
+fun <Stream>.filter(fn: fun) = object.filterIndexed(fun (value: any, i: number) = fn(value))
 
-// Call the given [fn] with each element in order and returns
-// the stream itself.
-fun <Stream>.onEach(fn: fun) -> Stream {
-  loop var i = 0 : i < ~object.data : i = i + 1 {
-    fn(object.data[i])
-  }
-  return object
-}
+
+
+/// MAP OPERATION
 
 // Maps the stream of data to a different kind of data using
 // the given [fn] transform function.
-fun <Stream>.map(fn: fun) -> Stream {
+fun <Stream>.mapIndexed(fn: fun) -> Stream {
+  const arr = object.data
   var result = []
-  loop var i = 0 : i < ~object.data : i = i + 1 {
-    result = result + fn(object.data[i])
-  }
+  object.onEachIndexed(fun (value: any, i: number) {
+    result = result + fn(arr[i], i)
+  })
   return new Stream { result }
 }
+fun <Stream>.map(fn: fun) = object.mapIndexed(fun (value: any, i: number) = fn(value))
+
+
+
+/// REDUCE OPERATIONS
 
 // Returns true if at least one of the elements in the stream
 // meets the requirements of [fn].
-fun <Stream>.any(fn: fun) -> bool {
-  loop var i = 0 : i < ~object.data : i = i + 1 {
-    if fn(object.data[i]) { return true }
+fun <Stream>.someIndexed(fn: fun) -> bool {
+  const arr = object.data
+  loop var i = 0 : i < ~arr : i = i + 1 {
+    if fn(arr[i], i) { return true }
   }
   return false
 }
+fun <Stream>.some(fn: fun) = object.someIndexed(fun (value: any, i: number) = fn(value))
 
 // Returns true if all of the elements in the stream meet the
 // requirements of [fn].
-fun <Stream>.all(fn: fun) -> bool {
-  loop var i = 0 : i < ~object.data : i = i + 1 {
-    if !fn(object.data[i]) { return false }
-  }
-  return true
-}
+fun <Stream>.allIndexed(fn: fun) = !object.someIndexed(fun (value: any, i: number) = !fn(value, i))
+fun <Stream>.all(fn: fun) = !object.some(fun (value: any) = !fn(value))
 
-fun <Stream>.none(fn: fun) = !object.any(fn)
+// Returns true if none of the elements in the stream meet the
+// requirements of [fn]
+fun <Stream>.noneIndexed(fn: fun) = !object.someIndexed(fn)
+fun <Stream>.none(fn: fun) = !object.some(fn)
 
+
+
+/// DIRECT STREAM MODIFICATION
+
+// Returns a new stream in reversed order
 fun <Stream>.reverse -> Stream {
+  const arr = object.data
   var result = []
-  loop var i = 0 : i < ~object.data : i = i + 1 {
-    result = object.data[i] + result
+  loop var i = 0 : i < ~arr : i = i + 1 {
+    result = arr[i] + result
   }
   return new Stream { result }
 }
 
+// Returns a slice of the stream starting from [startIndex] (inclusively) and
+// going to [endIndex] (exclusively).
 fun <Stream>.slice(startIndex: number, endIndex: number) -> Stream {
+  const arr = object.data
   var result = []
   loop var i = startIndex : i < endIndex : i = i + 1 {
-    result = result + object.data[i]
+    result = result + arr[i]
   }
   return new Stream { result }
 }
 
-// Call the given [fn] with each element in order.
-fun <Stream>.forEach(fn: fun) = object.onEach(fn)
 
+
+// ADDITIONAL SET OPERATIONS
+
+// Counts the number of elements in the stream
 fun <Stream>.count = ~object.data
 
+// Returns the min object in the stream
 fun <Stream>.min = min(object.data)
+
+// Returns the max object in the stream
 fun <Stream>.max = max(object.data)
 
+// Runs the given function if (and only if) the stream is empty
 fun <Stream>.ifEmpty(fn: fun) = if object.count() <= 0 { fn() }
+
+// Runs the given function if (and only if) the stream is NOT empty
 fun <Stream>.ifNotEmpty(fn: fun) = if object.count() > 0 { fn() }
 
-
-const stream = new Stream { [1,2,3,4] }
-stream
-  .filter(fun (data: number) = data > 1)
-  .onEach(fun (data: number) = println("Element value: " + data))
-  .reverse()
-  .slice(1, 3)
-  .count()
-
-
-
-fun assertEqualsNum(expected: number, actual: number) : (expected == actual) = true
-fun assertEquals(expected: string, actual: string) : (expected == actual) = true
-fun assertEquals(expected: bool, actual: bool) : (expected == actual) = true
-
-fun assertNotEquals(expected: number, actual: number) : (expected != actual) = true
-fun assertNotEquals(expected: string, actual: string) : (expected != actual) = true
-fun assertNotEquals(expected: bool, actual: bool) : (expected != actual) = true
-
-fun assertTrue(predicate: bool) : (predicate) = true
-fun assertFalse(predicate: bool) : (!predicate) = true
-
-
-
-fun shouldFilterStream {
-  const stream = new Stream { [1,2,3,4] }
-  const result = stream.filter(fun (data: number) = data > 1)
-  const expect = [2,3,4]
-  println(result)
-  result.forEach(fun (n: number) = assertEqualsNum(n, expect[0]))
+// Returns the union (A and B) of both streams
+fun <Stream>.union(other: Stream) -> Stream {
+  var result = []
+  object.forEach(fun (value: any) = result = result + value)
+  other.forEach(fun (value: any) = result = result + value)
+  return new Stream { result }
 }
 
-shouldFilterStream()
-
-
-
-
+// Returns the intersection of both streams (i.e. all elements that are
+// in both streams).
+fun <Stream>.intersection(other: Stream) -> Stream {
+  const arr1 = object.data
+  const arr2 = other.data
+  var result = []
+  loop var i = 0 : i < ~arr1 : i = i + 1 {
+    loop var j = 0 : j < ~arr2 : j = j + 1 {
+	  if arr1[i] == arr2[j] {
+        result = result + arr1[i]
+		break
+	  }
+	}
+  }
+  return new Stream { result }
+}

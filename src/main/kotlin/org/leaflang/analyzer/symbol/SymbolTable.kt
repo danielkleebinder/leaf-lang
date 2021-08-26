@@ -13,6 +13,7 @@ class SymbolTable(override val name: String? = null,
 
     init {
         if (withBuiltIns) {
+            define(BuiltInSymbol("any"))
             define(BuiltInSymbol("number"))
             define(BuiltInSymbol("bool"))
             define(BuiltInSymbol("string"))
