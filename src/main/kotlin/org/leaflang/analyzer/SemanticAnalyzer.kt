@@ -6,6 +6,7 @@ import org.leaflang.analyzer.result.emptyAnalysisResult
 import org.leaflang.analyzer.symbol.ISymbolTable
 import org.leaflang.analyzer.symbol.SymbolTable
 import org.leaflang.analyzer.visitor.*
+import org.leaflang.error.*
 import org.leaflang.natives.INativeModule
 import org.leaflang.natives.io.IOModule
 import org.leaflang.natives.math.MathModule
@@ -25,7 +26,7 @@ import org.leaflang.parser.ast.value.StringNode
 /**
  * Semantic analyzer implementation.
  */
-class SemanticAnalyzer : ISemanticAnalyzer {
+class SemanticAnalyzer(override var errorHandler: IErrorHandler? = null) : ISemanticAnalyzer {
 
     private val analyzers = hashMapOf(
             Pair(ProgramNode::class, ProgramStaticVisitor()),
@@ -67,6 +68,10 @@ class SemanticAnalyzer : ISemanticAnalyzer {
 
     override fun leaveScope() {
         currentScope = currentScope.parent!!
+    }
+
+    override fun flagError(node: INode, errorCode: ErrorCode) {
+        errorHandler?.handle(AnalysisError(errorCode, fromNode(node), ErrorType.SEMANTIC))
     }
 
     // Recursive analysis

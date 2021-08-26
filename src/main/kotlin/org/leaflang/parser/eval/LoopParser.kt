@@ -29,6 +29,7 @@ class LoopParser(private val parser: ILeafParser,
         val expressionParser = parserFactory.expressionParser
         val blockParser = parserFactory.blockParser
 
+        val pos = parser.nodePosition()
         var init: INode? = null
         var cond: INode? = null
         var step: INode? = null
@@ -44,7 +45,7 @@ class LoopParser(private val parser: ILeafParser,
             init = null
         }
 
-        return LoopNode(init, cond, step, body!!)
+        return LoopNode(pos, init, cond, step, body!!)
     }
 
     /**

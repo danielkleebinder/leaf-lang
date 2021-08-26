@@ -44,6 +44,7 @@ class FunDeclareParser(private val parser: ILeafParser,
         val statementParser = parserFactory.statementParser
         val statementListParser = parserFactory.statementListParser
 
+        val pos = parser.nodePosition()
         val extensionOf = arrayListOf<TypeNode>()
         var name: String? = null
         var params: DeclarationsNode? = null
@@ -93,7 +94,8 @@ class FunDeclareParser(private val parser: ILeafParser,
                 requires = requires,
                 ensures = ensures,
                 returns = returns,
-                body = body)
+                body = body,
+                position = pos)
     }
 
     /**

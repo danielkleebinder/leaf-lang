@@ -6,6 +6,7 @@ import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.AssignmentNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.utils.IParserFactory
+import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the assignment semantics:
@@ -19,6 +20,7 @@ class AssignmentParser(private val parser: ILeafParser,
     override fun parse(): INode {
         val varParser = parserFactory.variableParser
         val expr = parserFactory.expressionParser
+        val pos = fromToken(parser.token)
 
         if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
 
@@ -29,7 +31,7 @@ class AssignmentParser(private val parser: ILeafParser,
             parser.skipNewLines()
 
             val assignmentExpr = expr.parse()
-            return AssignmentNode(variable, assignmentExpr)
+            return AssignmentNode(pos, variable, assignmentExpr)
         }
         return variable
     }

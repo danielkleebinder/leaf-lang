@@ -6,6 +6,7 @@ import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.type.TypeArgument
 import org.leaflang.parser.ast.type.TypeInstantiationNode
 import org.leaflang.parser.utils.IParserFactory
+import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the type syntax:
@@ -19,6 +20,8 @@ class TypeInstantiationParser(private val parser: ILeafParser,
                               private val parserFactory: IParserFactory) : IParser {
 
     override fun parse(): TypeInstantiationNode {
+        val pos = fromToken(parser.token)
+
         if (TokenType.KEYWORD_NEW != parser.token.kind) parser.flagError(ErrorCode.MISSING_KEYWORD_NEW)
         parser.advanceCursor()
 
@@ -37,7 +40,7 @@ class TypeInstantiationParser(private val parser: ILeafParser,
             }
         }
 
-        return TypeInstantiationNode(typeName, typeArgs.toList())
+        return TypeInstantiationNode(pos, typeName, typeArgs.toList())
     }
 
     /**

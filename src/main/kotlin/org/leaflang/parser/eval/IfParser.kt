@@ -26,6 +26,7 @@ class IfParser(private val parser: ILeafParser,
         val expr = parserFactory.expressionParser
         val block = parserFactory.blockParser
 
+        val pos = parser.nodePosition()
         val cases = arrayListOf<IfCase>()
         var condition: INode? = null
         var elseCase: INode? = null
@@ -61,7 +62,7 @@ class IfParser(private val parser: ILeafParser,
         // Otherwise statements could not be separated properly.
         if (wasNewLine) parser.advanceCursor(-1)
 
-        return IfNode(cases, elseCase)
+        return IfNode(pos, cases, elseCase)
     }
 
     /**

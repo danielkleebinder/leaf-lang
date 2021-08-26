@@ -28,9 +28,9 @@ class StatementParser(private val parser: ILeafParser,
     override fun parse() = when (parser.token.kind) {
         TokenType.KEYWORD_CONST -> parser.advanceAndSkipNewLines { parserFactory.constDeclarationsParser.parse() }
         TokenType.KEYWORD_VAR -> parser.advanceAndSkipNewLines { parserFactory.varDeclarationsParser.parse() }
-        TokenType.KEYWORD_RETURN -> parser.advance { ReturnNode(parserFactory.expressionParser.parse()) }
-        TokenType.KEYWORD_BREAK -> parser.advance { BreakNode() }
-        TokenType.KEYWORD_CONTINUE -> parser.advance { ContinueNode() }
+        TokenType.KEYWORD_RETURN -> parser.advance { ReturnNode(parser.nodePosition(), parserFactory.expressionParser.parse()) }
+        TokenType.KEYWORD_BREAK -> parser.advance { BreakNode(parser.nodePosition()) }
+        TokenType.KEYWORD_CONTINUE -> parser.advance { ContinueNode(parser.nodePosition()) }
         TokenType.KEYWORD_LOOP -> parserFactory.loopParser.parse()
         TokenType.KEYWORD_TRAIT -> parserFactory.traitDeclareParser.parse()
         TokenType.KEYWORD_TYPE -> parserFactory.typeDeclareParser.parse()

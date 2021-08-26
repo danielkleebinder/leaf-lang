@@ -4,6 +4,7 @@ import org.leaflang.error.ErrorCode
 import org.leaflang.error.IErrorHandler
 import org.leaflang.lexer.token.Token
 import org.leaflang.parser.ast.INode
+import org.leaflang.parser.utils.fromToken
 
 /**
  * The parser uses the abstract tokens from the lexical analysis
@@ -56,6 +57,11 @@ interface ILeafParser {
             advanceCursor()
             return result
         }
+
+    /**
+     * Returns a new node position for the current token.
+     */
+    fun nodePosition() = fromToken(token)
 }
 
 /**

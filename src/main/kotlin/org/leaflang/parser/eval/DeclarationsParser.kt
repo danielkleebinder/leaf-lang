@@ -4,9 +4,13 @@ import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advanceAndSkipNewLines
-import org.leaflang.parser.ast.*
+import org.leaflang.parser.ast.Declaration
+import org.leaflang.parser.ast.DeclarationsNode
+import org.leaflang.parser.ast.INode
+import org.leaflang.parser.ast.Modifier
 import org.leaflang.parser.ast.type.TypeNode
 import org.leaflang.parser.utils.IParserFactory
+import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the declaration semantics:
@@ -21,6 +25,7 @@ class DeclarationsParser(private val parser: ILeafParser,
 
     override fun parse(): DeclarationsNode {
         val declarations = arrayListOf<Declaration>()
+        val pos = fromToken(parser.token)
         while (true) {
             declarations.add(evalDeclaration())
 
@@ -29,7 +34,7 @@ class DeclarationsParser(private val parser: ILeafParser,
             parser.advanceCursor()
             parser.skipNewLines()
         }
-        return DeclarationsNode(declarations, *modifiers)
+        return DeclarationsNode(pos, declarations, *modifiers)
     }
 
     /**

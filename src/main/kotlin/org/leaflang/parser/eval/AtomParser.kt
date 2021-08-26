@@ -12,6 +12,7 @@ import org.leaflang.parser.ast.value.BoolNode
 import org.leaflang.parser.ast.value.NumberNode
 import org.leaflang.parser.ast.value.StringNode
 import org.leaflang.parser.utils.IParserFactory
+import org.leaflang.parser.utils.fromToken
 import java.math.BigDecimal
 
 /**
@@ -41,11 +42,12 @@ class AtomParser(private val parser: ILeafParser,
     private val expressionParser = parserFactory.expressionParser
 
     override fun parse(): INode {
+        val pos = fromToken(parser.token)
         return when (parser.token.kind) {
 
-            TokenType.BOOL -> BoolNode(parser.tokenAndAdvance.value as Boolean)
-            TokenType.STRING -> StringNode(parser.tokenAndAdvance.value as String)
-            TokenType.NUMBER -> NumberNode(BigDecimal((parser.tokenAndAdvance.value as Double).toString()
+            TokenType.BOOL -> BoolNode(pos, parser.tokenAndAdvance.value as Boolean)
+            TokenType.STRING -> StringNode(pos, parser.tokenAndAdvance.value as String)
+            TokenType.NUMBER -> NumberNode(pos, BigDecimal((parser.tokenAndAdvance.value as Double).toString()
                     .trimEnd('0')
                     .trimEnd('.')))
 
@@ -56,7 +58,7 @@ class AtomParser(private val parser: ILeafParser,
             TokenType.KEYWORD_NEW -> typeInstantiationParser.parse()
             TokenType.LEFT_CURLY_BRACE -> blockParser.parse()
 
-            TokenType.KEYWORD_ASYNC -> parser.advance { AsyncNode(statementParser.parse()) }
+            TokenType.KEYWORD_ASYNC -> parser.advance { AsyncNode(pos, statementParser.parse()) }
             TokenType.LEFT_PARENTHESIS -> parser.advanceAndSkipNewLines {
                 val result = expressionParser.parse()
                 parser.skipNewLines()
@@ -67,10 +69,10 @@ class AtomParser(private val parser: ILeafParser,
 
             TokenType.ERROR -> {
                 parser.flagError(parser.token.value as ErrorCode)
-                EmptyNode()
+                EmptyNode(pos)
             }
 
-            else -> EmptyNode()
+            else -> EmptyNode(pos)
         }
     }
 }

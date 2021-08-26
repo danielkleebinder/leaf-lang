@@ -18,11 +18,12 @@ class PrefixExpressionParser(private val parser: ILeafParser,
                              private val parserFactory: IParserFactory) : IParser {
 
     override fun parse(): INode {
+        val pos = parser.nodePosition()
         return when (parser.token.kind) {
-            TokenType.PLUS -> parser.advance { UnaryOperationNode(parse(), UnaryOperation.POSITIVE) }
-            TokenType.MINUS -> parser.advance { UnaryOperationNode(parse(), UnaryOperation.NEGATE) }
-            TokenType.LOGICAL_NOT -> parser.advance { UnaryOperationNode(parse(), UnaryOperation.LOGICAL_NEGATE) }
-            TokenType.COMPLEMENT -> parser.advance { UnaryOperationNode(parse(), UnaryOperation.BIT_COMPLEMENT) }
+            TokenType.PLUS -> parser.advance { UnaryOperationNode(pos, parse(), UnaryOperation.POSITIVE) }
+            TokenType.MINUS -> parser.advance { UnaryOperationNode(pos, parse(), UnaryOperation.NEGATE) }
+            TokenType.LOGICAL_NOT -> parser.advance { UnaryOperationNode(pos, parse(), UnaryOperation.LOGICAL_NEGATE) }
+            TokenType.COMPLEMENT -> parser.advance { UnaryOperationNode(pos, parse(), UnaryOperation.BIT_COMPLEMENT) }
             else -> parserFactory.atomParser.parse()
         }
     }

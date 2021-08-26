@@ -1,6 +1,7 @@
 package org.leaflang.interpreter
 
 import org.leaflang.RuntimeOptions
+import org.leaflang.error.*
 import org.leaflang.interpreter.exception.DynamicSemanticException
 import org.leaflang.interpreter.memory.ActivationRecord
 import org.leaflang.interpreter.memory.IActivationRecord
@@ -30,7 +31,7 @@ import java.util.concurrent.Executors
 /**
  * Implementation of the interpreter specification.
  */
-class Interpreter : IInterpreter {
+class Interpreter(override var errorHandler: IErrorHandler? = null) : IInterpreter {
 
     private val visitors = hashMapOf(
             Pair(ProgramNode::class, ProgramVisitor()),
@@ -76,6 +77,10 @@ class Interpreter : IInterpreter {
         } catch (e: Exception) {
             throw DynamicSemanticException(e.message ?: "Unknown semantic error", e)
         }
+    }
+
+    override fun flagError(node: INode, errorCode: ErrorCode) {
+        errorHandler?.handle(AnalysisError(errorCode, fromNode(node), ErrorType.SEMANTIC))
     }
 
     private fun registerModule(activationRecord: IActivationRecord, module: INativeModule) {

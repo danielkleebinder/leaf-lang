@@ -19,13 +19,14 @@ class RelationExpressionParser(private val parser: ILeafParser,
 
     override fun parse(): INode {
         val rangeExpr = parserFactory.rangeExpressionParser
+        val pos = parser.nodePosition()
         var node = rangeExpr.parse()
         while (true) {
             node = when (parser.token.kind) {
-                TokenType.LESS -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, rangeExpr.parse(), BinaryOperation.LESS) }
-                TokenType.LESS_EQUALS -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, rangeExpr.parse(), BinaryOperation.LESS_EQUALS) }
-                TokenType.GREATER -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, rangeExpr.parse(), BinaryOperation.GREATER) }
-                TokenType.GREATER_EQUALS -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, rangeExpr.parse(), BinaryOperation.GREATER_EQUALS) }
+                TokenType.LESS -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, rangeExpr.parse(), BinaryOperation.LESS) }
+                TokenType.LESS_EQUALS -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, rangeExpr.parse(), BinaryOperation.LESS_EQUALS) }
+                TokenType.GREATER -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, rangeExpr.parse(), BinaryOperation.GREATER) }
+                TokenType.GREATER_EQUALS -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, rangeExpr.parse(), BinaryOperation.GREATER_EQUALS) }
                 else -> break
             }
         }

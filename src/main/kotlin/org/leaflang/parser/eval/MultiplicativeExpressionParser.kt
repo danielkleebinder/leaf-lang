@@ -19,12 +19,13 @@ class MultiplicativeExpressionParser(private val parser: ILeafParser,
 
     override fun parse(): INode {
         val prefixExpr = parserFactory.prefixExpressionParser
+        val pos = parser.nodePosition()
         var node = prefixExpr.parse()
         while (true) {
             node = when (parser.token.kind) {
-                TokenType.TIMES -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, prefixExpr.parse(), BinaryOperation.TIMES) }
-                TokenType.DIV -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, prefixExpr.parse(), BinaryOperation.DIV) }
-                TokenType.REM -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, prefixExpr.parse(), BinaryOperation.REM) }
+                TokenType.TIMES -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, prefixExpr.parse(), BinaryOperation.TIMES) }
+                TokenType.DIV -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, prefixExpr.parse(), BinaryOperation.DIV) }
+                TokenType.REM -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, prefixExpr.parse(), BinaryOperation.REM) }
                 else -> break
             }
         }

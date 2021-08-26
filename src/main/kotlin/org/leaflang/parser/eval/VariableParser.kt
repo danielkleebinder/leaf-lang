@@ -36,6 +36,7 @@ class VariableParser(private val parser: ILeafParser,
         if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
 
         val id = parser.tokenAndAdvance.value as String
+        val pos = parser.nodePosition()
         val children = arrayListOf<INode>()
 
         var wasNewLine = TokenType.NEW_LINE == parser.token.kind
@@ -58,16 +59,17 @@ class VariableParser(private val parser: ILeafParser,
         // Otherwise statements could not be separated properly.
         if (wasNewLine) parser.advanceCursor(-1)
 
-        return AccessNode(id, children.toList())
+        return AccessNode(pos, id, children.toList())
     }
 
     /**
      * Evaluates member field access (e.g. 'foo.bar') and flag errors.
      */
     private fun evalFieldAccess(): AccessFieldNode {
+        val pos = parser.nodePosition()
         if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
         val name = parser.tokenAndAdvance.value as String
-        return AccessFieldNode(name)
+        return AccessFieldNode(pos, name)
     }
 
     /**
@@ -75,12 +77,13 @@ class VariableParser(private val parser: ILeafParser,
      */
     private fun evalIndexAccess(): AccessIndexNode {
         val expr = parserFactory.expressionParser
+        val pos = parser.nodePosition()
         val indexExpr = expr.parse()
 
         if (TokenType.RIGHT_BRACKET != parser.token.kind) parser.flagError(ErrorCode.MISSING_RIGHT_BRACKET)
         parser.advanceCursor()
 
-        return AccessIndexNode(indexExpr)
+        return AccessIndexNode(pos, indexExpr)
     }
 
     /**
@@ -89,6 +92,7 @@ class VariableParser(private val parser: ILeafParser,
     private fun evalCallAccess(): AccessCallNode {
         val expr = parserFactory.expressionParser
         val args = arrayListOf<INode>()
+        val pos = parser.nodePosition()
 
         // Is the argument list non empty?
         if (TokenType.RIGHT_PARENTHESIS != parser.token.kind) {
@@ -104,6 +108,6 @@ class VariableParser(private val parser: ILeafParser,
         if (TokenType.RIGHT_PARENTHESIS != parser.token.kind) parser.flagError(ErrorCode.MISSING_RIGHT_PARENTHESIS)
         parser.advanceCursor()
 
-        return AccessCallNode(args.toList())
+        return AccessCallNode(pos, args.toList())
     }
 }

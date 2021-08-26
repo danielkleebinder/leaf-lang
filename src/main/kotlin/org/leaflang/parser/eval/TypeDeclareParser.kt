@@ -6,6 +6,7 @@ import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.DeclarationsNode
 import org.leaflang.parser.ast.type.TypeDeclareNode
 import org.leaflang.parser.utils.IParserFactory
+import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the custom type declaration semantics:
@@ -24,6 +25,7 @@ class TypeDeclareParser(private val parser: ILeafParser,
 
     override fun parse(): TypeDeclareNode {
         var name = "<anonymous>"
+        val pos = fromToken(parser.token)
         val traits = arrayListOf<String>()
         val fields = arrayListOf<DeclarationsNode>()
 
@@ -61,7 +63,8 @@ class TypeDeclareParser(private val parser: ILeafParser,
         return TypeDeclareNode(
                 name = name,
                 traits = traits.toList(),
-                fields = fields.toList())
+                fields = fields.toList(),
+                position = pos)
     }
 
     /**

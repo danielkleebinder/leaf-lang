@@ -4,6 +4,7 @@ import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.utils.IParserFactory
+import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the range semantics:
@@ -15,6 +16,7 @@ class RangeExpressionParser(private val parser: ILeafParser,
                             private val parserFactory: IParserFactory) : IParser {
 
     override fun parse(): INode {
+        val pos = parser.nodePosition()
         var node = parserFactory.additiveExpressionParser.parse()
         while (true) {
             node = when (parser.token.kind) {

@@ -12,5 +12,5 @@ import org.leaflang.parser.utils.IParserFactory
  */
 class ProgramParser(private val parser: ILeafParser,
                     private val parserFactory: IParserFactory) : IParser {
-    override fun parse() = ProgramNode(parserFactory.statementListParser.parse())
+    override fun parse() = ProgramNode(parser.nodePosition(), parserFactory.statementListParser.parse())
 }

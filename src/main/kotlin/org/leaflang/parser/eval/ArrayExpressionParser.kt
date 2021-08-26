@@ -3,10 +3,11 @@ package org.leaflang.parser.eval
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
-import org.leaflang.parser.ast.value.ArrayNode
 import org.leaflang.parser.ast.EmptyNode
 import org.leaflang.parser.ast.INode
+import org.leaflang.parser.ast.value.ArrayNode
 import org.leaflang.parser.utils.IParserFactory
+import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the array semantics:
@@ -20,6 +21,7 @@ class ArrayExpressionParser(private val parser: ILeafParser,
     override fun parse(): ArrayNode {
         val expr = parserFactory.expressionParser
         val elements = arrayListOf<INode>()
+        val pos = fromToken(parser.token)
 
         enclosingBrackets {
             elements.add(expr.parse())
@@ -37,7 +39,7 @@ class ArrayExpressionParser(private val parser: ILeafParser,
             }
         }
 
-        return ArrayNode(elements)
+        return ArrayNode(pos, elements)
     }
 
     /**

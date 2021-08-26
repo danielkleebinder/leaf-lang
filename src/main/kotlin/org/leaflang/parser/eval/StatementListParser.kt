@@ -6,6 +6,7 @@ import org.leaflang.parser.ast.EmptyNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.StatementListNode
 import org.leaflang.parser.utils.IParserFactory
+import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the statement list semantics:
@@ -18,6 +19,7 @@ class StatementListParser(private val parser: ILeafParser,
 
     override fun parse(): StatementListNode {
         val statementParser = parserFactory.statementParser
+        val pos = parser.nodePosition()
         val result = arrayListOf<INode>()
         result.add(statementParser.parse())
         while (TokenType.SEPARATOR == parser.token.kind ||
@@ -28,6 +30,6 @@ class StatementListParser(private val parser: ILeafParser,
             val evaluated = statementParser.parse()
             if (EmptyNode::class != evaluated::class) result.add(evaluated)
         }
-        return StatementListNode(result)
+        return StatementListNode(pos, result)
     }
 }

@@ -19,11 +19,12 @@ class ExpressionParser(private val parser: ILeafParser,
 
     override fun parse(): INode {
         val eqExpr = parserFactory.equalityExpressionParser
+        val pos = parser.nodePosition()
         var node = eqExpr.parse()
         while (true) {
             node = when (parser.token.kind) {
-                TokenType.LOGICAL_AND -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, eqExpr.parse(), BinaryOperation.LOGICAL_AND) }
-                TokenType.LOGICAL_OR -> parser.advanceAndSkipNewLines { BinaryOperationNode(node, eqExpr.parse(), BinaryOperation.LOGICAL_OR) }
+                TokenType.LOGICAL_AND -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, eqExpr.parse(), BinaryOperation.LOGICAL_AND) }
+                TokenType.LOGICAL_OR -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, eqExpr.parse(), BinaryOperation.LOGICAL_OR) }
                 else -> break
             }
         }

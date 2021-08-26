@@ -1,6 +1,8 @@
 package org.leaflang.interpreter
 
 import org.leaflang.RuntimeOptions
+import org.leaflang.error.ErrorCode
+import org.leaflang.error.IErrorHandler
 import org.leaflang.interpreter.memory.ActivationRecord
 import org.leaflang.interpreter.memory.IActivationRecord
 import org.leaflang.interpreter.memory.IRuntimeStack
@@ -38,6 +40,16 @@ interface IInterpreter {
      * Interprets the given abstract syntax tree ([ast]).
      */
     fun interpret(ast: INode?): IRuntimeResult
+
+    /**
+     * Flags the current node with an error.
+     */
+    fun flagError(node: INode, errorCode: ErrorCode)
+
+    /**
+     * The local error handler.
+     */
+    var errorHandler: IErrorHandler?
 }
 
 /**

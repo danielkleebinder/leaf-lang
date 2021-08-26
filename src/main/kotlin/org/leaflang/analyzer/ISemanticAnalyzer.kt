@@ -2,6 +2,8 @@ package org.leaflang.analyzer
 
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.symbol.ISymbolTable
+import org.leaflang.error.ErrorCode
+import org.leaflang.error.IErrorHandler
 import org.leaflang.parser.ast.INode
 
 /**
@@ -31,6 +33,16 @@ interface ISemanticAnalyzer {
      * Leaves the current scope.
      */
     fun leaveScope()
+
+    /**
+     * Flags the current node with an error.
+     */
+    fun flagError(node: INode, errorCode: ErrorCode)
+
+    /**
+     * The local error handler.
+     */
+    var errorHandler: IErrorHandler?
 }
 
 /**
