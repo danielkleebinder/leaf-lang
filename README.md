@@ -293,9 +293,9 @@ me.sayHi()
 ## References
 
 * [Programming Language Concepts by Carlo Ghezzi and Mehdi Jazayeri](https://www.wiley.com/en-us/Programming+Language+Concepts%2C+3rd+Edition-p-9780471104261)
-* [Writing Compilers and Interpreter: A Software Engineering Approach](https://www.wiley.com/en-us/Writing+Compilers+and+Interpreters%3A+A+Software+Engineering+Approach%2C+3rd+Edition-p-9780470177075)
+* [Writing Compilers and Interpreters: A Software Engineering Approach](https://www.wiley.com/en-us/Writing+Compilers+and+Interpreters%3A+A+Software+Engineering+Approach%2C+3rd+Edition-p-9780470177075)
 * [The While Programming Language](http://profs.sci.univr.it/~merro/files/WhileExtra_l.pdf)
 * [Let's Build a Simple Interpreter](https://ruslanspivak.com/lsbasi-part1/)
-* [The Go Programming Language Specification](https://golang.org/ref/spec)
+* [Go Language Specification](https://golang.org/ref/spec)
 * [Kotlin Language Specification](https://kotlinlang.org/spec/introduction.html)
 * [ECMAScript Language Specification](https://262.ecma-international.org/)
