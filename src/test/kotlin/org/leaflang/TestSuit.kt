@@ -39,7 +39,7 @@ open class TestSuit {
 
     @BeforeEach
     fun beforeEach() {
-        errorHandler = ErrorHandler()
+        errorHandler = ErrorHandlerMock()
 
         lexer = Lexer()
         parser = LeafParser(errorHandler)

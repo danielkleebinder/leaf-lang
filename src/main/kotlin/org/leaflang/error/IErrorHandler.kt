@@ -9,6 +9,7 @@ interface IErrorHandler {
      * The total number of errors.
      */
     val errorCount: Int
+        get() = errors.size
 
     /**
      * All errors produced so far.

@@ -11,9 +11,6 @@ class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
 
     private var errorList = arrayListOf<AnalysisError>()
 
-    override val errorCount: Int
-        get() = errorList.size
-
     override val errors: List<AnalysisError>
         get() = errorList
 
