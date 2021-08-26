@@ -6,7 +6,7 @@ package org.leaflang.analyzer.symbol
 class TypeSymbol(name: String,
                  val traits: List<TraitSymbol> = listOf(),
                  var fields: MutableList<VarSymbol> = arrayListOf(),
-                 var functions: MutableList<FunSymbol> = arrayListOf(),
+                 var functions: MutableList<ClosureSymbol> = arrayListOf(),
                  nestingLevel: Int = 0) : Symbol(name, nestingLevel) {
 
     /**

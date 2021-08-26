@@ -4,8 +4,8 @@ import org.leaflang.RuntimeOptions
 import org.leaflang.interpreter.memory.ActivationRecord
 import org.leaflang.interpreter.memory.IActivationRecord
 import org.leaflang.interpreter.memory.IRuntimeStack
-import org.leaflang.interpreter.result.IRuntimeResult
 import org.leaflang.interpreter.memory.cell.IMemoryCell
+import org.leaflang.interpreter.result.IRuntimeResult
 import org.leaflang.parser.ast.INode
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Future
@@ -70,6 +70,20 @@ inline fun IInterpreter.withStaticScope(name: String? = null,
     body(activationRecord!!)
     if (RuntimeOptions.debug) println(runtimeStack.peek())
     runtimeStack.pop()
+}
+
+/**
+ * Replaces the top activation record on the runtime stack with the given [activationRecord]
+ * and runs the given lambda.
+ */
+inline fun IInterpreter.replaceActivationRecord(activationRecord: IActivationRecord,
+                                                body: (activationRecord: IActivationRecord) -> Unit) {
+    val previousScope = runtimeStack.pop()
+    runtimeStack.push(activationRecord)
+    body(activationRecord)
+    if (RuntimeOptions.debug) println(runtimeStack.peek())
+    runtimeStack.pop()
+    runtimeStack.push(previousScope!!)
 }
 
 /**

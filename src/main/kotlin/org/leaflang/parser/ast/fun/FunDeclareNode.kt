@@ -1,6 +1,6 @@
 package org.leaflang.parser.ast.`fun`
 
-import org.leaflang.analyzer.symbol.FunSymbol
+import org.leaflang.analyzer.symbol.ClosureSymbol
 import org.leaflang.parser.ast.DeclarationsNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.type.TypeNode
@@ -15,6 +15,6 @@ class FunDeclareNode(val extensionOf: List<TypeNode> = listOf(),
                      val ensures: INode?,
                      val returns: TypeNode?,
                      val body: INode?,
-                     var spec: FunSymbol? = null) : INode {
+                     var spec: ClosureSymbol? = null) : INode {
     override fun toString() = "FunDeclareNode(for=$extensionOf, name=$name, params=$params, requires=$requires, ensures=$ensures, returns=$returns, body=$body)"
 }

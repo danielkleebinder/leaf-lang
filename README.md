@@ -147,14 +147,14 @@ Turing completeness can be shown by implementing a mapping between the WHILE and
 programming language is proven to be Turing complete and is defined as follows:
 
 ```
-C ::= <L> := <E>
+<C> ::= <L> := <E>
     | 'if' <B> 'then' <C> 'else' <C>
     | 'while' <B> 'do' <C>
     | <C>;<C>
     | skip
 
-B ::= 'true' | 'false' | <E> '=' <E> | <B> '&' <B> | '-' <B>
-E ::= L | n | (E + E)
+<B> ::= 'true' | 'false' | <E> '=' <E> | <B> '&' <B> | '-' <B>
+<E> ::= <L> | n | (E + E)
 ```
 
 The (bidirectional) mapping from WHILE to Leaf can be implemented as isomorphism function and looks like the following (WHILE

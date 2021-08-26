@@ -1,11 +1,13 @@
 package org.leaflang.interpreter.visitor
 
-import org.leaflang.analyzer.symbol.FunSymbol
+import org.leaflang.analyzer.symbol.ClosureSymbol
 import org.leaflang.analyzer.symbol.NativeFunSymbol
 import org.leaflang.interpreter.IInterpreter
 import org.leaflang.interpreter.exception.VisitorException
 import org.leaflang.interpreter.memory.IActivationRecord
+import org.leaflang.interpreter.memory.cell.ClosureMemoryCell
 import org.leaflang.interpreter.memory.cell.IMemoryCell
+import org.leaflang.interpreter.memory.cell.NativeFunMemoryCell
 import org.leaflang.interpreter.result.IRuntimeResult
 import org.leaflang.interpreter.result.ReturnRuntimeResult
 import org.leaflang.interpreter.result.dataResult
@@ -67,7 +69,6 @@ class AccessVisitor : IVisitor {
      * Visits the call access node and returns the interpreted result.
      */
     private fun visitCallAccess(previous: IMemoryCell?, current: IMemoryCell, node: AccessCallNode, interpreter: IInterpreter): IMemoryCell? {
-        val activationRecord = interpreter.activationRecord!!
         val args = node.args
 
         // Execute the arguments first before creating a new activation record,
@@ -80,23 +81,23 @@ class AccessVisitor : IVisitor {
 
         // We are dealing with a native function invocation. This is actually much
         // easier to deal with and faster.
-        if (spec is NativeFunSymbol) {
+        if (current is NativeFunMemoryCell && spec is NativeFunSymbol) {
             return spec.nativeFunction(actualArgs.toTypedArray())
         }
 
         // It is a user defined function that needs interpretation.
-        if (spec is FunSymbol) {
+        if (current is ClosureMemoryCell && spec is ClosureSymbol) {
             val funName = spec.name
 
             // Static vs dynamic link algorithm as described by the new mexico
             // state university: https://www.cs.nmsu.edu/~rth/cs/cs471/f00/ARIs.html
-            val callerDepth = activationRecord.nestingLevel
+            val callerDepth = current.executionContext.nestingLevel
             val declarerDepth = spec.nestingLevel
             val depthDifference = callerDepth - declarerDepth
 
             // The algorithm even works for negative depth difference (call up the
             // stack), because Kotlin won't execute negative ranges without "downTo".
-            var staticLink: IActivationRecord? = activationRecord
+            var staticLink: IActivationRecord? = current.executionContext
             for (i in 1..depthDifference) staticLink = staticLink?.staticLink
 
             // Push a new activation record onto the stack and assign the variables

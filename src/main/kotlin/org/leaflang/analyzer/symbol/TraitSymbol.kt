@@ -5,7 +5,7 @@ package org.leaflang.analyzer.symbol
  */
 class TraitSymbol(name: String,
                   nestingLevel: Int = 0,
-                  val functions: MutableList<FunSymbol> = arrayListOf()) : Symbol(name, nestingLevel) {
+                  val functions: MutableList<ClosureSymbol> = arrayListOf()) : Symbol(name, nestingLevel) {
     /**
      * Checks if a function with the given [funName] already exists.
      */

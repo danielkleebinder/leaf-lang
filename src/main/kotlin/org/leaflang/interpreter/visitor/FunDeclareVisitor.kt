@@ -5,7 +5,7 @@ import org.leaflang.interpreter.exception.VisitorException
 import org.leaflang.interpreter.memory.cell.TraitMemoryCell
 import org.leaflang.interpreter.memory.cell.TypeMemoryCell
 import org.leaflang.interpreter.result.DataRuntimeResult
-import org.leaflang.interpreter.result.funResult
+import org.leaflang.interpreter.result.closureResult
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.`fun`.FunDeclareNode
 
@@ -16,8 +16,8 @@ class FunDeclareVisitor : IVisitor {
     override fun visit(interpreter: IInterpreter, node: INode): DataRuntimeResult {
         val funDeclareNode = node as FunDeclareNode
         val funName = funDeclareNode.name
-        val result = funResult(funDeclareNode.spec!!)
         val activationRecord = interpreter.activationRecord!!
+        val result = closureResult(funDeclareNode.spec!!, activationRecord)
 
         if (funName == null) return result
 

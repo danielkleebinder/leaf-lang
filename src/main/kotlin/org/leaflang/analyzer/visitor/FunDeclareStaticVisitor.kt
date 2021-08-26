@@ -40,7 +40,7 @@ class FunDeclareStaticVisitor : IStaticVisitor {
         // Test for static semantic errors in the list of extensions
         funDeclareNode.extensionOf.forEach { analyzer.analyze(it) }
 
-        val funSymbol = FunSymbol(
+        val funSymbol = ClosureSymbol(
                 name = funName,
                 requires = funDeclareNode.requires,
                 ensures = funDeclareNode.ensures,

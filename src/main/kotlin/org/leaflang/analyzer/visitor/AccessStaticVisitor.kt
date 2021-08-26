@@ -36,7 +36,7 @@ class AccessStaticVisitor : IStaticVisitor {
 
         if (symbol is BuiltInSymbol) return analysisResult(symbol.name, true)
         if (symbol is VarSymbol && symbol.type != null) return analysisResult(symbol.type!!.name, symbol.modifiers.contains(Modifier.CONSTANT))
-        if (symbol is FunSymbol || symbol is NativeFunSymbol) return analysisResult("function")
+        if (symbol is ClosureSymbol || symbol is NativeFunSymbol) return analysisResult("function")
         if (symbol is TypeSymbol) return analysisResult(symbol.name)
 
         return emptyAnalysisResult()
@@ -56,7 +56,7 @@ class AccessStaticVisitor : IStaticVisitor {
             typeSymbol = symbol
         }
 
-        val functions: List<FunSymbol> = when (typeSymbol) {
+        val functions: List<ClosureSymbol> = when (typeSymbol) {
             is TypeSymbol -> typeSymbol.functions
             is TraitSymbol -> typeSymbol.functions
             else -> listOf()
@@ -99,7 +99,7 @@ class AccessStaticVisitor : IStaticVisitor {
         }
 
         // This is not a function symbol
-        if (symbol !is FunSymbol) return null
+        if (symbol !is ClosureSymbol) return null
 
         // What can I extract from the static information I have available?
         val paramCount = symbol.params.size

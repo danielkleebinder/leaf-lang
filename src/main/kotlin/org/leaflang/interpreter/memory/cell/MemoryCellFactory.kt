@@ -1,7 +1,8 @@
 package org.leaflang.interpreter.memory.cell
 
-import org.leaflang.analyzer.symbol.FunSymbol
+import org.leaflang.analyzer.symbol.ClosureSymbol
 import org.leaflang.analyzer.symbol.TypeSymbol
+import org.leaflang.interpreter.memory.IActivationRecord
 import java.math.BigDecimal
 import java.util.concurrent.Future
 
@@ -27,9 +28,9 @@ fun stringMemoryCell(value: String) = StringMemoryCell(value)
 fun arrayMemoryCell(value: Array<IMemoryCell?>) = ArrayMemoryCell(value)
 
 /**
- * Creates a function [value].
+ * Creates a closure [value] which executes in the given [executionContext].
  */
-fun funMemoryCell(value: FunSymbol) = FunMemoryCell(value)
+fun closureMemoryCell(value: ClosureSymbol, executionContext: IActivationRecord) = ClosureMemoryCell(value, executionContext)
 
 /**
  * Creates a custom type [value].

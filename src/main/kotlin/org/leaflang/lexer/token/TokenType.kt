@@ -33,10 +33,10 @@ enum class TokenType(val descriptor: String) {
     // Others
     LEFT_ARROW("<-"), RIGHT_ARROW("->"),
     ASSIGNMENT("="),
-    COMPLEMENT("~"), DOT("."),
+    COMPLEMENT("~"), DOT("."), RANGE(".."),
     COLON(":"), COMMA(","), COMMENT("//"),
     NEW_LINE("\\n"), SEPARATOR(";"),
-    BOOL("bool value"), NUMBER("number value"), STRING("string value"), RANGE("range value"),
+    BOOL("bool value"), NUMBER("number value"), STRING("string value"),
     IDENTIFIER("identifier name"),
     ERROR("error"),
     END_OF_PROGRAM("end of program")

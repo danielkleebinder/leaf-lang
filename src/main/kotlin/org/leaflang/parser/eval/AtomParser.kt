@@ -5,7 +5,9 @@ import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.advance
 import org.leaflang.parser.advanceAndSkipNewLines
-import org.leaflang.parser.ast.*
+import org.leaflang.parser.ast.AsyncNode
+import org.leaflang.parser.ast.EmptyNode
+import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.value.BoolNode
 import org.leaflang.parser.ast.value.NumberNode
 import org.leaflang.parser.ast.value.StringNode
@@ -61,6 +63,11 @@ class AtomParser(private val parser: ILeafParser,
                 if (TokenType.RIGHT_PARENTHESIS != parser.token.kind) parser.flagError(ErrorCode.MISSING_RIGHT_PARENTHESIS)
                 parser.advanceCursor()
                 result
+            }
+
+            TokenType.ERROR -> {
+                parser.flagError(parser.token.value as ErrorCode)
+                EmptyNode()
             }
 
             else -> EmptyNode()

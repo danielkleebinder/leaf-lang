@@ -274,4 +274,17 @@ class InterpreterFunctionTest : TestSuit() {
         execute(readResourceFile("function/fun-chain-2.test.leaf"))
         assertEquals(BigDecimal.valueOf(1), valueOf("res"))
     }
+
+    @Test
+    fun shouldAllowClosedLambdas() {
+        execute("""
+            fun test(closure: fun) = closure()
+            var res = 0
+            {
+              const n = 10
+              res = test(fun () = n * n)
+            }
+        """.trimIndent())
+        assertEquals(BigDecimal.valueOf(100), valueOf("res"))
+    }
 }

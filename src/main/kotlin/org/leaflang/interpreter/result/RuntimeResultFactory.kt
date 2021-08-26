@@ -1,7 +1,8 @@
 package org.leaflang.interpreter.result
 
-import org.leaflang.analyzer.symbol.FunSymbol
+import org.leaflang.analyzer.symbol.ClosureSymbol
 import org.leaflang.analyzer.symbol.TypeSymbol
+import org.leaflang.interpreter.memory.IActivationRecord
 import org.leaflang.interpreter.memory.cell.*
 import java.math.BigDecimal
 import java.util.concurrent.Future
@@ -35,7 +36,7 @@ fun boolResult(value: Boolean) = dataResult(boolMemoryCell(value))
 /**
  * Creates a data runtime result with the given function [value].
  */
-fun funResult(value: FunSymbol) = dataResult(funMemoryCell(value))
+fun closureResult(value: ClosureSymbol, executionContext: IActivationRecord) = dataResult(closureMemoryCell(value, executionContext))
 
 /**
  * Creates a data runtime result with the given type [value].

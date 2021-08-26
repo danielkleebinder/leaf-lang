@@ -1,7 +1,8 @@
 package org.leaflang.interpreter.memory.cell
 
-import org.leaflang.analyzer.symbol.FunSymbol
+import org.leaflang.analyzer.symbol.ClosureSymbol
 import org.leaflang.interpreter.exception.UnknownOperationException
+import org.leaflang.interpreter.memory.IActivationRecord
 import org.leaflang.parser.ast.BinaryOperation
 import org.leaflang.parser.ast.UnaryOperation
 
@@ -9,10 +10,11 @@ import org.leaflang.parser.ast.UnaryOperation
  * Function values are used to perform certain operations and
  * enable type coercion.
  */
-class FunMemoryCell(override var value: FunSymbol,
-                    override val members: Map<String, IMemoryCell> = mapOf()) : IMemoryCell {
+class ClosureMemoryCell(override var value: ClosureSymbol,
+                        val executionContext: IActivationRecord,
+                        override val members: Map<String, IMemoryCell> = mapOf()) : IMemoryCell {
 
-    override fun copy() = funMemoryCell(value)
+    override fun copy() = closureMemoryCell(value, executionContext)
     override fun get(index: IMemoryCell) = throw UnknownOperationException("Functions do not support index based access")
     override fun unary(op: UnaryOperation) = throw UnknownOperationException("Functions do not support unary operations")
     override fun assign(newValue: IMemoryCell) = throw UnknownOperationException("Assignments are not supported on function values")
@@ -27,7 +29,7 @@ class FunMemoryCell(override var value: FunSymbol,
      * Performs the '==' operation.
      */
     private fun binaryEqual(right: IMemoryCell) = when (right) {
-        is FunMemoryCell -> boolMemoryCell(value == right.value)
+        is ClosureMemoryCell -> boolMemoryCell(value == right.value)
         else -> throw UnknownOperationException("The == operation in array is not supported for $right")
     }
 
@@ -35,10 +37,10 @@ class FunMemoryCell(override var value: FunSymbol,
      * Performs the '!=' operation.
      */
     private fun binaryNotEqual(right: IMemoryCell) = when (right) {
-        is FunMemoryCell -> boolMemoryCell(value != right.value)
+        is ClosureMemoryCell -> boolMemoryCell(value != right.value)
         else -> throw UnknownOperationException("The != operation in array is not supported for $right")
     }
 
     override fun stringify() = value.toString()
-    override fun toString() = "FunMemoryCell(definition=$value)"
+    override fun toString() = "ClosureMemoryCell(definition=$value)"
 }
