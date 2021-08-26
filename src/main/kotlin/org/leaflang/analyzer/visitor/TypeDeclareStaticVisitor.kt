@@ -1,13 +1,13 @@
 package org.leaflang.analyzer.visitor
 
 import org.leaflang.analyzer.ISemanticAnalyzer
-import org.leaflang.analyzer.exception.AnalyticalVisitorException
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.emptyAnalysisResult
 import org.leaflang.analyzer.symbol.TraitSymbol
 import org.leaflang.analyzer.symbol.TypeSymbol
 import org.leaflang.analyzer.symbol.VarSymbol
 import org.leaflang.analyzer.withScope
+import org.leaflang.error.ErrorCode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.Modifier
 import org.leaflang.parser.ast.type.TypeDeclareNode
@@ -20,23 +20,25 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
         val typeDeclareNode = node as TypeDeclareNode
         val typeName = typeDeclareNode.name
 
-        if (analyzer.currentScope.has(typeName)) throw AnalyticalVisitorException("\"$typeName\" (type) already exists")
+        if (analyzer.currentScope.has(typeName)) {
+            analyzer.error(node, ErrorCode.ALREADY_EXISTS, "\"$typeName\" (type) already exists")
+        }
 
         // Check if each trait is available in the current scope
         typeDeclareNode.traits
                 .filter { !analyzer.currentScope.has(it) }
-                .forEach { throw AnalyticalVisitorException("Type \"$typeName\" tries to implement trait \"$it\" which does not exist in this scope") }
+                .forEach { analyzer.error(node, ErrorCode.INVALID_TRAIT, "Type \"$typeName\" tries to implement trait \"$it\" which does not exist in this scope") }
 
         // Check if each trait really is a trait type
         typeDeclareNode.traits
                 .filter { analyzer.currentScope.has(it) && analyzer.currentScope.get(it) !is TraitSymbol }
-                .forEach { throw AnalyticalVisitorException("Type \"$typeName\" tries to implement \"$it\" which is not a trait") }
+                .forEach { analyzer.error(node, ErrorCode.INVALID_TRAIT, "Type \"$typeName\" tries to implement \"$it\" which is not a trait") }
 
         // Check if each trait is only implemented once
         typeDeclareNode.traits
                 .groupingBy { it }.eachCount()
                 .filter { it.value > 1 }
-                .forEach { throw AnalyticalVisitorException("Type \"$typeName\" implements trait \"${it.key}\" ${it.value} times, but only once is allowed") }
+                .forEach { analyzer.error(node, ErrorCode.INVALID_TYPE_SPECIFICATION, "Type \"$typeName\" implements trait \"${it.key}\" ${it.value} times, but only once is allowed") }
 
 
         val typeSymbol = TypeSymbol(
@@ -60,17 +62,22 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
             //     parent: Human
             //   }
             typeDeclareNode.fields
-                    .flatMap { field -> field.declarations }
-                    .onEach { field ->
-                        if (typeSymbol.hasField(field.identifier)) {
-                            throw AnalyticalVisitorException("\"$typeName.${field.identifier}\" already exists")
+                    .forEach { declarationsNode ->
+                        declarationsNode.declarations.forEach { field ->
+                            if (typeSymbol.hasField(field.identifier)) {
+                                analyzer.error(declarationsNode, ErrorCode.ALREADY_EXISTS, "\"$typeName.${field.identifier}\" already exists")
+                            }
+                            val type = when {
+                                field.typeExpr != null -> field.typeExpr.type
+                                field.assignmentExpr != null -> analyzer.analyze(field.assignmentExpr).type
+                                else -> {
+                                    analyzer.error(declarationsNode, ErrorCode.MISSING_TYPE_INFORMATION, "\"$typeName.${field.identifier}\" has no type")
+                                    null
+                                }
+                            }
+
+                            if (type != null) typeSymbol.fields.add(VarSymbol(field.identifier, analyzer.currentScope.get(type)))
                         }
-                        val type = when {
-                            field.typeExpr != null -> field.typeExpr.type
-                            field.assignmentExpr != null -> analyzer.analyze(field.assignmentExpr).type
-                            else -> throw AnalyticalVisitorException("\"$typeName.${field.identifier}\" has no type")
-                        }
-                        typeSymbol.fields.add(VarSymbol(field.identifier, analyzer.currentScope.get(type!!)))
                     }
 
             // All fields must be valid now

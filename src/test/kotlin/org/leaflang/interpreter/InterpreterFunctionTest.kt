@@ -11,17 +11,17 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldErrorWhenRequiresWithoutParams() {
-        assertThrows(StaticSemanticException::class.java) { execute("fun a : true -> number = 10") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun b() : true -> number = 10") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun c ( ) : false -> bool = true") }
+        assertSemanticError { execute("fun a : true -> number = 10") }
+        assertSemanticError { execute("fun b() : true -> number = 10") }
+        assertSemanticError { execute("fun c ( ) : false -> bool = true") }
     }
 
     @Test
     fun shouldErrorWhenEnsuresWithoutReturn() {
-        assertThrows(StaticSemanticException::class.java) { execute("fun a :: true = 10") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun b :: _ > 10 && true = 10") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun c(x: number) :: x > 10 = 10") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun d(x: number) : x == 1 : _ != 10 = 10") }
+        assertSemanticError { execute("fun a :: true = 10") }
+        assertSemanticError { execute("fun b :: _ > 10 && true = 10") }
+        assertSemanticError { execute("fun c(x: number) :: x > 10 = 10") }
+        assertSemanticError { execute("fun d(x: number) : x == 1 : _ != 10 = 10") }
     }
 
     @Test
@@ -140,7 +140,7 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldFollowStaticLink2() {
-        assertThrows(StaticSemanticException::class.java) { execute(readResourceFile("function/fun-static-link-2.test.leaf")) }
+        assertSemanticError { execute(readResourceFile("function/fun-static-link-2.test.leaf")) }
     }
 
     @Test
@@ -157,7 +157,7 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldFollowStaticLink5() {
-        assertThrows(StaticSemanticException::class.java) { execute(readResourceFile("function/fun-static-link-5.test.leaf")) }
+        assertSemanticError { execute(readResourceFile("function/fun-static-link-5.test.leaf")) }
         assertNull(valueOf("res"))
     }
 
@@ -178,30 +178,30 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldErrorUnknownReturnType() {
-        assertThrows(StaticSemanticException::class.java) { execute("fun f -> unknownType = false; f()") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun f -> Test = false; f()") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun f -> OString = false; f()") }
+        assertSemanticError { execute("fun f -> unknownType = false; f()") }
+        assertSemanticError { execute("fun f -> Test = false; f()") }
+        assertSemanticError { execute("fun f -> OString = false; f()") }
     }
 
     @Test
     fun shouldErrorWrongParamCount() {
-        assertThrows(StaticSemanticException::class.java) { execute("fun f -> bool = false; f(1)") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) -> bool = false; f()") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) -> bool = false; f(1, 2)") }
+        assertSemanticError { execute("fun f -> bool = false; f(1)") }
+        assertSemanticError { execute("fun f(a: number) -> bool = false; f()") }
+        assertSemanticError { execute("fun f(a: number) -> bool = false; f(1, 2)") }
     }
 
     @Test
     fun shouldErrorForWrongType() {
-        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) = a; f(\"Test\")") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number) = a; const n: string = f(10)") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: bool) -> string = a; f(10)") }
+        assertSemanticError { execute("fun f(a: number) = a; f(\"Test\")") }
+        assertSemanticError { execute("fun f(a: number) = a; const n: string = f(10)") }
+        assertSemanticError { execute("fun f(a: bool) -> string = a; f(10)") }
     }
 
     @Test
     fun shouldErrorForParameterRedeclaration() {
-        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number, a: number) {}") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number, a: string) {}") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun f(a: number, b: string, a: number) {}") }
+        assertSemanticError { execute("fun f(a: number, a: number) { true }") }
+        assertSemanticError { execute("fun f(a: number, a: string) { true }") }
+        assertSemanticError { execute("fun f(a: number, b: string, a: number) { true }") }
     }
 
     @Test

@@ -30,7 +30,10 @@ fun execute(programCode: String, fileName: String? = null) {
         var ast: INode?
         var result: Any?
 
-        parser.errorHandler = ErrorHandler(source)
+        val errorHandler = ErrorHandler(source)
+        parser.errorHandler = errorHandler
+        analyzer.errorHandler = errorHandler
+        interpreter.errorHandler = errorHandler
 
         val timeLexer = measureNanoTime { tokens = lexer.tokenize(source) }
         if (RuntimeOptions.debug) println("Lexical Analysis    : " + tokens.contentToString())
@@ -54,9 +57,8 @@ fun execute(programCode: String, fileName: String? = null) {
             """.trimIndent())
         }
 
-        if (result != null) {
-            println("Result: $result")
-        }
+        if (errorHandler.hasErrors()) println(errorHandler.summary())
+        if (result != null) println("Result: $result")
     } catch (e: Exception) {
         System.err.println(e)
         Thread.sleep(500)

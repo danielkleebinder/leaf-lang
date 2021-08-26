@@ -1,11 +1,11 @@
 package org.leaflang.analyzer.visitor
 
 import org.leaflang.analyzer.ISemanticAnalyzer
-import org.leaflang.analyzer.exception.AnalyticalVisitorException
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.analysisResult
 import org.leaflang.analyzer.symbol.*
 import org.leaflang.analyzer.withScope
+import org.leaflang.error.ErrorCode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.Modifier
 import org.leaflang.parser.ast.`fun`.FunDeclareNode
@@ -20,21 +20,21 @@ class FunDeclareStaticVisitor : IStaticVisitor {
 
         // Invalid function declaration semantic (should already be checked in the parser though)
         if (funDeclareNode.extensionOf.isNotEmpty() && funName == null) {
-            throw AnalyticalVisitorException("This function tries to extend some types but does not have a unique name")
+            analyzer.error(node, ErrorCode.EXTENSION_FUNCTION_ANONYMOUS)
         }
 
         // Abstract function declarations are only allowed on trait types
         if (funDeclareNode.body == null) {
             funDeclareNode.extensionOf
                     .filter { analyzer.currentScope.get(it.type) !is TraitSymbol }
-                    .forEach { throw AnalyticalVisitorException("\"$funName\" is abstract (i.e. has no implementation), but wants to extend the non-trait type \"${it.type}\"") }
+                    .forEach { analyzer.error(node, ErrorCode.EXTENSION_FUNCTION_ABSTRACT, "${it.type}.$funName extension not possible") }
         }
 
         // Concrete function declarations are only allowed on non-trait types
         if (funDeclareNode.body != null) {
             funDeclareNode.extensionOf
                     .filter { analyzer.currentScope.get(it.type) !is TypeSymbol }
-                    .forEach { throw AnalyticalVisitorException("\"$funName\" is concrete (i.e. has an implementation), but wants to extend the non-concrete type \"${it.type}\"") }
+                    .forEach { analyzer.error(node, ErrorCode.EXTENSION_FUNCTION_CONCRETE, "${it.type}.$funName extension not possible") }
         }
 
         // Test for static semantic errors in the list of extensions
@@ -58,7 +58,8 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                 .mapNotNull { analyzer.currentScope.get(it.type) as? TypeSymbol }
                 .forEach {
                     if (it.hasField(funName)) {
-                        throw AnalyticalVisitorException("Function extension not possible, \"${it.name}.${funName}\" already exists")
+                        analyzer.error(node, ErrorCode.EXTENSION_NOT_POSSIBLE, "\"${it.name}.${funName}\" already exists")
+                        return@forEach
                     }
 
                     // The function has to have to same signature as in the trait definition
@@ -70,7 +71,8 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                         if (traitFunParams.size != implFunParamsCount) {
                             val traitFunName = "${fromTrait.name}.${traitFun.name}"
                             val typeFunName = "${it.name}.$funName"
-                            throw AnalyticalVisitorException("Trait function \"$traitFunName\" expects ${traitFunParams.size} parameters but \"$typeFunName\" specifies $implFunParamsCount")
+                            analyzer.error(node, ErrorCode.INVALID_FUNCTION_IMPLEMENTATION, "\"$traitFunName\" expects ${traitFunParams.size} parameters but \"$typeFunName\" specifies $implFunParamsCount")
+                            return@forEach
                         }
 
                         funDeclareNode.params?.declarations
@@ -90,7 +92,7 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                                 ?.forEach { params ->
                                     val traitFunName = "${fromTrait.name}.${traitFun.name}"
                                     val typeFunName = "${it.name}.$funName"
-                                    throw AnalyticalVisitorException("Trait function \"$traitFunName\" expects \"${params.first}\" parameter type but \"$typeFunName\" specifies \"${params.second}\"")
+                                    analyzer.error(node, ErrorCode.INVALID_FUNCTION_IMPLEMENTATION, "\"$traitFunName\" expects \"${params.first}\" parameter type but \"$typeFunName\" specifies \"${params.second}\"")
                                 }
                     }
 
@@ -101,7 +103,7 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                 .mapNotNull { analyzer.currentScope.get(it.type) as? TraitSymbol }
                 .forEach {
                     if (it.hasFunction(funName)) {
-                        throw AnalyticalVisitorException("Function extension not possible, \"${it.name}.${funName}\" already exists")
+                        analyzer.error(node, ErrorCode.EXTENSION_NOT_POSSIBLE, "\"${it.name}.${funName}\" already exists")
                     }
                     it.functions.add(funSymbol)
                 }
@@ -128,12 +130,12 @@ class FunDeclareStaticVisitor : IStaticVisitor {
 
             // Requires without parameters does not make sense
             if ((funDeclareNode.params == null || funDeclareNode.params.declarations.isEmpty()) && funDeclareNode.requires != null) {
-                throw AnalyticalVisitorException("Function \"$funName\" specifies requires, but does not have any parameters")
+                analyzer.error(node, ErrorCode.INVALID_FUNCTION_REQUIRES_BLOCK, "No function parameters in \"$funName\"")
             }
 
             // Ensures without return value does not make sense
             if (funDeclareNode.returns == null && funDeclareNode.ensures != null) {
-                throw AnalyticalVisitorException("Function \"$funName\" specifies ensures, but does not have a return value")
+                analyzer.error(node, ErrorCode.INVALID_FUNCTION_ENSURES_BLOCK, "No returns value in \"$funName\"")
             }
 
             // Check if all our checks are syntactically correct
@@ -163,7 +165,7 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                 analyzer.analyze(funDeclareNode.returns)
                 funSymbol.returns = analyzer.currentScope.get(funDeclareNode.returns.type)
                 if (funSymbol.returns == null) {
-                    throw AnalyticalVisitorException("Function \"$funName\" return type \"${funDeclareNode.returns} does not exist")
+                    analyzer.error(node, ErrorCode.INVALID_TYPE, "Function \"$funName\" return type \"${funDeclareNode.returns} does not exist")
                 }
             } else if (bodyReturnType != null) {
 

@@ -10,7 +10,7 @@ class AnalyzerFunctionTest : TestSuit() {
 
     @Test
     fun shouldErrorForIncompatibleReturnType() {
-        assertThrows(StaticSemanticException::class.java) { execute("fun c -> number = 10; const a: string = c()") }
+        assertSemanticError { execute("fun c -> number = 10; const a: string = c()") }
     }
 
     @Test

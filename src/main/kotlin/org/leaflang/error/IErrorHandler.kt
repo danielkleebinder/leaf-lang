@@ -11,6 +11,11 @@ interface IErrorHandler {
     val errorCount: Int
 
     /**
+     * All errors produced so far.
+     */
+    val errors: List<AnalysisError>
+
+    /**
      * Handles the given [error].
      */
     fun handle(error: AnalysisError)
@@ -22,7 +27,17 @@ interface IErrorHandler {
     fun abort(error: AnalysisError)
 
     /**
+     * Returns a summary of all errors.
+     */
+    fun summary(): String
+
+    /**
      * Resets all errors in this particular handler.
      */
     fun reset()
+
+    /**
+     * Returns true if any errors occurred so far.
+     */
+    fun hasErrors() = errorCount > 0
 }

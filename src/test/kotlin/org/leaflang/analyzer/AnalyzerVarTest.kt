@@ -10,17 +10,17 @@ class AnalyzerVarTest : TestSuit() {
 
     @Test
     fun shouldErrorForIncompatibleAssignTypes() {
-        assertThrows(StaticSemanticException::class.java) { execute("const a: string = 10") }
-        assertThrows(StaticSemanticException::class.java) { execute("const b: number = true") }
-        assertThrows(StaticSemanticException::class.java) { execute("const c: bool = [1,2,3]") }
-        assertThrows(StaticSemanticException::class.java) { execute("const d: array = \"Hello World\"") }
+        assertSemanticError { execute("const a: string = 10") }
+        assertSemanticError { execute("const b: number = true") }
+        assertSemanticError { execute("const c: bool = [1,2,3]") }
+        assertSemanticError { execute("const d: array = \"Hello World\"") }
     }
 
     @Test
     fun shouldErrorForIncompatibleVarTypes() {
-        assertThrows(StaticSemanticException::class.java) { execute("const x1 = 10; var y1: string = x1") }
-        assertThrows(StaticSemanticException::class.java) { execute("const x2 = \"Hello World\"; var y2: number = x2") }
-        assertThrows(StaticSemanticException::class.java) { execute("const x3: bool = true; var y3: array = x3") }
+        assertSemanticError { execute("const x1 = 10; var y1: string = x1") }
+        assertSemanticError { execute("const x2 = \"Hello World\"; var y2: number = x2") }
+        assertSemanticError { execute("const x3: bool = true; var y3: array = x3") }
     }
 
     @Test

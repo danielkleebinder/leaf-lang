@@ -16,9 +16,9 @@ class InterpreterSubtypingTest : TestSuit() {
 
     @Test
     fun shouldNotAllowSubtypingForDifferentTypes() {
-        assertThrows(StaticSemanticException::class.java) { execute("type Human1; type Pet1; const a: Human1 = new Pet1") }
-        assertThrows(StaticSemanticException::class.java) { execute("type Human2; const a: string = new Human2") }
-        assertThrows(StaticSemanticException::class.java) { execute("trait Eats3; type Human3; const a: Eats3 = new Human3") }
+        assertSemanticError { execute("type Human1; type Pet1; const a: Human1 = new Pet1") }
+        assertSemanticError { execute("type Human2; const a: string = new Human2") }
+        assertSemanticError { execute("trait Eats3; type Human3; const a: Eats3 = new Human3") }
     }
 
     @Test
@@ -68,7 +68,7 @@ class InterpreterSubtypingTest : TestSuit() {
 
     @Test
     fun shouldNotAllowDifferentSignature() {
-        assertThrows(StaticSemanticException::class.java) {
+        assertSemanticError {
             execute("""
                 trait Liquid
                 trait Drinks
@@ -78,7 +78,7 @@ class InterpreterSubtypingTest : TestSuit() {
                 fun <Animal>.drink(liquid: Liquid) = "Animal is drinking " + liquid
             """.trimIndent())
         }
-        assertThrows(StaticSemanticException::class.java) {
+        assertSemanticError {
             execute("""
                 trait Drinks2
                 fun <Drinks2>.drink(n: number)

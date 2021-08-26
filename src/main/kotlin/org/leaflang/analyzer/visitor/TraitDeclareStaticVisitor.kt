@@ -1,10 +1,10 @@
 package org.leaflang.analyzer.visitor
 
 import org.leaflang.analyzer.ISemanticAnalyzer
-import org.leaflang.analyzer.exception.AnalyticalVisitorException
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.emptyAnalysisResult
 import org.leaflang.analyzer.symbol.TraitSymbol
+import org.leaflang.error.ErrorCode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.type.TraitDeclareNode
 
@@ -16,7 +16,9 @@ class TraitDeclareStaticVisitor : IStaticVisitor {
         val traitDeclareNode = node as TraitDeclareNode
         val traitName = traitDeclareNode.name
 
-        if (analyzer.currentScope.has(traitName)) throw AnalyticalVisitorException("\"$traitName\" (trait) already exists")
+        if (analyzer.currentScope.has(traitName)) {
+            analyzer.error(node, ErrorCode.ALREADY_EXISTS, "\"$traitName\" (trait) already exists")
+        }
 
         val traitSymbol = TraitSymbol(
                 name = traitName,

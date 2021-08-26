@@ -1,9 +1,9 @@
 package org.leaflang.interpreter
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertDoesNotThrow
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.leaflang.TestSuit
-import org.leaflang.analyzer.exception.StaticSemanticException
 import java.math.BigDecimal
 
 /**
@@ -66,14 +66,14 @@ class InterpreterTypeExtTest : TestSuit() {
 
     @Test
     fun shouldErrorIfNoExtensionsSpecified() {
-        assertThrows(StaticSemanticException::class.java) { execute("fun <>.test = true".trimIndent()) }
-        assertTrue(withErrors { execute("fun .test = true") } > 0)
+        assertSyntaxError { execute("fun <>.test = true") }
+        assertSyntaxError { execute("fun .test = true") }
     }
 
     @Test
     fun shouldErrorOnInvalidExtTypes() {
-        assertThrows(StaticSemanticException::class.java) { execute("fun <UnknownTypooo>.test = true") }
-        assertThrows(StaticSemanticException::class.java) { execute("fun <string, UnknownTypooo>.test { return true }") }
+        assertSemanticError { execute("fun <UnknownTypooo>.test = true") }
+        assertSemanticError { execute("fun <string, UnknownTypooo>.test { return true }") }
     }
 
     @Test

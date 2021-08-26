@@ -1,10 +1,11 @@
 package org.leaflang.analyzer.visitor
 
 import org.leaflang.analyzer.ISemanticAnalyzer
-import org.leaflang.analyzer.exception.TypeException
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.analysisResult
 import org.leaflang.analyzer.result.emptyAnalysisResult
+import org.leaflang.analyzer.result.errorAnalysisResult
+import org.leaflang.error.ErrorCode
 import org.leaflang.parser.ast.BinaryOperation
 import org.leaflang.parser.ast.BinaryOperationNode
 import org.leaflang.parser.ast.INode
@@ -13,6 +14,7 @@ import org.leaflang.parser.ast.INode
  * Analyzes a binary operation.
  */
 class BinaryOperationStaticVisitor : IStaticVisitor {
+
     override fun analyze(analyzer: ISemanticAnalyzer, node: INode): StaticAnalysisResult {
         val binOpNode = node as BinaryOperationNode
         val left = analyzer.analyze(binOpNode.leftNode).type
@@ -37,10 +39,18 @@ class BinaryOperationStaticVisitor : IStaticVisitor {
                 } else if (left == "string" || right == "string") {
                     analysisResult("string")
                 } else {
-                    throw TypeException(left, right, op.name)
+                    typeError(analyzer, node, left, right, op)
                 }
             }
-            else -> throw TypeException(left, right, op.name)
+            else -> typeError(analyzer, node, left, right, op)
         }
+    }
+
+    /**
+     * Creates a non-critical type error.
+     */
+    private fun typeError(analyzer: ISemanticAnalyzer, node: INode, left: String, right: String, op: BinaryOperation): StaticAnalysisResult {
+        analyzer.error(node, ErrorCode.INCOMPATIBLE_TYPES, "Operation \"${op.name}\" is not defined in conjunction with $left and $right")
+        return errorAnalysisResult()
     }
 }

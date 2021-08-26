@@ -67,15 +67,15 @@ class InterpreterArrayTest : TestSuit() {
 
     @Test
     fun shouldErrorOnInvalidDeclaration() {
-        assertTrue(withErrors { execute("[") } > 0)
-        assertTrue(withErrors { execute("[1,2,") } > 0)
-        assertTrue(withErrors { execute("[[2") } > 0)
-        assertTrue(withErrors { execute("[3[") } > 0)
+        assertSyntaxError { execute("[") }
+        assertSyntaxError { execute("[1,2,") }
+        assertSyntaxError { execute("[[2") }
+        assertSyntaxError { execute("[3[") }
     }
 
     @Test
     fun shouldDeclareArrayType() {
         assertArrayEquals(arrayOfBigDecimal(8, 9, 10), (execute("const a: array = [8,9,10]; a") as List<*>).toTypedArray())
-        assertThrows(StaticSemanticException::class.java) { execute("const a: array, b = 10; a = b") }
+        assertSemanticError { execute("const a: array, b = 10; a = b") }
     }
 }

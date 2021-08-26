@@ -75,7 +75,7 @@ class InterpreterStringTest : TestSuit() {
 
     @Test
     fun shouldErrorForWrongOperators() {
-        assertThrows(StaticSemanticException::class.java) { execute("\"Test\" / 3") }
-        assertThrows(StaticSemanticException::class.java) { execute("\"Test\" % 3") }
+        assertSemanticError { execute("\"Test\" / 3") }
+        assertSemanticError { execute("\"Test\" % 3") }
     }
 }

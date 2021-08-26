@@ -1,10 +1,12 @@
 package org.leaflang
 
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.leaflang.analyzer.ISemanticAnalyzer
 import org.leaflang.analyzer.SemanticAnalyzer
 import org.leaflang.analyzer.symbol.ISymbolTable
 import org.leaflang.error.ErrorHandler
+import org.leaflang.error.ErrorType
 import org.leaflang.error.IErrorHandler
 import org.leaflang.interpreter.IInterpreter
 import org.leaflang.interpreter.Interpreter
@@ -38,10 +40,12 @@ open class TestSuit {
     @BeforeEach
     fun beforeEach() {
         errorHandler = ErrorHandler()
+
         lexer = Lexer()
         parser = LeafParser(errorHandler)
-        analyzer = SemanticAnalyzer()
-        interpreter = Interpreter()
+        analyzer = SemanticAnalyzer(errorHandler)
+        interpreter = Interpreter(errorHandler)
+
         globalSymbolTable = analyzer.currentScope
         globalActivationRecord = interpreter.activationRecord!!
         runtimeStack = interpreter.runtimeStack
@@ -77,8 +81,14 @@ open class TestSuit {
      */
     fun execute(programCode: String): Any? {
         val tokens = lexer.tokenize(TextSource(programCode))
+        if (errorHandler.hasErrors()) return null
+
         val ast = parser.parse(tokens)
+        if (errorHandler.hasErrors()) return null
+
         analyzer.analyze(ast!!)
+        if (errorHandler.hasErrors()) return null
+
         return interpreter.interpret(ast).unpack()
     }
 
@@ -106,12 +116,38 @@ open class TestSuit {
     }
 
     /**
-     * Resets the error handler, runs the given [fn] and returns the number of errors
-     * that occur in the given block.
+     * Asserts that [fn] produces at least one syntax error.
      */
-    inline fun withErrors(fn: () -> Unit): Int {
+    inline fun assertSyntaxError(fn: () -> Unit) = assertError(ErrorType.SYNTAX, fn)
+
+    /**
+     * Asserts that [fn] produces at least one semantic error.
+     */
+    inline fun assertSemanticError(fn: () -> Unit) = assertError(ErrorType.SEMANTIC, fn)
+
+    /**
+     * Asserts that [fn] produces at least one runtime error.
+     */
+    inline fun assertRuntimeError(fn: () -> Unit) = assertError(ErrorType.RUNTIME, fn)
+
+    /**
+     * Asserts that some sort of error has to occur during program execution.
+     */
+    inline fun assertError(fn: () -> Unit) {
         errorHandler.reset()
         fn()
-        return errorHandler.errorCount.also { errorHandler.reset() }
+        assertTrue(errorHandler.errorCount > 0, "No errors occurred")
+        errorHandler.reset()
+    }
+
+    /**
+     * Asserts that [fn] produces an error of the given type.
+     */
+    inline fun assertError(errorType: ErrorType, fn: () -> Unit) {
+        errorHandler.reset()
+        fn()
+        assertTrue(errorHandler.errorCount > 0, "No errors occurred at all")
+        assertTrue(errorHandler.errors.any { it.errorType == errorType }, "${errorType.descriptor} did not occur")
+        errorHandler.reset()
     }
 }

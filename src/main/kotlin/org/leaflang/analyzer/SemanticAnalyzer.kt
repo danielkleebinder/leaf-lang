@@ -70,8 +70,9 @@ class SemanticAnalyzer(override var errorHandler: IErrorHandler? = null) : ISema
         currentScope = currentScope.parent!!
     }
 
-    override fun flagError(node: INode, errorCode: ErrorCode) {
-        errorHandler?.handle(AnalysisError(errorCode, fromNode(node), ErrorType.SEMANTIC))
+    override fun error(node: INode, errorCode: ErrorCode, errorMessage: String?, abort: Boolean) {
+        val error = AnalysisError(errorCode, fromNode(node), ErrorType.SEMANTIC, errorMessage)
+        if (abort) errorHandler?.abort(error) else errorHandler?.handle(error)
     }
 
     // Recursive analysis

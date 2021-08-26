@@ -1,5 +1,5 @@
-fun funcA{
-  fun funcB {}
+fun funcA {
+  fun funcB { true }
 }
 
 funcA()

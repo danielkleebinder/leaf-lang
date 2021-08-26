@@ -5,6 +5,27 @@ package org.leaflang.error
  */
 enum class ErrorCode(val errorText: String) {
 
+    // Static analysis errors
+    UNKNOWN_SYMBOL("Symbol not defined in this scope"),
+    MISSING_TYPE_INFORMATION("Missing type information"),
+    INVALID_FIELD("Invalid field access"),
+    INVALID_ARGUMENT_COUNT("Invalid argument count"),
+    INVALID_CONSTANT_REASSIGNMENT("Cannot assign a new value to a constant"),
+    INVALID_TRAIT("Invalid trait"),
+    INVALID_TYPE("Invalid type"),
+    INVALID_TYPE_SPECIFICATION("Invalid type specification"),
+    INVALID_TYPE_IMPLEMENTATION("Invalid type implementation"),
+    INCOMPATIBLE_TYPES("Incompatible types"),
+    ALREADY_EXISTS("Already exists"),
+    EXTENSION_FUNCTION_ANONYMOUS("Functions without names (i.e. anonymous functions) cannot extend types"),
+    EXTENSION_FUNCTION_ABSTRACT("Abstract functions (i.e. functions without an implementation) cannot extend non-trait types"),
+    EXTENSION_FUNCTION_CONCRETE("Concrete functions (i.e. functions with an implementation) cannot extend non-concrete types"),
+    EXTENSION_NOT_POSSIBLE("Extension is not possible"),
+    INVALID_FUNCTION_IMPLEMENTATION("Invalid function implementation"),
+    INVALID_FUNCTION_REQUIRES_BLOCK("Invalid function requires block specified"),
+    INVALID_FUNCTION_ENSURES_BLOCK("Invalid function ensures block specified"),
+    TOO_MANY_ARGUMENTS("Too many arguments"),
+
     // Parser errors
     INVALID_VARIABLE_DECLARATION("Variable declarations require either a type specification ': <type>' or an immediate assignment '= ...'"),
     INVALID_TYPE_DECLARATION("Invalid type used in type declaration"),

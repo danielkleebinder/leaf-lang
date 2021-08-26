@@ -1,11 +1,11 @@
 package org.leaflang.analyzer.visitor
 
 import org.leaflang.analyzer.ISemanticAnalyzer
-import org.leaflang.analyzer.exception.AnalyticalVisitorException
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.analysisResult
 import org.leaflang.analyzer.result.emptyAnalysisResult
 import org.leaflang.analyzer.symbol.*
+import org.leaflang.error.ErrorCode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.Modifier
 import org.leaflang.parser.ast.access.AccessCallNode
@@ -22,15 +22,23 @@ class AccessStaticVisitor : IStaticVisitor {
         val accessNode = node as AccessNode
         val name = accessNode.name
         var symbol: Symbol? = analyzer.currentScope.get(name)
-                ?: throw AnalyticalVisitorException("Symbol with name \"${name}\" not defined")
+
+        // Unknown symbol
+        if (symbol == null) analyzer.error(accessNode, ErrorCode.UNKNOWN_SYMBOL, "\"${name}\" not defined")
 
         for (child in accessNode.children) {
-            if (symbol == null) throw AnalyticalVisitorException("Cannot perform operation \"$child\" because symbol does not exist")
+            if (symbol == null) {
+                analyzer.error(accessNode, ErrorCode.UNKNOWN_SYMBOL, "Cannot perform operation")
+                break
+            }
             symbol = when (child::class) {
                 AccessCallNode::class -> analyzeCallAccess(symbol, child as AccessCallNode, analyzer)
                 AccessFieldNode::class -> analyzeFieldAccess(symbol, child as AccessFieldNode, analyzer)
                 AccessIndexNode::class -> analyzeIndexAccess(symbol, child as AccessIndexNode, analyzer)
-                else -> throw AnalyticalVisitorException("Invalid child node \"$symbol\" for access")
+                else -> {
+                    analyzer.error(accessNode, ErrorCode.UNKNOWN_SYMBOL, "Cannot access ${symbol.name}")
+                    null
+                }
             }
         }
 
@@ -74,7 +82,9 @@ class AccessStaticVisitor : IStaticVisitor {
         // Check if a field with this name exists
         val fieldSymbol = fields.find { it.name == fieldName }
         if (fieldSymbol != null) return fieldSymbol
-        throw AnalyticalVisitorException("Field with name \"$fieldName\" does not exist on \"$symbolName\"")
+
+        analyzer.error(node, ErrorCode.INVALID_FIELD, "\"$fieldName\" does not exist on \"$symbolName\"")
+        return null
     }
 
     /**
@@ -103,12 +113,14 @@ class AccessStaticVisitor : IStaticVisitor {
 
         // What can I extract from the static information I have available?
         val paramCount = symbol.params.size
-        val funName = symbol.name
         val argsCount = node.args.size
         val returns = symbol.returns
 
         // Do we have enough arguments?
-        if (paramCount != argsCount) throw AnalyticalVisitorException("Expected $paramCount arguments in function \"$funName\" but got $argsCount")
+        if (paramCount != argsCount) {
+            analyzer.error(node, ErrorCode.INVALID_ARGUMENT_COUNT, "Expected $paramCount arguments but got $argsCount")
+            return returns
+        }
 
         // Check if the argument types match with the parameter types
         symbol.params.zip(node.args)
@@ -118,7 +130,7 @@ class AccessStaticVisitor : IStaticVisitor {
                     if (expectedType != null && actualType != null) {
                         val actualTypeSymbol = analyzer.currentScope.get(actualType)
                         if (actualTypeSymbol == null || !actualTypeSymbol.isSubtypeOf(expectedType)) {
-                            throw AnalyticalVisitorException("Expected type \"$expectedType\" for parameter \"${it.first.name}\" but got \"${actualType}\"")
+                            analyzer.error(node, ErrorCode.INCOMPATIBLE_TYPES, "Expected \"$expectedType\" for \"${it.first.name}\" but got \"${actualType}\"")
                         }
                     }
                 }

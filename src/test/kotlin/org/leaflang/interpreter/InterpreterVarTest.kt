@@ -47,43 +47,43 @@ class InterpreterVarTest : TestSuit() {
 
     @Test
     fun shouldErrorUnknownVariableAccess() {
-        assertThrows(StaticSemanticException::class.java) { execute("hello;") }
-        assertThrows(StaticSemanticException::class.java) { execute("x;") }
-        assertThrows(StaticSemanticException::class.java) { execute("Test;") }
-        assertThrows(StaticSemanticException::class.java) { execute("z = true;") }
+        assertSemanticError { execute("hello;") }
+        assertSemanticError { execute("x;") }
+        assertSemanticError { execute("Test;") }
+        assertSemanticError { execute("z = true;") }
     }
 
     @Test
     fun shouldErrorInvalidConstAssignment() {
 
         // Constants must be initialized on declaration
-        assertTrue(withErrors { execute("const a") } > 0)
+        assertSyntaxError { execute("const a") }
 
         // Constants cannot be reassigned
-        assertThrows(StaticSemanticException::class.java) { execute("const b = 3; b = 7;") }
+        assertSemanticError { execute("const b = 3; b = 7;") }
     }
 
     @Test
     fun shouldErrorInvalidVarDeclaration() {
 
         // Uninitialized vars must have data type
-        assertTrue(withErrors { execute("var a") } > 0)
+        assertSyntaxError { execute("var a") }
     }
 
     @Test
     fun shouldErrorUnknownTypeDeclaration() {
-        assertThrows(StaticSemanticException::class.java) { execute("var a: customUnknownType") }
-        assertThrows(StaticSemanticException::class.java) { execute("var a: numberType") }
-        assertThrows(StaticSemanticException::class.java) { execute("var a: StringType") }
-        assertThrows(StaticSemanticException::class.java) { execute("var a: StringT") }
+        assertSemanticError { execute("var a: customUnknownType") }
+        assertSemanticError { execute("var a: numberType") }
+        assertSemanticError { execute("var a: StringType") }
+        assertSemanticError { execute("var a: StringT") }
     }
 
     @Test
     fun shouldErrorForRedeclaration() {
-        assertThrows(StaticSemanticException::class.java) { execute("var a: number; var a: number;") }
-        assertThrows(StaticSemanticException::class.java) { execute("const a = 7; var a: number;") }
-        assertThrows(StaticSemanticException::class.java) { execute("const a: number; const a = 7;") }
-        assertThrows(StaticSemanticException::class.java) { execute("const a: number, a: number, b: number;") }
+        assertSemanticError { execute("var a: number; var a: number;") }
+        assertSemanticError { execute("const a = 7; var a: number;") }
+        assertSemanticError { execute("const a: number; const a = 7;") }
+        assertSemanticError { execute("const a: number, a: number, b: number;") }
     }
 
     @Test

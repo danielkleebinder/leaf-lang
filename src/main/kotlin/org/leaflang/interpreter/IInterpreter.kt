@@ -42,9 +42,9 @@ interface IInterpreter {
     fun interpret(ast: INode?): IRuntimeResult
 
     /**
-     * Flags the current node with an error.
+     * Marks the given [node] with an error.
      */
-    fun flagError(node: INode, errorCode: ErrorCode)
+    fun error(node: INode, errorCode: ErrorCode, errorMessage: String? = null, abort: Boolean = false)
 
     /**
      * The local error handler.
