@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.leaflang.analyzer.ISemanticAnalyzer
 import org.leaflang.analyzer.SemanticAnalyzer
 import org.leaflang.analyzer.symbol.ISymbolTable
-import org.leaflang.error.ErrorHandler
 import org.leaflang.error.ErrorType
 import org.leaflang.error.IErrorHandler
 import org.leaflang.interpreter.IInterpreter
@@ -29,17 +28,19 @@ import java.math.BigDecimal
 open class TestSuit {
 
     lateinit var errorHandler: IErrorHandler
+
     lateinit var lexer: ILexer
     lateinit var parser: ILeafParser
     lateinit var analyzer: ISemanticAnalyzer
     lateinit var interpreter: IInterpreter
+
     lateinit var globalSymbolTable: ISymbolTable
     lateinit var globalActivationRecord: IActivationRecord
     lateinit var runtimeStack: IRuntimeStack
 
     @BeforeEach
     fun beforeEach() {
-        errorHandler = ErrorHandlerMock()
+        errorHandler = MockErrorHandler()
 
         lexer = Lexer()
         parser = LeafParser(errorHandler)
@@ -131,7 +132,7 @@ open class TestSuit {
     inline fun assertRuntimeError(fn: () -> Unit) = assertError(ErrorType.RUNTIME, fn)
 
     /**
-     * Asserts that some sort of error has to occur during program execution.
+     * Asserts that some sort of error has to occur during execution of [fn].
      */
     inline fun assertError(fn: () -> Unit) {
         errorHandler.reset()

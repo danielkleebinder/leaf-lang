@@ -6,7 +6,7 @@ import org.leaflang.error.IErrorHandler
 /**
  * Mocked error handler that does not log anything.
  */
-class ErrorHandlerMock : IErrorHandler {
+class MockErrorHandler : IErrorHandler {
 
     private val errorList = arrayListOf<AnalysisError>()
     override val errors: List<AnalysisError> = errorList
