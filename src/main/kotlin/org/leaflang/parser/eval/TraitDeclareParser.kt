@@ -5,7 +5,6 @@ import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.type.TraitDeclareNode
 import org.leaflang.parser.utils.IParserFactory
-import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the trait declaration syntax:
@@ -17,7 +16,7 @@ class TraitDeclareParser(private val parser: ILeafParser,
                          private val parserFactory: IParserFactory) : IParser {
 
     override fun parse(): TraitDeclareNode {
-        val pos = fromToken(parser.token)
+        val pos = parser.nodePosition()
 
         // Is this even a trait declaration?
         if (TokenType.KEYWORD_TRAIT != parser.token.kind) parser.flagError(ErrorCode.MISSING_KEYWORD_TRAIT)

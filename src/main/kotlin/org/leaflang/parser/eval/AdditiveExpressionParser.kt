@@ -7,7 +7,6 @@ import org.leaflang.parser.ast.BinaryOperation
 import org.leaflang.parser.ast.BinaryOperationNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.utils.IParserFactory
-import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the additive semantics:
@@ -22,7 +21,7 @@ class AdditiveExpressionParser(private val parser: ILeafParser,
         val multExpr = parserFactory.multiplicativeExpressionParser
         var node = multExpr.parse()
         while (true) {
-            val pos = fromToken(parser.token)
+            val pos = parser.nodePosition()
             node = when (parser.token.kind) {
                 TokenType.PLUS -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, multExpr.parse(), BinaryOperation.PLUS) }
                 TokenType.MINUS -> parser.advanceAndSkipNewLines { BinaryOperationNode(pos, node, multExpr.parse(), BinaryOperation.MINUS) }

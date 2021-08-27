@@ -3,7 +3,6 @@ package org.leaflang.interpreter
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.leaflang.TestSuit
-import org.leaflang.analyzer.exception.StaticSemanticException
 import org.leaflang.interpreter.exception.DynamicSemanticException
 import java.math.BigDecimal
 
@@ -276,7 +275,7 @@ class InterpreterFunctionTest : TestSuit() {
     }
 
     @Test
-    fun shouldAllowClosedLambdas() {
+    fun shouldAllowClosedLambdas1() {
         execute("""
             fun test(closure: fun) = closure()
             var res = 0
@@ -286,5 +285,18 @@ class InterpreterFunctionTest : TestSuit() {
             }
         """.trimIndent())
         assertEquals(BigDecimal.valueOf(100), valueOf("res"))
+    }
+
+    @Test
+    fun shouldAllowClosedLambdas2() {
+        execute("""
+            var fn: fun
+            {
+              const a = 3
+              fn = fun () = a + a
+            }
+            const res = fn()
+        """.trimIndent())
+        assertEquals(BigDecimal.valueOf(6), valueOf("res"))
     }
 }

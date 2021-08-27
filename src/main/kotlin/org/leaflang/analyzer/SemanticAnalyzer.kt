@@ -1,6 +1,5 @@
 package org.leaflang.analyzer
 
-import org.leaflang.analyzer.exception.StaticSemanticException
 import org.leaflang.analyzer.result.StaticAnalysisResult
 import org.leaflang.analyzer.result.emptyAnalysisResult
 import org.leaflang.analyzer.symbol.ISymbolTable
@@ -77,13 +76,9 @@ class SemanticAnalyzer(override var errorHandler: IErrorHandler? = null) : ISema
 
     // Recursive analysis
     override fun analyze(ast: INode): StaticAnalysisResult {
-        try {
-            return analyzers[ast::class]
-                    ?.analyze(this, ast)
-                    ?: emptyAnalysisResult()
-        } catch (e: Exception) {
-            throw StaticSemanticException(e.message!!, e)
-        }
+        return analyzers[ast::class]
+                ?.analyze(this, ast)
+                ?: emptyAnalysisResult()
     }
 
     private fun registerModule(symbolTable: ISymbolTable, module: INativeModule) {

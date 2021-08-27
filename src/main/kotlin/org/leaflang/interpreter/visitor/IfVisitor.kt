@@ -3,8 +3,8 @@ package org.leaflang.interpreter.visitor
 import org.leaflang.interpreter.IInterpreter
 import org.leaflang.interpreter.result.IRuntimeResult
 import org.leaflang.interpreter.result.emptyResult
-import org.leaflang.parser.ast.IfNode
 import org.leaflang.parser.ast.INode
+import org.leaflang.parser.ast.IfNode
 
 /**
  * Interprets the conditional logic.

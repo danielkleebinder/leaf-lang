@@ -43,6 +43,11 @@ fun execute(programCode: String, fileName: String? = null) {
 
         val timeAnalyzer = measureNanoTime { analyzer.analyze(ast!!) }
 
+        if (errorHandler.hasErrors()) {
+            println(errorHandler.summary())
+            return
+        }
+
         val timeInterpreter = measureNanoTime { result = interpreter.interpret(ast).unpack() }
         if (RuntimeOptions.debug) println("Global Memory       : " + interpreter.runtimeStack)
 

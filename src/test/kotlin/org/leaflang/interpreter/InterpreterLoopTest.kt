@@ -44,7 +44,7 @@ class InterpreterLoopTest : TestSuit() {
     }
 
     @Test
-    fun shouldAllowRedeclareOfSameInitVar()  {
+    fun shouldAllowRedeclareOfSameInitVar() {
         assertDoesNotThrow {
             execute("""
                 loop var i = 0 : i < 5 : i = i + 1 {}

@@ -12,7 +12,6 @@ import org.leaflang.parser.ast.value.BoolNode
 import org.leaflang.parser.ast.value.NumberNode
 import org.leaflang.parser.ast.value.StringNode
 import org.leaflang.parser.utils.IParserFactory
-import org.leaflang.parser.utils.fromToken
 import java.math.BigDecimal
 
 /**
@@ -42,7 +41,7 @@ class AtomParser(private val parser: ILeafParser,
     private val expressionParser = parserFactory.expressionParser
 
     override fun parse(): INode {
-        val pos = fromToken(parser.token)
+        val pos = parser.nodePosition()
         return when (parser.token.kind) {
 
             TokenType.BOOL -> BoolNode(pos, parser.tokenAndAdvance.value as Boolean)

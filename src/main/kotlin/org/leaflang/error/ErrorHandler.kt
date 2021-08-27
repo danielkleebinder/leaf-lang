@@ -27,7 +27,7 @@ class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
 
         val fileName = if (source?.name != null) " in \"${source.name}\"" else ""
 
-        System.err.println("$errorType$fileName: $errorDescription (at row $errorRow and column $errorColumn - position $errorPosition)")
+        System.err.println("$errorType$fileName: $errorDescription (at row ${errorRow + 1} and column ${errorColumn + 1} - position $errorPosition)")
 
         if (source != null) {
             val codeSnippet = source.lineSnippet(errorRow)
@@ -64,7 +64,7 @@ class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
         if (syntaxErrors > 0) result.appendLine("$syntaxErrors syntax (or lexical) error${if (syntaxErrors > 1) "s" else ""} occurred")
         if (semanticErrors > 0) result.appendLine("$semanticErrors semantic error${if (semanticErrors > 1) "s" else ""} occurred")
         if (runtimeErrors > 0) result.appendLine("$runtimeErrors runtime error${if (runtimeErrors > 1) "s" else ""} occurred")
-        result.append("$errorCount total")
+        result.append("$errorCount error${if (errorCount != 0) "s" else ""} in total")
 
         return result.toString()
     }

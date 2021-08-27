@@ -1,10 +1,10 @@
 package org.leaflang.lexer.tokenizer
 
+import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.source.ISource
 import org.leaflang.lexer.token.ITokenFactory
 import org.leaflang.lexer.token.Token
 import org.leaflang.lexer.token.TokenType
-import org.leaflang.error.ErrorCode
 
 /**
  * Tokenizes a number (either decimal or int).

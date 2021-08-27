@@ -7,7 +7,6 @@ import org.leaflang.parser.ast.EmptyNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.value.ArrayNode
 import org.leaflang.parser.utils.IParserFactory
-import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the array semantics:
@@ -21,7 +20,7 @@ class ArrayExpressionParser(private val parser: ILeafParser,
     override fun parse(): ArrayNode {
         val expr = parserFactory.expressionParser
         val elements = arrayListOf<INode>()
-        val pos = fromToken(parser.token)
+        val pos = parser.nodePosition()
 
         enclosingBrackets {
             elements.add(expr.parse())

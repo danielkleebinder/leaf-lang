@@ -4,7 +4,6 @@ import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.utils.IParserFactory
-import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the range semantics:

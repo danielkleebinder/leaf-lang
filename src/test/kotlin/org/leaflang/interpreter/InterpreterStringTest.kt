@@ -1,9 +1,9 @@
 package org.leaflang.interpreter
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.leaflang.TestSuit
-import org.leaflang.analyzer.exception.StaticSemanticException
 import java.math.BigDecimal
 
 class InterpreterStringTest : TestSuit() {

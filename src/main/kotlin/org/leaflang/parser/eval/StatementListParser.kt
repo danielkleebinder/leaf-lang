@@ -6,7 +6,6 @@ import org.leaflang.parser.ast.EmptyNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.StatementListNode
 import org.leaflang.parser.utils.IParserFactory
-import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the statement list semantics:

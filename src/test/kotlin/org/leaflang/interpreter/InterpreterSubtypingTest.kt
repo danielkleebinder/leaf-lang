@@ -1,11 +1,9 @@
 package org.leaflang.interpreter
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.leaflang.TestSuit
-import org.leaflang.analyzer.exception.StaticSemanticException
 
 class InterpreterSubtypingTest : TestSuit() {
 

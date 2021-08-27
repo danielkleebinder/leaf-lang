@@ -35,8 +35,8 @@ class VariableParser(private val parser: ILeafParser,
     override fun parse(): AccessNode {
         if (TokenType.IDENTIFIER != parser.token.kind) parser.flagError(ErrorCode.MISSING_IDENTIFIER)
 
-        val id = parser.tokenAndAdvance.value as String
         val pos = parser.nodePosition()
+        val id = parser.tokenAndAdvance.value as String
         val children = arrayListOf<INode>()
 
         var wasNewLine = TokenType.NEW_LINE == parser.token.kind

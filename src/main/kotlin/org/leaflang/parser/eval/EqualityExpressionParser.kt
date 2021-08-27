@@ -7,7 +7,6 @@ import org.leaflang.parser.ast.BinaryOperation
 import org.leaflang.parser.ast.BinaryOperationNode
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.utils.IParserFactory
-import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the equality semantics:

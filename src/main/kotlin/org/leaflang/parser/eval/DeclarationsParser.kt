@@ -10,7 +10,6 @@ import org.leaflang.parser.ast.INode
 import org.leaflang.parser.ast.Modifier
 import org.leaflang.parser.ast.type.TypeNode
 import org.leaflang.parser.utils.IParserFactory
-import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the declaration semantics:
@@ -25,7 +24,7 @@ class DeclarationsParser(private val parser: ILeafParser,
 
     override fun parse(): DeclarationsNode {
         val declarations = arrayListOf<Declaration>()
-        val pos = fromToken(parser.token)
+        val pos = parser.nodePosition()
         while (true) {
             declarations.add(evalDeclaration())
 

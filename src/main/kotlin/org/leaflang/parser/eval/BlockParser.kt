@@ -5,7 +5,6 @@ import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.BlockNode
 import org.leaflang.parser.utils.IParserFactory
-import org.leaflang.parser.utils.fromToken
 
 /**
  * Evaluates the block semantics:
@@ -18,7 +17,7 @@ class BlockParser(private val parser: ILeafParser,
 
     override fun parse(): BlockNode {
         val statementListParser = parserFactory.statementListParser
-        val pos = fromToken(parser.token)
+        val pos = parser.nodePosition()
 
         if (TokenType.LEFT_CURLY_BRACE != parser.token.kind) parser.flagError(ErrorCode.MISSING_BLOCK_LEFT_CURLY_BRACE)
         parser.advanceCursor()

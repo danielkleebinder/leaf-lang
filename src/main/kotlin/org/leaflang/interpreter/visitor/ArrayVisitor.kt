@@ -1,11 +1,11 @@
 package org.leaflang.interpreter.visitor
 
 import org.leaflang.interpreter.IInterpreter
+import org.leaflang.interpreter.memory.cell.IMemoryCell
 import org.leaflang.interpreter.result.DataRuntimeResult
 import org.leaflang.interpreter.result.arrayResult
-import org.leaflang.interpreter.memory.cell.IMemoryCell
-import org.leaflang.parser.ast.value.ArrayNode
 import org.leaflang.parser.ast.INode
+import org.leaflang.parser.ast.value.ArrayNode
 
 /**
  * Interprets the array node.

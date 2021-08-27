@@ -3,7 +3,6 @@ package org.leaflang.interpreter
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.leaflang.TestSuit
-import org.leaflang.analyzer.exception.StaticSemanticException
 import org.leaflang.interpreter.exception.DynamicSemanticException
 import java.math.BigDecimal
 
