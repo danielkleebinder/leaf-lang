@@ -6,6 +6,7 @@ import org.leaflang.parser.utils.NodePosition
  * A "use" statement that allows importing code snippets from other files.
  */
 class UseNode(override val position: NodePosition,
-              val fileName: String) : INode {
-    override fun toString() = "UseNode(file=\"$fileName\")"
+              val cwd: String,
+              val loadFiles: List<String>) : INode {
+    override fun toString() = "UseNode(in=\"$cwd\", load=\"$loadFiles\")"
 }

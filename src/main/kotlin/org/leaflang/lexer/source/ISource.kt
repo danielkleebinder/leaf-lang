@@ -41,6 +41,11 @@ interface ISource {
     val name: String?
 
     /**
+     * The absolute path to the current working directory for this source.
+     */
+    val cwd: String
+
+    /**
      * Returns the current cursor position.
      */
     val cursorPosition: Int

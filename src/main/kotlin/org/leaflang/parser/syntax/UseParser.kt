@@ -9,7 +9,7 @@ import org.leaflang.parser.utils.IParserFactory
 /**
  * Evaluates the use declaration syntax:
  *
- * 'use' (NL)* <string>
+ * <use-stmt> ::= 'use' (NL)* '(' (NL)* <string> (NL)* (',' (NL)* <string> (NL)*)*  ')'
  *
  */
 class UseParser(private val parser: ILeafParser,
@@ -20,15 +20,36 @@ class UseParser(private val parser: ILeafParser,
 
         // Is this even a use declaration?
         if (TokenType.KEYWORD_USE != parser.token.kind) parser.flagError(ErrorCode.MISSING_KEYWORD_USE)
+        val inFile = parser.tokenAndAdvance.value as String
+        parser.skipNewLines()
+
+        // The list of imported files must be in parenthesis
+        if (TokenType.LEFT_PARENTHESIS != parser.token.kind) parser.flagError(ErrorCode.MISSING_LEFT_PARENTHESIS)
         parser.advanceCursor()
         parser.skipNewLines()
 
-        var name = "<undefined>"
+        val loadFiles = arrayListOf<String>()
         if (TokenType.STRING == parser.token.kind) {
-            name = parser.tokenAndAdvance.value as String
-        } else {
-            parser.flagError(ErrorCode.MISSING_USE_FILE_PATH)
+            loadFiles.add(parser.tokenAndAdvance.value as String)
+            parser.skipNewLines()
         }
-        return UseNode(pos, name)
+
+        // Load the entire list of use statements
+        while (TokenType.COMMA == parser.token.kind) {
+            parser.advanceCursor()
+            parser.skipNewLines()
+            if (TokenType.STRING == parser.token.kind) {
+                loadFiles.add(parser.tokenAndAdvance.value as String)
+                parser.skipNewLines()
+            } else {
+                parser.flagError(ErrorCode.MISSING_USE_FILE_PATH)
+            }
+        }
+
+        // Closing parenthesis are required
+        if (TokenType.RIGHT_PARENTHESIS != parser.token.kind) parser.flagError(ErrorCode.MISSING_RIGHT_PARENTHESIS)
+        parser.advanceCursor()
+
+        return UseNode(pos, inFile, loadFiles.toList())
     }
 }

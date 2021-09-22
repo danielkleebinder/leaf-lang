@@ -50,18 +50,20 @@ class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
     override fun abort(error: AnalysisError) {
         errorList.add(error)
         handle(error)
-        System.err.println("The error above was critical and the program execution had to be stopped!")
+        System.err.println("Program interpretation stopped because the error above was critical (error code ${error.errorCode.ordinal})")
         System.err.println()
         exitProcess(error.errorCode.ordinal)
     }
 
     override fun summary(): String {
         val syntaxErrors = errorList.count { ErrorType.SYNTAX == it.errorType }
+        val linkerErrors = errorList.count { ErrorType.LINKER == it.errorType }
         val semanticErrors = errorList.count { ErrorType.SEMANTIC == it.errorType }
         val runtimeErrors = errorList.count { ErrorType.RUNTIME == it.errorType }
 
         val result = StringBuilder()
         if (syntaxErrors > 0) result.appendLine("$syntaxErrors syntax (or lexical) error${if (syntaxErrors > 1) "s" else ""} occurred")
+        if (linkerErrors > 0) result.appendLine("$linkerErrors linker error${if (linkerErrors > 1) "s" else ""} occurred")
         if (semanticErrors > 0) result.appendLine("$semanticErrors semantic error${if (semanticErrors > 1) "s" else ""} occurred")
         if (runtimeErrors > 0) result.appendLine("$runtimeErrors runtime error${if (runtimeErrors > 1) "s" else ""} occurred")
         result.append("$errorCount error${if (errorCount != 1) "s" else ""} in total")

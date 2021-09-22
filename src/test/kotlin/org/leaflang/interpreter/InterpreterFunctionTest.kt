@@ -99,7 +99,7 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldComputeFactorialRecursively() {
-        val result = execute(readResourceFile("function/fun-factorial.test.leaf"))
+        val result = execute(readSourceFile("function/fun-factorial.test.leaf"))
         assertEquals(BigDecimal.valueOf(3628800), result)
     }
 
@@ -133,30 +133,30 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldFollowStaticLink1() {
-        execute(readResourceFile("function/fun-static-link-1.test.leaf"))
+        execute(readSourceFile("function/fun-static-link-1.test.leaf"))
         assertEquals(true, valueOf("res"))
     }
 
     @Test
     fun shouldFollowStaticLink2() {
-        assertSemanticError { execute(readResourceFile("function/fun-static-link-2.test.leaf")) }
+        assertSemanticError { execute(readSourceFile("function/fun-static-link-2.test.leaf")) }
     }
 
     @Test
     fun shouldFollowStaticLink3() {
-        execute(readResourceFile("function/fun-static-link-3.test.leaf"))
+        execute(readSourceFile("function/fun-static-link-3.test.leaf"))
         assertEquals(BigDecimal.valueOf(46), valueOf("res"))
     }
 
     @Test
     fun shouldFollowStaticLink4() {
-        execute(readResourceFile("function/fun-static-link-4.test.leaf"))
+        execute(readSourceFile("function/fun-static-link-4.test.leaf"))
         assertTrue(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldFollowStaticLink5() {
-        assertSemanticError { execute(readResourceFile("function/fun-static-link-5.test.leaf")) }
+        assertSemanticError { execute(readSourceFile("function/fun-static-link-5.test.leaf")) }
         assertNull(valueOf("res"))
     }
 
@@ -213,38 +213,38 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldAssignReturnValue() {
-        execute(readResourceFile("function/fun-return-1.test.leaf"))
+        execute(readSourceFile("function/fun-return-1.test.leaf"))
         assertEquals(BigDecimal.valueOf(771), valueOf("x"))
     }
 
     @Test
     fun shouldReturnLocalVariableValue() {
-        execute(readResourceFile("function/fun-return-2.test.leaf"))
+        execute(readSourceFile("function/fun-return-2.test.leaf"))
         assertEquals(BigDecimal.valueOf(11), valueOf("x"))
     }
 
     @Test
     fun shouldReturnBeforeEnd() {
-        execute(readResourceFile("function/fun-return-3.test.leaf"))
+        execute(readSourceFile("function/fun-return-3.test.leaf"))
         assertEquals(BigDecimal.valueOf(21), valueOf("c"))
     }
 
     @Test
     fun shouldContainMultipleReturns() {
-        execute(readResourceFile("function/fun-return-4.test.leaf"))
+        execute(readSourceFile("function/fun-return-4.test.leaf"))
         assertEquals(BigDecimal.valueOf(0), valueOf("x"))
         assertEquals(BigDecimal.valueOf(26), valueOf("y"))
     }
 
     @Test
     fun shouldReturnWithoutResult() {
-        execute(readResourceFile("function/fun-return-5.test.leaf"))
+        execute(readSourceFile("function/fun-return-5.test.leaf"))
         assertFalse(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldReturnResultFromFunctionLoop() {
-        execute(readResourceFile("function/fun-return-6.test.leaf"))
+        execute(readSourceFile("function/fun-return-6.test.leaf"))
         assertEquals(BigDecimal.valueOf(205), valueOf("x"))
         assertEquals(BigDecimal.valueOf(305), valueOf("y"))
         assertEquals(BigDecimal.valueOf(0), valueOf("z"))
@@ -252,25 +252,25 @@ class InterpreterFunctionTest : TestSuit() {
 
     @Test
     fun shouldAllowLambdas1() {
-        execute(readResourceFile("function/fun-lambda-1.test.leaf"))
+        execute(readSourceFile("function/fun-lambda-1.test.leaf"))
         assertEquals(BigDecimal.valueOf(-20), valueOf("res"))
     }
 
     @Test
     fun shouldAllowLambdas2() {
-        execute(readResourceFile("function/fun-lambda-2.test.leaf"))
+        execute(readSourceFile("function/fun-lambda-2.test.leaf"))
         assertEquals(BigDecimal.valueOf(250), valueOf("res"))
     }
 
     @Test
     fun shouldAllowChainedCalls1() {
-        execute(readResourceFile("function/fun-chain-1.test.leaf"))
+        execute(readSourceFile("function/fun-chain-1.test.leaf"))
         assertEquals(BigDecimal.valueOf(1), valueOf("res"))
     }
 
     @Test
     fun shouldAllowChainedCalls2() {
-        execute(readResourceFile("function/fun-chain-2.test.leaf"))
+        execute(readSourceFile("function/fun-chain-2.test.leaf"))
         assertEquals(BigDecimal.valueOf(1), valueOf("res"))
     }
 

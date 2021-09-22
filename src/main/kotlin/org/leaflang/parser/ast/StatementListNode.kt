@@ -7,6 +7,6 @@ import org.leaflang.parser.utils.NodePosition
  * interpreted independently.
  */
 class StatementListNode(override val position: NodePosition,
-                        val statements: List<INode>) : INode {
+                        var statements: List<INode>) : INode {
     override fun toString() = "StatementListNode(statements=$statements)"
 }

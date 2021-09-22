@@ -55,7 +55,7 @@ class InterpreterLoopTest : TestSuit() {
 
     @Test
     fun shouldRunPrimeChecker1() {
-        execute(readResourceFile("prime-4.test.leaf"))
+        execute(readSourceFile("prime-4.test.leaf"))
         assertEquals(BigDecimal.valueOf(4), valueOf("n"))
         assertEquals(BigDecimal.valueOf(2), valueOf("i"))
         assertEquals(false, valueOf("isPrime"))
@@ -63,7 +63,7 @@ class InterpreterLoopTest : TestSuit() {
 
     @Test
     fun shouldRunPrimeChecker2() {
-        execute(readResourceFile("prime-47.test.leaf"))
+        execute(readSourceFile("prime-47.test.leaf"))
         assertEquals(BigDecimal.valueOf(47), valueOf("n"))
         assertEquals(BigDecimal.valueOf(47), valueOf("i"))
         assertEquals(true, valueOf("isPrime"))
@@ -71,7 +71,7 @@ class InterpreterLoopTest : TestSuit() {
 
     @Test
     fun shouldRunFactorial() {
-        execute(readResourceFile("factorial.test.leaf"))
+        execute(readSourceFile("factorial.test.leaf"))
         assertEquals(BigDecimal.valueOf(120), valueOf("res"))
     }
 
@@ -83,38 +83,38 @@ class InterpreterLoopTest : TestSuit() {
 
     @Test
     fun shouldBreakLoop1() {
-        execute(readResourceFile("loop-break-1.test.leaf"))
+        execute(readSourceFile("loop-break-1.test.leaf"))
         assertEquals(BigDecimal.valueOf(3), valueOf("a"))
     }
 
     @Test
     fun shouldBreakLoop2() {
-        execute(readResourceFile("loop-break-2.test.leaf"))
+        execute(readSourceFile("loop-break-2.test.leaf"))
         assertEquals(BigDecimal.valueOf(-1), valueOf("a"))
         assertTrue(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldContinueLoop1() {
-        execute(readResourceFile("loop-continue-1.test.leaf"))
+        execute(readSourceFile("loop-continue-1.test.leaf"))
         assertFalse(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldContinueLoop2() {
-        execute(readResourceFile("loop-continue-2.test.leaf"))
+        execute(readSourceFile("loop-continue-2.test.leaf"))
         assertFalse(valueOf("res") as Boolean)
     }
 
     @Test
     fun shouldIgnoreNewLines1() {
-        execute(readResourceFile("loop-structure-1.test.leaf"))
+        execute(readSourceFile("loop-structure-1.test.leaf"))
         assertEquals(BigDecimal.valueOf(0), valueOf("a"))
     }
 
     @Test
     fun shouldIgnoreNewLines2() {
-        execute(readResourceFile("loop-structure-2.test.leaf"))
+        execute(readSourceFile("loop-structure-2.test.leaf"))
         assertEquals(BigDecimal.valueOf(0), valueOf("a"))
         assertEquals(true, valueOf("res"))
     }

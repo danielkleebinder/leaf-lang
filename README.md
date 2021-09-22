@@ -29,15 +29,17 @@ The formal language definition in **Backus-Naur form** looks like the following.
 
 <statements> ::= <statement> ((';' | (NL)*) <statement>)*
 <statement>  ::= ('const' | 'var') (NL)* <declaration>
-               | 'use' (NL)* <string>
                | 'return' ((NL)* <expr>)?
                | 'break'
                | 'continue'
                | <trait-declaration>
                | <type-declaration>
                | <assignment>
+               | <use-stmt>
                | <loop-stmt>
                | <expr>
+
+<use-stmt> ::= 'use' (NL)* '(' (NL)* <string> (NL)* (',' (NL)* <string> (NL)*)*  ')'
 ```
 
 ### Functions

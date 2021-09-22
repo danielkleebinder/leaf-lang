@@ -14,7 +14,11 @@ import org.leaflang.interpreter.memory.IRuntimeStack
 import org.leaflang.interpreter.result.unpack
 import org.leaflang.lexer.ILexer
 import org.leaflang.lexer.Lexer
+import org.leaflang.lexer.source.FileSource
+import org.leaflang.lexer.source.ISource
 import org.leaflang.lexer.source.TextSource
+import org.leaflang.linker.ILinker
+import org.leaflang.linker.Linker
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.LeafParser
 import java.io.ByteArrayOutputStream
@@ -31,6 +35,7 @@ open class TestSuit {
 
     lateinit var lexer: ILexer
     lateinit var parser: ILeafParser
+    lateinit var linker: ILinker
     lateinit var analyzer: ISemanticAnalyzer
     lateinit var interpreter: IInterpreter
 
@@ -44,6 +49,7 @@ open class TestSuit {
 
         lexer = Lexer()
         parser = LeafParser(errorHandler)
+        linker = Linker(lexer, parser, errorHandler)
         analyzer = SemanticAnalyzer(errorHandler)
         interpreter = Interpreter(errorHandler)
 
@@ -77,28 +83,36 @@ open class TestSuit {
         analyzer.analyze(ast!!)
     }
 
+    fun execute(programCode: String) = execute(TextSource(programCode))
+
     /**
      * Executes the given [programCode] by running all stages.
      */
-    fun execute(programCode: String): Any? {
-        val tokens = lexer.tokenize(TextSource(programCode))
+    fun execute(source: ISource): Any? {
+        val tokens = lexer.tokenize(source)
         if (errorHandler.hasErrors()) return null
 
-        val ast = parser.parse(tokens)
+        var ast = parser.parse(tokens)
         if (errorHandler.hasErrors()) return null
 
-        analyzer.analyze(ast!!)
+        ast = linker.link(ast!!)
+        if (errorHandler.hasErrors()) return null
+
+        analyzer.analyze(ast)
         if (errorHandler.hasErrors()) return null
 
         return interpreter.interpret(ast).unpack()
     }
 
     /**
+     * Reads the source code inside the given file.
+     */
+    fun readSourceFile(fileName: String) = FileSource(File("src/test/resources/$fileName"))
+
+    /**
      * Reads the text inside the given file.
      */
-    fun readResourceFile(fileName: String): String {
-        return File("src/test/resources/$fileName").readText()
-    }
+    fun readResourceFile(fileName: String) = File("src/test/resources/$fileName").readText()
 
     /**
      * Changes the output stream of the program for the given function call

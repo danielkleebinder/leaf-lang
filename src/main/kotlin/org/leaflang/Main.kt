@@ -1,5 +1,7 @@
 package org.leaflang
 
+import org.leaflang.lexer.source.FileSource
+import org.leaflang.lexer.source.TextSource
 import java.io.File
 
 /**
@@ -7,8 +9,8 @@ import java.io.File
  */
 fun runFile(fileName: String) {
     val file = File(fileName)
-    if (!file.exists()) System.err.println("Given file does not exist: $fileName")
-    execute(file.readText(), file.name)
+    if (!file.exists()) System.err.println("Program file with name \"$fileName\" does not exist")
+    execute(FileSource(file))
 }
 
 /**
@@ -34,7 +36,7 @@ fun runCli() {
                 break
             }
         }
-        execute(program.toString())
+        execute(TextSource(program.toString()))
     }
 }
 

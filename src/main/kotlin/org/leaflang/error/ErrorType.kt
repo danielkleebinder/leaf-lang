@@ -11,6 +11,11 @@ enum class ErrorType(val descriptor: String) {
     SYNTAX("Syntax error"),
 
     /**
+     * Error that occurs during linking of multiple modules.
+     */
+    LINKER("Linker error"),
+
+    /**
      * Error that occurs during static semantic analysis.
      */
     SEMANTIC("Semantic error"),

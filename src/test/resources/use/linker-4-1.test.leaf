@@ -1,0 +1,5 @@
+use ( "linker-4-2.test.leaf" )
+use ( "linker-4-3.test.leaf" )
+use ( "linker-4-2.test.leaf" )
+
+const res = from2 + from3

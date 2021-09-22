@@ -13,12 +13,12 @@ import org.leaflang.parser.utils.IParserFactory
  * Evaluates the statement semantics:
  *
  * <statement>  ::= ('const' | 'var') (NL)* <declaration>
- *                | 'use' (NL)* <string>
  *                | 'return' ((NL)* <expr>)?
  *                | 'break'
  *                | 'continue'
  *                | <type-declaration>
  *                | <assignment>
+ *                | <use-stmt>
  *                | <loop-stmt>
  *                | <expr>
  *

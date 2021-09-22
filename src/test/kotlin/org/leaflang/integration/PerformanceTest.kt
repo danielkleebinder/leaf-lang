@@ -17,7 +17,7 @@ class PerformanceTest : TestSuit() {
     @Test
     fun shouldComputeFactorialRecursively() {
         Assertions.assertTimeoutPreemptively<Any?>(Duration.ofSeconds(2)) {
-            execute(readResourceFile("integration/fibonacci.test.leaf"))
+            execute(readSourceFile("integration/fibonacci.test.leaf"))
         }
         assertEquals(BigDecimal.valueOf(317_811), valueOf("res"))
     }
@@ -25,7 +25,7 @@ class PerformanceTest : TestSuit() {
     @Test
     fun shouldConcatenateStrings() {
         Assertions.assertTimeoutPreemptively<Any?>(Duration.ofSeconds(2)) {
-            execute(readResourceFile("integration/string-concat.test.leaf"))
+            execute(readSourceFile("integration/string-concat.test.leaf"))
         }
     }
 }

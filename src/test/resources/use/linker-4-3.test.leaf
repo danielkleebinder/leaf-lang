@@ -1,0 +1,4 @@
+use ( "linker-4-2.test.leaf" )
+use ( "linker-4-3.test.leaf" )
+
+const from3 = 33

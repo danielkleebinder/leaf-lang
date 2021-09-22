@@ -1,0 +1,5 @@
+use (
+  "dir/linker-2-2.test.leaf"
+)
+
+const res = fromLinker3()

@@ -14,19 +14,19 @@ class IntegrationTest : TestSuit() {
 
     @Test
     fun shouldComputeFactorialRecursively() {
-        execute(readResourceFile("integration/factorial.test.leaf"))
+        execute(readSourceFile("integration/factorial.test.leaf"))
         assertEquals(BigDecimal.valueOf(3628800), valueOf("res"))
     }
 
     @Test
     fun shouldGreet() {
-        execute(readResourceFile("integration/greeting.test.leaf"))
+        execute(readSourceFile("integration/greeting.test.leaf"))
         assertEquals("Hello Hello Hello Daniel", valueOf("res"))
     }
 
     @Test
     fun shouldSplitAndJoinString() {
-        execute(readResourceFile("integration/string-utils.test.leaf"))
+        execute(readSourceFile("integration/string-utils.test.leaf"))
 
         val result = valueOf("res") as Array<IMemoryCell>
         assertEquals(2, result.size)

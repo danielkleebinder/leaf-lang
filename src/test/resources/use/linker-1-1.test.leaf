@@ -1,0 +1,5 @@
+use (
+  "linker-1-2.test.leaf"
+)
+
+const res = myFileVariable

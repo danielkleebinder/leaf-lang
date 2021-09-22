@@ -26,6 +26,9 @@ enum class ErrorCode(val errorText: String) {
     INVALID_FUNCTION_ENSURES_BLOCK("Invalid function ensures block specified"),
     TOO_MANY_ARGUMENTS("Too many arguments"),
 
+    // Linker errors
+    SOURCE_FILE_NOT_FOUND("Source file not found"),
+
     // Parser errors
     INVALID_VARIABLE_DECLARATION("Variable declarations require either a type specification ': <type>' or an immediate assignment '= ...'"),
     INVALID_TYPE_DECLARATION("Invalid type used in type declaration"),
