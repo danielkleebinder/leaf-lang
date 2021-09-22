@@ -181,6 +181,12 @@ complete and Turing completeness has been shown.
 ## Example Programs
 
 ```kotlin
+use (
+  "libs/my-math-lib.leaf",
+  "libs/my-stream-lib.leaf",
+  "libs/my-http-lib.leaf"
+)
+
 trait Eats
 fun <Eats>.eat()
 fun <Eats>.hungry()
