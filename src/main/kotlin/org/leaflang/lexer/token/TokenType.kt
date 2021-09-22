@@ -14,6 +14,7 @@ enum class TokenType(val descriptor: String) {
     KEYWORD_LOOP("loop"),
     KEYWORD_BREAK("break"), KEYWORD_CONTINUE("continue"), KEYWORD_RETURN("return"),
     KEYWORD_TRAIT("trait"), KEYWORD_TYPE("type"), KEYWORD_NEW("new"),
+    KEYWORD_USE("use"),
 
     // Arithmetic
     INCREMENT("++"), DECREMENT("--"),

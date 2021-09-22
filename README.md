@@ -29,7 +29,7 @@ The formal language definition in **Backus-Naur form** looks like the following.
 
 <statements> ::= <statement> ((';' | (NL)*) <statement>)*
 <statement>  ::= ('const' | 'var') (NL)* <declaration>
-               | 'async' <statement>
+               | 'use' (NL)* <string>
                | 'return' ((NL)* <expr>)?
                | 'break'
                | 'continue'

@@ -1,6 +1,6 @@
 package org.leaflang.parser.utils
 
-import org.leaflang.parser.eval.*
+import org.leaflang.parser.syntax.*
 
 /**
  * Used to create parsers.
@@ -27,7 +27,8 @@ interface IParserFactory {
     val statementListParser: StatementListParser
     val traitDeclareParser: TraitDeclareParser
     val typeDeclareParser: TypeDeclareParser
-    val typeParser: TypeParser
     val typeInstantiationParser: TypeInstantiationParser
+    val typeParser: TypeParser
+    val useParser: UseParser
     val variableParser: VariableParser
 }

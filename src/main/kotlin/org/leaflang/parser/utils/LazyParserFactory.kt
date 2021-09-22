@@ -2,7 +2,7 @@ package org.leaflang.parser.utils
 
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.Modifier
-import org.leaflang.parser.eval.*
+import org.leaflang.parser.syntax.*
 
 /**
  * Concrete parser factory implementation that uses lazy loading (i.e. initialize the parsers
@@ -24,6 +24,7 @@ class LazyParserFactory(private val leafParser: ILeafParser) : IParserFactory {
     override val programParser by lazy { ProgramParser(leafParser, this) }
     override val statementParser by lazy { StatementParser(leafParser, this) }
     override val statementListParser by lazy { StatementListParser(leafParser, this) }
+    override val useParser by lazy { UseParser(leafParser, this) }
 
     // Type related stuff
     override val typeParser by lazy { TypeParser(leafParser, this) }

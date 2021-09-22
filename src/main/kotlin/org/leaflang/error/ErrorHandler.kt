@@ -64,7 +64,7 @@ class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
         if (syntaxErrors > 0) result.appendLine("$syntaxErrors syntax (or lexical) error${if (syntaxErrors > 1) "s" else ""} occurred")
         if (semanticErrors > 0) result.appendLine("$semanticErrors semantic error${if (semanticErrors > 1) "s" else ""} occurred")
         if (runtimeErrors > 0) result.appendLine("$runtimeErrors runtime error${if (runtimeErrors > 1) "s" else ""} occurred")
-        result.append("$errorCount error${if (errorCount != 0) "s" else ""} in total")
+        result.append("$errorCount error${if (errorCount != 1) "s" else ""} in total")
 
         return result.toString()
     }

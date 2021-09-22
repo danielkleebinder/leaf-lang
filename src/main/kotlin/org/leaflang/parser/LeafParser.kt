@@ -6,6 +6,9 @@ import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ast.INode
 import org.leaflang.parser.utils.LazyParserFactory
 
+/**
+ * Concrete implementation for the leaf programming language parser.
+ */
 class LeafParser(override var errorHandler: IErrorHandler? = null) : ILeafParser {
 
     private var tokens = arrayOf<Token>()

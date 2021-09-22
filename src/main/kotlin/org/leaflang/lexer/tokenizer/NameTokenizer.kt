@@ -38,6 +38,7 @@ class NameTokenizer : ITokenizer {
             "type" -> tokenFactory.newToken(TokenType.KEYWORD_TYPE)
             "trait" -> tokenFactory.newToken(TokenType.KEYWORD_TRAIT)
             "new" -> tokenFactory.newToken(TokenType.KEYWORD_NEW)
+            "use" -> tokenFactory.newToken(TokenType.KEYWORD_USE)
             "async" -> tokenFactory.newToken(TokenType.KEYWORD_ASYNC)
             else -> tokenFactory.newToken(TokenType.IDENTIFIER, name)
         }

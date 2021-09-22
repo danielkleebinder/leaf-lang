@@ -1,4 +1,4 @@
-package org.leaflang.parser.eval
+package org.leaflang.parser.syntax
 
 import org.leaflang.error.ErrorCode
 import org.leaflang.lexer.token.TokenType

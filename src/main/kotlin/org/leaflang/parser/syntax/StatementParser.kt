@@ -1,4 +1,4 @@
-package org.leaflang.parser.eval
+package org.leaflang.parser.syntax
 
 import org.leaflang.lexer.token.TokenType
 import org.leaflang.parser.ILeafParser
@@ -13,7 +13,7 @@ import org.leaflang.parser.utils.IParserFactory
  * Evaluates the statement semantics:
  *
  * <statement>  ::= ('const' | 'var') (NL)* <declaration>
- *                | 'async' <statement>
+ *                | 'use' (NL)* <string>
  *                | 'return' ((NL)* <expr>)?
  *                | 'break'
  *                | 'continue'
@@ -31,6 +31,7 @@ class StatementParser(private val parser: ILeafParser,
         TokenType.KEYWORD_RETURN -> parser.advance { ReturnNode(parser.nodePosition(), parserFactory.expressionParser.parse()) }
         TokenType.KEYWORD_BREAK -> parser.advance { BreakNode(parser.nodePosition()) }
         TokenType.KEYWORD_CONTINUE -> parser.advance { ContinueNode(parser.nodePosition()) }
+        TokenType.KEYWORD_USE -> parserFactory.useParser.parse()
         TokenType.KEYWORD_LOOP -> parserFactory.loopParser.parse()
         TokenType.KEYWORD_TRAIT -> parserFactory.traitDeclareParser.parse()
         TokenType.KEYWORD_TYPE -> parserFactory.typeDeclareParser.parse()

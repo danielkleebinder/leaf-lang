@@ -1,4 +1,4 @@
-package org.leaflang.parser.eval
+package org.leaflang.parser.syntax
 
 import org.leaflang.parser.ILeafParser
 import org.leaflang.parser.ast.ProgramNode

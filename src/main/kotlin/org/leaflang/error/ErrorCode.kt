@@ -38,6 +38,8 @@ enum class ErrorCode(val errorText: String) {
     MISSING_KEYWORD_NEW("Missing type instantiation keyword 'new'"),
     MISSING_KEYWORD_TYPE("Missing custom type keyword 'type'"),
     MISSING_KEYWORD_TRAIT("Missing trait keyword 'trait'"),
+    MISSING_KEYWORD_USE("Missing load keyword 'use'"),
+    MISSING_USE_FILE_PATH("Use statements must be followed by a string identifying a file to load"),
     MISSING_TRAIT_IDENTIFIER("Missing identifier for trait"),
     MISSING_TYPE_IDENTIFIER("Missing identifier for custom type"),
     MISSING_FUNCTION_BODY("Function body definition either requires block '{...}' or immediate expression '= ...' if it is not an abstract function"),
