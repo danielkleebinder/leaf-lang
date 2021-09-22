@@ -30,4 +30,15 @@ class LinkerTest : TestSuit() {
         execute(readSourceFile("use/linker-4-1.test.leaf"))
         assertEquals(BigDecimal.valueOf(55), valueOf("res"))
     }
+
+    @Test
+    fun shouldErrorForInvalidUseStatement() {
+        assertSyntaxError { execute("use ") }
+        assertSyntaxError { execute("use \"lib.test.leaf\"") }
+    }
+
+    @Test
+    fun shouldErrorForUnknownFile() {
+        assertLinkerError { execute("use ( \"9ebcab6e2549067fbad9e226fabac804.test.leaf\" )") }
+    }
 }

@@ -1,5 +1,6 @@
 package org.leaflang.linker
 
+import org.leaflang.RuntimeOptions
 import org.leaflang.error.*
 import org.leaflang.lexer.ILexer
 import org.leaflang.lexer.source.FileSource
@@ -54,7 +55,10 @@ class Linker(private val lexer: ILexer,
         var file = File(fileName)
 
         // Check if the file was already loaded and linked
-        if (alreadyLoaded.contains(file.absolutePath)) return null
+        if (alreadyLoaded.contains(file.absolutePath)) {
+            if (RuntimeOptions.debug) println("File is already linked (skip): \"${file.canonicalPath}\"")
+            return null
+        }
         alreadyLoaded.add(file.absolutePath)
 
         // Resolve the file name by using a relative path
@@ -65,9 +69,11 @@ class Linker(private val lexer: ILexer,
         // The file does not exist. The linking process will abort and the program never execute.
         if (!file.exists()) {
             errorHandler?.abort(AnalysisError(ErrorCode.SOURCE_FILE_NOT_FOUND, fromNode(use), ErrorType.LINKER, "Source file \"$fileName\" not found"))
+            return null
         }
 
         // Read the entire file at once
+        if (RuntimeOptions.debug) println("Linking file: \"${file.canonicalPath}\"")
         return FileSource(file)
     }
 }

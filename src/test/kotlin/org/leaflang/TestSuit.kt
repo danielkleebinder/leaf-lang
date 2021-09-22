@@ -136,6 +136,11 @@ open class TestSuit {
     inline fun assertSyntaxError(fn: () -> Unit) = assertError(ErrorType.SYNTAX, fn)
 
     /**
+     * Asserts that [fn] produces at least one linker error.
+     */
+    inline fun assertLinkerError(fn: () -> Unit) = assertError(ErrorType.LINKER, fn)
+
+    /**
      * Asserts that [fn] produces at least one semantic error.
      */
     inline fun assertSemanticError(fn: () -> Unit) = assertError(ErrorType.SEMANTIC, fn)
