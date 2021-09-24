@@ -135,7 +135,7 @@ class FunDeclareStaticVisitor : IStaticVisitor {
 
             // Ensures without return value does not make sense
             if (funDeclareNode.returns == null && funDeclareNode.ensures != null) {
-                analyzer.error(node, ErrorCode.INVALID_FUNCTION_ENSURES_BLOCK, "No returns value in \"$funName\"")
+                analyzer.error(node, ErrorCode.INVALID_FUNCTION_ENSURES_BLOCK, "No return value in \"$funName\"")
             }
 
             // Check if all our checks are syntactically correct
@@ -165,7 +165,7 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                 analyzer.analyze(funDeclareNode.returns)
                 funSymbol.returns = analyzer.currentScope.get(funDeclareNode.returns.type)
                 if (funSymbol.returns == null) {
-                    analyzer.error(node, ErrorCode.INVALID_TYPE, "Function \"$funName\" return type \"${funDeclareNode.returns?.type}\" does not exist")
+                    analyzer.error(node, ErrorCode.INVALID_TYPE, "Function \"$funName\" return type \"${funDeclareNode.returns.type}\" does not exist")
                 }
             } else if (bodyReturnType != null) {
 

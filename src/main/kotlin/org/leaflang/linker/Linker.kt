@@ -39,8 +39,18 @@ class Linker(private val lexer: ILexer,
                                 .mapNotNull { tokens -> parser.parse(tokens) }
                                 .forEach { subTree ->
 
-                                    // Recursively link used files as well
-                                    newStatementList.add(link(subTree))
+                                    // Recursively link used files as well. Each file loaded might have more files
+                                    // to load. Those are linked here.
+                                    val linkedTree = link(subTree)
+
+                                    // Unroll the program node and the statement list node to improve performance. This
+                                    // is some sort of optimization mechanism that inlines code more directly and thus
+                                    // saves interpretation steps.
+                                    when (linkedTree) {
+                                        is ProgramNode -> newStatementList.addAll(linkedTree.statements.statements)
+                                        is StatementListNode -> newStatementList.addAll(linkedTree.statements)
+                                        else -> newStatementList.add(linkedTree)
+                                    }
                                 }
                     }
             ast.statements = newStatementList

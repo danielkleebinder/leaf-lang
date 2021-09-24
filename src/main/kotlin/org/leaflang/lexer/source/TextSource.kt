@@ -55,4 +55,5 @@ class TextSource(private val text: String) : ISource {
     override val isEndOfProgram: Boolean
         get() = position >= text.length
 
+    override fun toString() = "Plain Text Source"
 }

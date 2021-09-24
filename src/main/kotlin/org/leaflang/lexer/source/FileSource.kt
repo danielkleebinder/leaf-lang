@@ -80,4 +80,5 @@ class FileSource(val file: File) : ISource {
     override val isEndOfProgram: Boolean
         get() = eof
 
+    override fun toString(): String = file.name
 }

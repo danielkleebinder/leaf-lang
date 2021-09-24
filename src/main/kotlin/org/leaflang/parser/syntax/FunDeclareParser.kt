@@ -129,9 +129,7 @@ class FunDeclareParser(private val parser: ILeafParser,
     private inline fun funName(name: () -> Unit) {
         // Functions do not require a name. Functions without names are anonymous functions.
         if (TokenType.IDENTIFIER != parser.token.kind) return
-
         name()
-        parser.skipNewLines()
     }
 
     /**
