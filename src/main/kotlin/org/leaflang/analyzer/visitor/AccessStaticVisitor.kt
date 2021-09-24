@@ -24,7 +24,7 @@ class AccessStaticVisitor : IStaticVisitor {
         var symbol: Symbol? = analyzer.currentScope.get(name)
 
         // Unknown symbol
-        if (symbol == null) analyzer.error(accessNode, ErrorCode.UNKNOWN_SYMBOL, "\"${name}\" not defined")
+        if (symbol == null) analyzer.error(accessNode, ErrorCode.UNKNOWN_SYMBOL, "\"$name\" not found. Define it before using it like 'var $name = ...' or 'const $name = ...' for constants.")
 
         for (child in accessNode.children) {
             if (symbol == null) {

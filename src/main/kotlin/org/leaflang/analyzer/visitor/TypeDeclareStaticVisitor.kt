@@ -27,7 +27,7 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
         // Check if each trait is available in the current scope
         typeDeclareNode.traits
                 .filter { !analyzer.currentScope.has(it) }
-                .forEach { analyzer.error(node, ErrorCode.INVALID_TRAIT, "Type \"$typeName\" tries to implement trait \"$it\" which does not exist in this scope") }
+                .forEach { analyzer.error(node, ErrorCode.INVALID_TRAIT, "Type \"$typeName\" tries to implement trait \"$it\" which does not exist in this scope. Define it with 'trait $it' beforehand.") }
 
         // Check if each trait really is a trait type
         typeDeclareNode.traits
@@ -38,7 +38,7 @@ class TypeDeclareStaticVisitor : IStaticVisitor {
         typeDeclareNode.traits
                 .groupingBy { it }.eachCount()
                 .filter { it.value > 1 }
-                .forEach { analyzer.error(node, ErrorCode.INVALID_TYPE_SPECIFICATION, "Type \"$typeName\" implements trait \"${it.key}\" ${it.value} times, but only once is allowed") }
+                .forEach { analyzer.error(node, ErrorCode.INVALID_TYPE_SPECIFICATION, "Type \"$typeName\" implements trait \"${it.key}\" ${it.value} times, but only once is allowed. Use 'type $typeName : ${it.key}'") }
 
 
         val typeSymbol = TypeSymbol(

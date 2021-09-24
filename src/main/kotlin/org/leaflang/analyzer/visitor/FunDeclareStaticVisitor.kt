@@ -165,7 +165,7 @@ class FunDeclareStaticVisitor : IStaticVisitor {
                 analyzer.analyze(funDeclareNode.returns)
                 funSymbol.returns = analyzer.currentScope.get(funDeclareNode.returns.type)
                 if (funSymbol.returns == null) {
-                    analyzer.error(node, ErrorCode.INVALID_TYPE, "Function \"$funName\" return type \"${funDeclareNode.returns} does not exist")
+                    analyzer.error(node, ErrorCode.INVALID_TYPE, "Function \"$funName\" return type \"${funDeclareNode.returns?.type}\" does not exist")
                 }
             } else if (bodyReturnType != null) {
 

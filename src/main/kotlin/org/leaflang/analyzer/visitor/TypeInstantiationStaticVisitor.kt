@@ -21,11 +21,11 @@ class TypeInstantiationStaticVisitor : IStaticVisitor {
 
         // Do some availability checks
         if (symbol == null) {
-            analyzer.error(node, ErrorCode.MISSING_TYPE_INFORMATION, "Type \"$typeName\" was not found")
+            analyzer.error(node, ErrorCode.MISSING_TYPE_INFORMATION, "Type \"$typeName\" does not exist. If there is no typo, declare a custom type with 'type $typeName'")
             return errorAnalysisResult()
         }
         if (symbol !is TypeSymbol) {
-            analyzer.error(node, ErrorCode.INVALID_TYPE, "\"$typeName\" is not a concrete type")
+            analyzer.error(node, ErrorCode.INVALID_TYPE, "\"$typeName\" is not a concrete type. Only custom types can be instantiated like 'type $typeName; new $typeName'")
             return errorAnalysisResult()
         }
 
