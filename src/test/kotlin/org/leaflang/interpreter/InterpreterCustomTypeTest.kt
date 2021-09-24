@@ -116,4 +116,10 @@ class InterpreterCustomTypeTest : TestSuit() {
         assertSemanticError { execute("type X1{a=0, a=1}") }
         assertSemanticError { execute("type X2{x=10, y=20, pos=3, x=5}") }
     }
+
+    @Test
+    fun shouldErrorForUnknownType() {
+        assertSemanticError { execute("new Player") }
+        assertSemanticError { execute("var x: Player") }
+    }
 }

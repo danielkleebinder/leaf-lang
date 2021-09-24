@@ -94,4 +94,16 @@ class InterpreterTraitTest : TestSuit() {
         assertSemanticError { execute("trait Drinks2; new Drinks2") }
         assertSemanticError { execute("trait Eatable; trait Feedable; const a = new Feedable") }
     }
+
+    @Test
+    fun shouldErrorForNotImplementedExtFunction() {
+        assertSemanticError {
+            execute("""
+                trait Executes
+                fun <Executes>.execute
+                type Computer : Executes
+                new Computer
+            """.trimIndent())
+        }
+    }
 }

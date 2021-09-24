@@ -16,5 +16,21 @@ open class Symbol(val name: String,
         return false
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Symbol) return false
+
+        if (name != other.name) return false
+        if (nestingLevel != other.nestingLevel) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + nestingLevel
+        return result
+    }
+
     override fun toString() = "Symbol(name=$name, nesting=$nestingLevel)"
 }

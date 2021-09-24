@@ -5,15 +5,13 @@ import org.leaflang.parser.ast.INode
 /**
  * Function symbols represent user defined functions.
  */
-class ClosureSymbol(name: String?,
+class ClosureSymbol(name: String? = null,
                     var params: ArrayList<VarSymbol> = arrayListOf(),
                     var returns: Symbol? = null,
-                    var requires: INode?,
-                    var ensures: INode?,
-                    var body: INode?,
+                    var requires: INode? = null,
+                    var ensures: INode? = null,
+                    var body: INode? = null,
                     nestingLevel: Int = 0) : Symbol(name ?: "<anonymous>", nestingLevel) {
-
-    override fun toString() = "ClosureSymbol(name=$name, params=$params)"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -29,4 +27,6 @@ class ClosureSymbol(name: String?,
         result = 31 * result + (returns?.hashCode() ?: 0)
         return result
     }
+
+    override fun toString() = "ClosureSymbol(name=$name, params=$params)"
 }
