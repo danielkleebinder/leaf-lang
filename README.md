@@ -3,7 +3,9 @@
 # The Leaf Programming Language
 
 [![Build](https://github.com/danielkleebinder/leaf-lang/actions/workflows/main.yml/badge.svg)](https://github.com/danielkleebinder/leaf-lang/actions/workflows/main.yml)
+[![Code Coverage](https://img.shields.io/badge/coverage-82%25-green)](https://github.com/danielkleebinder/leaf-lang/tree/main/src/test)
 [![Licence](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/danielkleebinder/leaf-lang/blob/main/LICENSE)
+[![Issues](https://img.shields.io/github/issues/danielkleebinder/leaf-lang?maxAge=2592000)](https://github.com/danielkleebinder/leaf-lang/issues)
 
 [Leaf programming language website](https://danielkleebinder.github.io/leaf-lang.html)
 
