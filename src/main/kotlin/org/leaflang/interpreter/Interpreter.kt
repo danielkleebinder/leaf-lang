@@ -79,9 +79,12 @@ class Interpreter(override var errorHandler: IErrorHandler? = null) : IInterpret
         }
     }
 
-    override fun error(node: INode, errorCode: ErrorCode, errorMessage: String?, abort: Boolean) {
-        val error = AnalysisError(errorCode, fromNode(node), ErrorType.RUNTIME, errorMessage)
-        if (abort) errorHandler?.abort(error) else errorHandler?.handle(error)
+    override fun error(node: INode, errorCode: ErrorCode, errorMessage: String?) {
+        errorHandler?.handle(AnalysisError(errorCode, fromNode(node), ErrorType.RUNTIME, errorMessage))
+    }
+
+    override fun abort(node: INode, errorCode: ErrorCode, errorMessage: String?) {
+        errorHandler?.abort(AnalysisError(errorCode, fromNode(node), ErrorType.RUNTIME, errorMessage))
     }
 
     private fun registerModule(activationRecord: IActivationRecord, module: INativeModule) {

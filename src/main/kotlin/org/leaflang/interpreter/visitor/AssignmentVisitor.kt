@@ -1,7 +1,7 @@
 package org.leaflang.interpreter.visitor
 
+import org.leaflang.error.ErrorCode
 import org.leaflang.interpreter.IInterpreter
-import org.leaflang.interpreter.exception.VisitorException
 import org.leaflang.interpreter.result.IRuntimeResult
 import org.leaflang.interpreter.result.emptyResult
 import org.leaflang.parser.ast.AssignmentNode
@@ -18,7 +18,10 @@ class AssignmentVisitor : IVisitor {
 
         val access = interpreter.interpret(accessNode).data
         val assignmentValue = interpreter.interpret(assignmentExpr).data
-                ?: throw VisitorException("Assignment value for \"${accessNode.name}\" is undefined")
+        if (assignmentValue == null) {
+            interpreter.abort(node, ErrorCode.INVALID_MEMORY_ASSIGN, "Assignment value for \"${accessNode.name}\" is undefined and cannot be used")
+            return emptyResult()
+        }
 
         if (access != null) {
             access.assign(assignmentValue)

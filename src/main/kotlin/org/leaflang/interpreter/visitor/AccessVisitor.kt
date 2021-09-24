@@ -2,8 +2,8 @@ package org.leaflang.interpreter.visitor
 
 import org.leaflang.analyzer.symbol.ClosureSymbol
 import org.leaflang.analyzer.symbol.NativeFunSymbol
+import org.leaflang.error.ErrorCode
 import org.leaflang.interpreter.IInterpreter
-import org.leaflang.interpreter.exception.VisitorException
 import org.leaflang.interpreter.memory.IActivationRecord
 import org.leaflang.interpreter.memory.cell.ClosureMemoryCell
 import org.leaflang.interpreter.memory.cell.IMemoryCell
@@ -32,13 +32,21 @@ class AccessVisitor : IVisitor {
         var previousValue: IMemoryCell? = null
 
         for (child in accessNode.children) {
-            if (value == null) throw VisitorException("Cannot perform operation \"$child\" because nothing was returned from the previous call")
+            if (value == null) {
+                interpreter.error(child, ErrorCode.INVALID_MEMORY_ACCESS, "Cannot perform operation \"$child\" because the parent did not return anything")
+                break
+            }
             val tmp = value
-            value = when (child::class) {
-                AccessCallNode::class -> visitCallAccess(previousValue, value, child as AccessCallNode, interpreter)
-                AccessFieldNode::class -> visitFieldAccess(value, child as AccessFieldNode)
-                AccessIndexNode::class -> visitIndexAccess(value, child as AccessIndexNode, interpreter)
-                else -> throw VisitorException("Invalid child node \"$value\" for access")
+            value = when (child) {
+                is AccessCallNode -> visitCallAccess(previousValue, value, child, interpreter)
+                is AccessFieldNode -> visitFieldAccess(value, child, interpreter)
+                is AccessIndexNode -> visitIndexAccess(value, child, interpreter)
+                else -> {
+                    // ASSERT: This error is never allowed to happen because it must be caught by either syntax or
+                    //         static semantic analysis anyways.
+                    interpreter.abort(child, ErrorCode.INVALID_MEMORY_ACCESS)
+                    null
+                }
             }
             previousValue = tmp
         }
@@ -49,20 +57,25 @@ class AccessVisitor : IVisitor {
     /**
      * Visits the field access node and returns the fields value.
      */
-    private fun visitFieldAccess(current: IMemoryCell, node: AccessFieldNode): IMemoryCell {
+    private fun visitFieldAccess(current: IMemoryCell, node: AccessFieldNode, interpreter: IInterpreter): IMemoryCell? {
         val fieldName = node.name
-        return current.members[fieldName]
-                ?: throw VisitorException("Member field with name \"${fieldName}\" not found on value \"$current\"")
+        val result = current.members[fieldName]
+        if (result == null) {
+            interpreter.error(node, ErrorCode.INVALID_FIELD_ACCESS, "Member field with name \"${fieldName}\" not found on value \"$current\"")
+        }
+        return result
     }
 
     /**
      * Visits the index access node and returns the value at the index of the current value.
      */
-    private fun visitIndexAccess(current: IMemoryCell, node: AccessIndexNode, interpreter: IInterpreter): IMemoryCell {
+    private fun visitIndexAccess(current: IMemoryCell, node: AccessIndexNode, interpreter: IInterpreter): IMemoryCell? {
         val indexExpr = node.indexExpr
         val index = interpreter.interpret(indexExpr).data
-                ?: throw VisitorException("Not an index expression")
-        return current.get(index)
+        return if (index == null) {
+            interpreter.error(node, ErrorCode.INVALID_INDEX_ACCESS, "Not an index")
+            null
+        } else current.get(index)
     }
 
     /**
@@ -114,7 +127,8 @@ class AccessVisitor : IVisitor {
                 if (previous != null) activationRecord.define("object", previous)
 
                 if (false == interpreter.interpret(spec.requires).data?.value) {
-                    throw VisitorException("Requires expression of function \"$funName\" failed")
+                    interpreter.abort(node, ErrorCode.REQUIRES_FAILED, "Invalid argument values provided for function \"$funName\"")
+                    return@withDynamicScope
                 }
 
                 result = interpreter.interpret(spec.body)
@@ -126,7 +140,8 @@ class AccessVisitor : IVisitor {
                 if (result.hasData()) {
                     activationRecord.define("_", result.data)
                     if (false == interpreter.interpret(spec.ensures).data?.value) {
-                        throw VisitorException("Ensures expression of function \"$funName\" failed")
+                        interpreter.abort(node, ErrorCode.ENSURES_FAILED, "Function \"$funName\" failed due to 'ensures' clause")
+                        return@withDynamicScope
                     }
                 }
             }

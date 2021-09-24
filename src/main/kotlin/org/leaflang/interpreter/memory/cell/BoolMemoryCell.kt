@@ -1,7 +1,6 @@
 package org.leaflang.interpreter.memory.cell
 
 import org.leaflang.interpreter.exception.UnknownOperationException
-import org.leaflang.interpreter.exception.VisitorException
 import org.leaflang.parser.ast.BinaryOperation
 import org.leaflang.parser.ast.UnaryOperation
 
@@ -26,7 +25,7 @@ class BoolMemoryCell(private var data: Boolean,
     override fun unary(op: UnaryOperation) = when (op) {
         UnaryOperation.LOGICAL_NEGATE -> boolMemoryCell(!data)
         UnaryOperation.BIT_COMPLEMENT -> boolMemoryCell(!data)
-        else -> throw VisitorException("The operation $op is not supported for data type bool")
+        else -> throw UnknownOperationException("The operation $op is not supported for data type bool")
     }
 
     override fun binary(right: IMemoryCell, op: BinaryOperation) = when (op) {
@@ -35,7 +34,7 @@ class BoolMemoryCell(private var data: Boolean,
         BinaryOperation.NOT_EQUAL -> binaryNotEqual(right)
         BinaryOperation.LOGICAL_AND -> binaryLogicalAnd(right)
         BinaryOperation.LOGICAL_OR -> binaryLogicalOr(right)
-        else -> throw VisitorException("The operation $op is not supported for data type bool")
+        else -> throw UnknownOperationException("The operation $op is not supported for data type bool")
     }
 
     /**

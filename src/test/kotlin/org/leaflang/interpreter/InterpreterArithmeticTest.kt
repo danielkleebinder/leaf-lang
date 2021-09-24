@@ -106,7 +106,7 @@ class InterpreterArithmeticTest : TestSuit() {
     @Test
     fun shouldErrorForInvalidArithmetic() {
         assertThrows(DynamicSemanticException::class.java) { execute("2 && 1") }
-        assertThrows(DynamicSemanticException::class.java) { execute("*1") }
+        assertRuntimeError { execute("*1") }
     }
 
     @Test

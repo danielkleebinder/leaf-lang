@@ -5,6 +5,15 @@ package org.leaflang.error
  */
 enum class ErrorCode(val errorText: String) {
 
+    // Runtime errors
+    INVALID_MEMORY_ASSIGN("Invalid assignment"),
+    INVALID_MEMORY_ACCESS("Invalid memory access"),
+    INVALID_FIELD_ACCESS("Invalid field access"),
+    INVALID_INDEX_ACCESS("Invalid index access"),
+    REQUIRES_FAILED("Function 'requires' expression failed"),
+    ENSURES_FAILED("Function 'ensures' expression failed"),
+    UNSUPPORTED_OPERATION("Operation not supported"),
+
     // Static analysis errors
     UNKNOWN_SYMBOL("Symbol not defined in this scope"),
     MISSING_TYPE_INFORMATION("Missing type information"),

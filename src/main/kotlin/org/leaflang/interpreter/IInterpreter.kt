@@ -44,7 +44,12 @@ interface IInterpreter {
     /**
      * Marks the given [node] with an error.
      */
-    fun error(node: INode, errorCode: ErrorCode, errorMessage: String? = null, abort: Boolean = false)
+    fun error(node: INode, errorCode: ErrorCode, errorMessage: String? = null)
+
+    /**
+     * Aborts program execution immediately.
+     */
+    fun abort(node: INode, errorCode: ErrorCode, errorMessage: String? = null)
 
     /**
      * The local error handler.
