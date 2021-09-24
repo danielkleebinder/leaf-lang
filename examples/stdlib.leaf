@@ -1,0 +1,18 @@
+// Common trait that is implemented by types that execute something
+trait Executes
+fun <Executes>.execute
+
+// Trait used to compare two objects
+trait Compares
+fun <Compares>.compare(o1: any, o2: any)
+
+
+// Call this function with a [msg] if something is not implemented yet. This
+// function will always error in the postcondition and stops the program.
+fun TODO(msg: string) :: _ -> bool {
+  println("Not implemented yet: " + msg)
+  return false
+}
+
+// Creates an empty array
+fun emptyArray = []

@@ -1,0 +1,12 @@
+use (
+  "stdlib.leaf",
+  "stream-api.leaf"
+)
+
+type Printer : Executes
+fun <Printer>.execute = println("Printing...")
+
+const printer = new Printer
+printer.execute()
+
+TODO("The printer should run in an endless loop")
