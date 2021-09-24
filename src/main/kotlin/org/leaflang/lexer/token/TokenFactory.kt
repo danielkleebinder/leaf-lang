@@ -7,7 +7,11 @@ import org.leaflang.lexer.source.ISource
  */
 class TokenFactory(private val source: ISource) : ITokenFactory {
     override fun newToken(kind: TokenType, value: Any?): Token {
-        val position = TokenPosition(source.rowPosition, source.columnPosition, source.cursorPosition)
+        val position = TokenPosition(
+                row = source.rowPosition,
+                column = source.columnPosition,
+                position = source.cursorPosition,
+                source = source)
         return Token(kind, position, value)
     }
 }

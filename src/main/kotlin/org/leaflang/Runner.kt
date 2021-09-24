@@ -30,7 +30,7 @@ fun execute(source: ISource) {
         var ast: INode?
         var result: Any?
 
-        val errorHandler = ErrorHandler(source)
+        val errorHandler = ErrorHandler()
         val linker = Linker(lexer, parser, errorHandler)
 
         parser.errorHandler = errorHandler

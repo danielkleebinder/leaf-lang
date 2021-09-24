@@ -1,13 +1,12 @@
 package org.leaflang.error
 
-import org.leaflang.lexer.source.ISource
 import kotlin.math.max
 import kotlin.system.exitProcess
 
 /**
  * Concrete error handler implementation.
  */
-class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
+class ErrorHandler : IErrorHandler {
 
     private var errorList = arrayListOf<AnalysisError>()
 
@@ -24,26 +23,23 @@ class ErrorHandler(private val source: ISource? = null) : IErrorHandler {
         val errorRow = error.errorPosition.row
         val errorColumn = error.errorPosition.column
         val errorPosition = error.errorPosition.position
+        val source = error.errorPosition.source
 
-        val fileName = if (source?.name != null) " in \"${source.name}\"" else ""
+        val fileName = if (source.name != null) " in \"${source.name}\"" else ""
 
         System.err.println("$errorType$fileName: $errorDescription (at row ${errorRow + 1} and column ${errorColumn + 1} - position $errorPosition)")
 
-        if (source != null) {
-            val codeSnippet = source.lineSnippet(errorRow)
-            val nr = (errorRow + 1).toString().padStart(3, '0')
+        val codeSnippet = source.lineSnippet(errorRow)
+        val nr = (errorRow + 1).toString().padStart(3, '0')
 
-            val errorPadStart = max(errorColumn - 1, 0)
-            val errorCursor = "".padStart(errorPadStart, ' ') + "^^^"
-            val errorMessage = error.errorMessage ?: ""
+        val errorPadStart = max(errorColumn - 1, 0)
+        val errorCursor = "".padStart(errorPadStart, ' ') + "^^^"
+        val errorMessage = error.errorMessage ?: ""
 
-            System.err.println("    |")
-            System.err.println("$nr | $codeSnippet")
-            System.err.println("    | $errorCursor $errorMessage")
-            System.err.println("    |")
-        } else {
-            System.err.println("No source available for more detailed error information")
-        }
+        System.err.println("    |")
+        System.err.println("$nr | $codeSnippet")
+        System.err.println("    | $errorCursor $errorMessage")
+        System.err.println("    |")
         System.err.println()
     }
 
