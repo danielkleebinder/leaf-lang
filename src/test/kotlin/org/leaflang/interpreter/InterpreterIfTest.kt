@@ -83,4 +83,11 @@ class InterpreterIfTest : TestSuit() {
         assertTrue(globalActivationRecord.has("x"))
         assertEquals(BigDecimal.valueOf(15), valueOf("x"))
     }
+
+    @Test
+    fun shouldAllowNestedIfExpressions() {
+        execute("const res = if if if if true { true } else { false } { true } { 1 == 1 } { 10 }")
+        assertTrue(globalActivationRecord.has("res"))
+        assertEquals(BigDecimal.valueOf(10), valueOf("res"))
+    }
 }

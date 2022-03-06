@@ -152,10 +152,10 @@ programming language is proven to be Turing complete and is defined as follows:
 
 ```
 <C> ::= <L> := <E>
-    | 'if' <B> 'then' <C> 'else' <C>
-    | 'while' <B> 'do' <C>
-    | <C>;<C>
-    | skip
+      | 'if' <B> 'then' <C> 'else' <C>
+      | 'while' <B> 'do' <C>
+      | <C>;<C>
+      | skip
 
 <B> ::= 'true' | 'false' | <E> '=' <E> | <B> '&' <B> | '-' <B>
 <E> ::= <L> | n | (E + E)
@@ -257,6 +257,27 @@ fun recursion(a: number) = if a > 0 { recursion(a - 1) }
 recursion(5)
 ```
 
+### If-Expressions
+Other programming languages often times only implement if-statements. This means, that `if` cannot be used to return any
+value directly. This programming language (similar to Kotlin), however, provides if-expressions.
+
+```kotlin
+const someValue = ...
+const res = if someValue > 0 {
+  someValue * 100
+} else {
+  0
+}
+```
+
+This can be very useful in combination with single expression functions (like in the recursion example above). It also
+allows for rather weird and hard to comprehend expressions. So it is up to the developer to use them with caution. The
+example below is a correct and sound statement where `res` will be `10` after execution:
+
+```kotlin
+const res = if if if if true { true } else { false } { true } { 1 == 1 } { 10 }
+```
+
 ### Lambdas
 Lambdas are typically used to implement some sort of functional programming pattern that focuses on the
 computational part of a problem. Lambdas can be used as follows:
@@ -282,7 +303,7 @@ type Dog {
 
 type Human {
   name: string
-  age: 27
+  age = 27
 }
 ```
 
@@ -298,6 +319,29 @@ on `object` if for the case above. This function can be executed like:
 ```kotlin
 const me = new Human { "Daniel" }
 me.sayHi()
+```
+
+### Traits
+Besides basic types, the programming language also supports so called traits. A `trait` is a special kind of type that
+allows design by contract. Using traits, different developers can create separate modules while still enforcing certain
+requirements. A `trait` can be compared to an `interface` in programming languages like Kotlin or TypeScript.
+
+```kotlin
+trait ComparesPositive
+fun <ComparesPositive>.compare(n: number) : n > 0 -> number
+```
+
+A custom `type` then has to implement this trait to allow proper subtyping. Traits are also one of the fundamental
+aspects when it comes to object-oriented programming paradigms in this programming language:
+
+```kotlin
+type Age : ComparesPositive {
+  age: number
+}
+
+fun <Age>.compare(n: number) {
+  return object.age - n
+}
 ```
 
 
